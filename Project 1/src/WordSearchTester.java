@@ -59,6 +59,40 @@ public class WordSearchTester {
 
 	/* TODO: write more methods for both make and search. */
 
+	//TODO Comment
+	@Test
+	public void testSearchNullString(){
+		char[][][] testGrid = {
+				{{'a', 'b'},
+						{'c', 'd'}},
+				{{'t', 'r'},
+						{'w', 'z'}}
+		};
+		assertNull(_wordSearch.search(testGrid, null));
+	}
+
+	@Test
+	public void testSearchEmptyString(){
+		char[][][] testGrid = {
+				{{'a', 'b'},
+						{'c', 'd'}},
+				{{'t', 'r'},
+						{'w', 'z'}}
+		};
+		assertArrayEquals(new int[0][0], _wordSearch.search(testGrid, ""));
+	}
+
+	@Test
+	public void testSearchStringNotInGrid(){
+		char[][][] testGrid = {
+				{{'a', 'b'},
+						{'c', 'd'}},
+				{{'t', 'r'},
+						{'w', 'z'}}
+		};
+		assertNull(_wordSearch.search(testGrid, "we"));
+	}
+
 	@Before
 	public void setUp () {
 		_wordSearch = new WordSearch3D();

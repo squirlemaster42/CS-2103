@@ -32,8 +32,12 @@ public class WordSearch3D {
 	 * word, then the method returns a list of the (3-d) locations of its letters; if not, 
 	 */
 	public int[][] search (char[][][] grid, String word) {
-		// TODO: implement me
-		return null;
+		if(word == null){
+			return null;
+		} else if (word.equals("")) {
+			return new int[0][0];
+		}
+		return new int[10][10];
 	}
 
 	/**
