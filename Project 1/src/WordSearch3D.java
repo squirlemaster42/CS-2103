@@ -38,7 +38,6 @@ public class WordSearch3D {
 			return new int[0][0];
 		}
 
-		//#2 Repeat first step with second letter
 		final char firstChar = word.charAt(0);
 		final char lastChar = word.charAt(word.length() - 1);
 
