@@ -111,15 +111,6 @@ public class WordSearchTester {
 		assertEquals(location[1][2], 2);
 	}
 
-	//TODO Split up tests
-	@Test
-	public void testCompareString(){
-		assertTrue(_wordSearch.compareString("hello", "hello"));
-		assertTrue(_wordSearch.compareString("olleh", "hello"));
-		assertFalse(_wordSearch.compareString("food", "fish"));
-		assertFalse(_wordSearch.compareString("olleh", "hllo"));
-	}
-
 	@Before
 	public void setUp () {
 		_wordSearch = new WordSearch3D();
