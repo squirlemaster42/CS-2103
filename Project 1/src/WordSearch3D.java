@@ -37,7 +37,26 @@ public class WordSearch3D {
 		} else if (word.equals("")) {
 			return new int[0][0];
 		}
+
+		//Look for first letter of the string
+		//Look for next letter of the string
+		//See if they are next to eachother
+		//If yes #2 else #1
+		//#1 Look for next place with first letter
+		//#2 Repeat first step with second letter
+
 		return new int[10][10];
+	}
+
+	//TODO See if this approach breaks sometimes
+	/**
+	 * Compares two Strings and returns true f they are the same (will also return true if the String is reversed)
+	 * @param compare the String to compare
+	 * @param word the word to compare to
+	 * @return Will return true if the input strings are the same and false if not
+	 */
+	public boolean compareString(String compare, final String word){
+		return word.equals(compare) || word.equals(new StringBuilder().append(compare).reverse().toString());
 	}
 
 	/**

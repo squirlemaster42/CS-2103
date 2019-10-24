@@ -93,6 +93,33 @@ public class WordSearchTester {
 		assertNull(_wordSearch.search(testGrid, "we"));
 	}
 
+	@Test
+	/**
+	 * Verifies that search works correctly in a tiny grid that is effectively 2D.
+ 	*/
+	public void testSearchSimple () {
+		// Note: this grid is 1x2x2 in size
+		final char[][][] grid = new char[][][] { { { 'a', 'b', 'c' },
+				{ 'd', 'f', 'e' } } };
+		final int[][] location = _wordSearch.search(grid, "be");
+		assertNotNull(location);
+		assertEquals(location[0][0], 0);
+		assertEquals(location[0][1], 0);
+		assertEquals(location[0][2], 1);
+		assertEquals(location[1][0], 0);
+		assertEquals(location[1][1], 1);
+		assertEquals(location[1][2], 2);
+	}
+
+	//TODO Split up tests
+	@Test
+	public void testCompareString(){
+		assertTrue(_wordSearch.compareString("hello", "hello"));
+		assertTrue(_wordSearch.compareString("olleh", "hello"));
+		assertFalse(_wordSearch.compareString("food", "fish"));
+		assertFalse(_wordSearch.compareString("olleh", "hllo"));
+	}
+
 	@Before
 	public void setUp () {
 		_wordSearch = new WordSearch3D();
