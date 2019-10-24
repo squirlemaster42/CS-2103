@@ -9,6 +9,15 @@ import java.util.*;
 public class WordSearchTester {
 	private WordSearch3D _wordSearch;
 
+	//TODO Use search to test all words are in the grid
+	//TODO Verify that we can deal with something impossible
+
+	//TODO Test this 2 x 3 Grid
+	// X X X
+	// X X X
+	
+	//abc, def, cd, ad
+
 	@Test
 	/**
 	 * Verifies that make can generate a very simple puzzle that is effectively 1d.

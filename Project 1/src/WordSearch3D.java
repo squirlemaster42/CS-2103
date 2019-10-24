@@ -38,12 +38,31 @@ public class WordSearch3D {
 			return new int[0][0];
 		}
 
-		//Look for first letter of the string
-		//Look for next letter of the string
-		//See if they are next to eachother
-		//If yes #2 else #1
-		//#1 Look for next place with first letter
 		//#2 Repeat first step with second letter
+		final char firstChar = word.charAt(0);
+		final char lastChar = word.charAt(word.length() - 1);
+
+		ArrayList<int[]> startPos = new ArrayList<>();
+		ArrayList<int[]> endPos = new ArrayList<>();
+
+		//TODO Check with words length 1
+		for(int i = 0; i < grid.length; i++){
+			for(int j = 0; j < grid[0].length; j++) { //TODO Check if we need to handle arrays that are not rectangles
+				for(int k = 0; k < grid[0][0].length; k++){
+					if(grid[i][j][k] == firstChar){
+						startPos.add(new int[]{i, j, k});
+					} else if (grid[i][j][k] == lastChar){
+						endPos.add(new int[]{i, j, k});
+					}
+				}
+			}
+		}
+
+		startPos.forEach(startE -> {
+			endPos.forEach(endE -> {
+
+			});
+		});
 
 		return new int[10][10];
 	}
