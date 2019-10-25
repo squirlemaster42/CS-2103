@@ -14,7 +14,7 @@ public class WordSearch3D {
 	 * You should not need to modify this method.
 	 * @param grid the grid of characters comprising the word search puzzle
 	 * @param words the words to search for
-	 * @param a list of lists of locations of the letters in the words
+	 * @param /a list of lists of locations of the letters in the words
 	 */
 	public int[][][] searchForAll (char[][][] grid, String[] words) {
 		final int[][][] locations = new int[words.length][][];
@@ -57,15 +57,57 @@ public class WordSearch3D {
 			}
 		}
 
-		startPos.forEach(startE -> {
-			endPos.forEach(endE -> {
+		for (int[] startE : startPos) {
+			for (int[] endE : endPos) {
+				int diffI = Math.abs(startE[0] - endE[0]);
+				int diffJ = Math.abs(startE[1] - endE[1]);
+				int diffK = Math.abs(startE[2] - endE[2]);
+				//TODO check logic behind this
+				//TODO Test that - 1 is okay to do here for other grids
+				if((diffI == 0 || diffI == word.length() - 1) &&
+						(diffJ == 0 || diffJ == word.length() - 1) &&
+							(diffK == 0 || diffK == word.length() - 1)){
+					if(checkWord(grid, word, startE, endE)){
+						return new int[][]{startE, endE};
+					}
+				}
+			}
+		}
 
-			});
-		});
-
-		return new int[10][10];
+		return null;
 	}
 
+	private boolean checkWord(char[][][] grid, String word, int[] startPos, int[] endPos){
+		int[] currentPos = {startPos[0],startPos[1],startPos[2]};
+		int deltaI = endPos[0] - startPos[0];
+		int deltaJ = endPos[1] - startPos[1];
+		int deltaK = endPos[2] - startPos[2];
+
+		StringBuilder str = new StringBuilder();
+		str.append(grid[startPos[0]][startPos[1]][startPos[2]]);
+		while(deltaI != 0 || deltaJ != 0 || deltaK != 0){
+			currentPos[0] = followPath(deltaI, currentPos[0]);
+			currentPos[1] = followPath(deltaJ, currentPos[1]);
+			currentPos[2] = followPath(deltaK, currentPos[2]);
+
+			deltaI = endPos[0] - currentPos[0];
+			deltaJ = endPos[1] - currentPos[1];
+			deltaK = endPos[2] - currentPos[2];
+
+			str.append(grid[currentPos[0]][currentPos[1]][currentPos[2]]);
+		}
+		return word.equals(str.toString());
+	}
+	//TODO change name potentially
+	private int followPath(int delta, int curPos){
+		if(delta > 0){
+			return curPos + 1;
+		}else if(delta < 0){
+			return curPos - 1;
+		}else{
+			return curPos;
+		}
+	}
 	/**
 	 * Tries to create a word search puzzle of the specified size with the specified
 	 * list of words.
