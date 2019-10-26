@@ -39,6 +39,8 @@ public class WordSearch3D {
 			return null;
 		} else if (word.equals("")) {
 			return new int[0][0];
+		} else if (!canFitInGrid(grid, word)){ //TODO Check if we need equals
+			return null;
 		}
 
 		final char firstChar = word.charAt(0);
@@ -111,6 +113,11 @@ public class WordSearch3D {
 			return curPos;
 		}
 	}
+
+	private boolean canFitInGrid(final char[][][] grid, final String word){
+		return grid.length < word.length() || grid[0].length < word.length() || grid[0][0].length < word.length();
+	}
+
 	/**
 	 * Tries to create a word search puzzle of the specified size with the specified
 	 * list of words.

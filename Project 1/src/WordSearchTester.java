@@ -103,6 +103,17 @@ public class WordSearchTester {
 	}
 
 	@Test
+	public void testWordBiggerThanGrid(){
+		char[][][] testGrid = {
+				{{'a', 'b'},
+						{'c', 'd'}},
+				{{'t', 'r'},
+						{'w', 'z'}}
+		};
+		assertNull(_wordSearch.search(testGrid, "wee"));
+	}
+
+	@Test
 	/**
 	 * Verifies that search works correctly in a tiny grid that is effectively 2D.
  	*/
