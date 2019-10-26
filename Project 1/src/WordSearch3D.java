@@ -148,26 +148,49 @@ public class WordSearch3D {
 			//TODO change grid to a LockableCharacter 3D array
 			final LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 
-			//gets out of loop
-			boolean isOK = true;
-			if(isOK){
-				final char[][][] tempGrid = new char[sizeX][sizeY][sizeZ];
-				for(int i = 0; i < tempGrid.length; i++){
-					for(int j = 0; j < tempGrid[0].length;j++){
-						for(int k = 0; k < tempGrid[0][0].length;k++){
-							tempGrid[i][j][k] = grid[i][j][k].getChar();
+			for(int w = 0; w < words.length;w++){
+				char[][][] tempGrid = copyLockableCharToCharGrid(grid);
+				ArrayList<int[]> temp = getInstanceOfChar(tempGrid, words[w].charAt(0));
+				for(int i = 0; i < sizeX; i++){
+					for(int j = 0; j < sizeY; j++){
+						for(int k = 0; k < sizeZ; k++){
+							try {
+								final Random rng = new Random();
+								int deltaI = rng.nextInt(2) - 1;
+								int deltaJ = rng.nextInt(2) - 1;
+								int deltaK = rng.nextInt(2) - 1;
+
+								                    
+							}catch (ArrayIndexOutOfBoundsException e){
+
+							}
 						}
 					}
 				}
-				return tempGrid;
+			}
+			//gets out of loop
+			boolean isOK = true;
+			if(isOK){
+				char[][][] finalGrid = copyLockableCharToCharGrid(grid);
+				return finalGrid;
 			}
 		}
 
 		return null;
 	}
 
+	private char[][][] copyLockableCharToCharGrid(LockableCharacter[][][] grid){
+		final char[][][] tempGrid = new char[grid.length][grid[0].length][grid[0][0].length];
+		for(int i = 0; i < tempGrid.length; i++){
+			for(int j = 0; j < tempGrid[0].length;j++){
+				for(int k = 0; k < tempGrid[0][0].length;k++){
+					tempGrid[i][j][k] = grid[i][j][k].getChar();
+				}
+			}
+		}
+		return tempGrid;
+	}
 	private LockableCharacter[][][] randomlyGenGrid(int sizeX, int sizeY, int sizeZ){
-		final Random rng = new Random();
 		final LockableCharacter[][][] grid = new LockableCharacter[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
 		for(int i = 0; i < grid.length; i++){
 			for(int j = 0; j < grid[0].length; j++) {
