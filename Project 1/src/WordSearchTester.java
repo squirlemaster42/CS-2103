@@ -114,6 +114,58 @@ public class WordSearchTester {
 	}
 
 	@Test
+	public void test3DAtEdge(){
+		char[][][] testGrid = {
+				{{'a', 'b' ,'c'},
+						{'x', 'z', 'y'},
+								{'m', 'n', 'o'}},
+				{{'e', 'r', 'd'},
+						{'g', 'v', 'b'},
+								{'p', 's', 'q'}},
+				{{'f', 'i', 't'},
+						{'j', 'k', 'l'},
+								{'z', 'v', 'w'}}
+		};
+
+		int[][] coord = {{0,0,0},
+						 {2,2,2}};
+		assertArrayEquals(coord ,_wordSearch.search(testGrid,"avw"));
+	}
+
+	@Test
+	public void test3DNotAtEdge(){
+		char[][][] testGrid = {
+				{{'a', 'b' ,'c'},
+						{'x', 'z', 'y'},
+							{'m', 'n', 'o'},
+								{'x', 'z', 'y'},
+									{'m', 'n', 'o'}},
+				{{'e', 'r', 'd'},
+						{'g', 'v', 'b'},
+							{'p', 's', 'q'},
+								{'g', 'v', 'b'},
+									{'p', 's', 'q'}},
+				{{'f', 'i', 't'},
+						{'j', 'k', 'l'},
+							{'z', 'v', 'w'},
+								{'g', 'v', 'b'},
+									{'p', 's', 'q'}},
+				{{'a', 's', 's'},
+						{'d', 'f', 'l'},
+							{'s', 'g', 'w'},
+								{'g', 'j', 'b'},
+									{'i', 's', 'i'}},
+				{{'f', 'i', 't'},
+						{'j', 'k', 's'},
+							{'p', 'v', 'w'},
+								{'g', 'o', 'b'},
+									{'p', 's', 'j'}}
+		};
+		int[][] coord = {{1, 2, 1},
+						 {4, 2, 1}};
+		assertArrayEquals(coord,_wordSearch.search(testGrid,"svg"));
+	}
+	@Test
 	/**
 	 * Verifies that search works correctly in a tiny grid that is effectively 2D.
  	*/
