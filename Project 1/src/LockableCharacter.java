@@ -1,17 +1,26 @@
-public class LockableCharacter {
+import java.util.Random;
+
+class LockableCharacter {
     private char c;
     private boolean isLocked;
 
-    public LockableCharacter(char letter, boolean locked){
-        letter = c;
-        locked = isLocked;
+    LockableCharacter(){
+        final Random rng = new Random();
+        c = (char) (rng.nextInt(26) + 'a');
+        isLocked = false;
     }
 
-    public char getLet(){
+    char getChar(){
         return c;
     }
 
-    public boolean getisLocked(){
+    boolean getIsLocked(){
         return isLocked;
+    }
+
+    void lock(){
+        if(!isLocked){
+            isLocked = true;
+        }
     }
 }

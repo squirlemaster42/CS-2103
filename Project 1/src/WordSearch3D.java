@@ -82,6 +82,19 @@ public class WordSearch3D {
 		return null;
 	}
 
+	private ArrayList<int[]> getInstanceOfChar(char[][][] grid, char c){
+		ArrayList<int[]> pos = new ArrayList<>();
+		for(int i = 0; i < grid.length; i++){
+			for(int j = 0; j < grid[0].length; j++) {
+				for(int k = 0; k < grid[0][0].length; k++){
+					if(grid[i][j][k] == c){
+						pos.add(new int[] {i,j,k});
+					}
+				}
+			}
+		}
+		return pos;
+	}
 	private boolean checkWord(char[][][] grid, String word, int[] startPos, int[] endPos){
 		int[] currentPos = {startPos[0],startPos[1],startPos[2]};
 		int deltaI = endPos[0] - startPos[0];
@@ -133,34 +146,38 @@ public class WordSearch3D {
 		int currentIterations = 0;
 		while(currentIterations <= MAX_ITERATIONS){
 			//TODO change grid to a LockableCharacter 3D array
-			final char[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+			final LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 
 			//gets out of loop
 			boolean isOK = true;
 			if(isOK){
-				return grid;
+				final char[][][] tempGrid = new char[sizeX][sizeY][sizeZ];
+				for(int i = 0; i < tempGrid.length; i++){
+					for(int j = 0; j < tempGrid[0].length;j++){
+						for(int k = 0; k < tempGrid[0][0].length;k++){
+							tempGrid[i][j][k] = grid[i][j][k].getChar();
+						}
+					}
+				}
+				return tempGrid;
 			}
 		}
 
 		return null;
 	}
 
-	//TODO change grid to a LockableCharacter 3D array
-
-	private char[][][] randomlyGenGrid(int sizeX, int sizeY, int sizeZ){
+	private LockableCharacter[][][] randomlyGenGrid(int sizeX, int sizeY, int sizeZ){
 		final Random rng = new Random();
-		final char[][][] grid = new char[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
+		final LockableCharacter[][][] grid = new LockableCharacter[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
 		for(int i = 0; i < grid.length; i++){
 			for(int j = 0; j < grid[0].length; j++) {
 				for(int k = 0; k < grid[0][0].length; k++){
-					grid[i][j][k] = (char) (rng.nextInt(26) + 'a');
+					grid[i][j][k] = new LockableCharacter();
 				}
 			}
 		}
 		return grid;
 	}
-
-
 
 	/**
 	 * Exports to a file the list of lists of 3-d coordinates.

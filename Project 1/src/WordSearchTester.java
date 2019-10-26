@@ -129,7 +129,7 @@ public class WordSearchTester {
 
 		int[][] coord = {{0,0,0},
 						 {2,2,2}};
-		assertArrayEquals(coord ,_wordSearch.search(testGrid,"avw"));
+		assertArrayEquals(coord, _wordSearch.search(testGrid,"avw"));
 	}
 
 	@Test
