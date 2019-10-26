@@ -6,6 +6,9 @@ import java.io.*;
  * Implements a 3-d word search puzzle program.
  */
 public class WordSearch3D {
+
+	public static final int MAX_ITERATIONS = 1000; //TODO Double check that public is okay
+
 	public WordSearch3D () {
 	}
 
@@ -41,8 +44,8 @@ public class WordSearch3D {
 		final char firstChar = word.charAt(0);
 		final char lastChar = word.charAt(word.length() - 1);
 
-		ArrayList<int[]> startPos = new ArrayList<>();
-		ArrayList<int[]> endPos = new ArrayList<>();
+		final ArrayList<int[]> startPos = new ArrayList<>();
+		final ArrayList<int[]> endPos = new ArrayList<>();
 
 		//TODO Check with words length 1
 		for(int i = 0; i < grid.length; i++){
@@ -59,9 +62,9 @@ public class WordSearch3D {
 
 		for (int[] startE : startPos) {
 			for (int[] endE : endPos) {
-				int diffI = Math.abs(startE[0] - endE[0]);
-				int diffJ = Math.abs(startE[1] - endE[1]);
-				int diffK = Math.abs(startE[2] - endE[2]);
+				final int diffI = Math.abs(startE[0] - endE[0]);
+				final int diffJ = Math.abs(startE[1] - endE[1]);
+				final int diffK = Math.abs(startE[2] - endE[2]);
 				//TODO check logic behind this
 				//TODO Test that - 1 is okay to do here for other grids
 				if((diffI == 0 || diffI == word.length() - 1) &&
@@ -83,7 +86,7 @@ public class WordSearch3D {
 		int deltaJ = endPos[1] - startPos[1];
 		int deltaK = endPos[2] - startPos[2];
 
-		StringBuilder str = new StringBuilder();
+		final StringBuilder str = new StringBuilder();
 		str.append(grid[startPos[0]][startPos[1]][startPos[2]]);
 		while(deltaI != 0 || deltaJ != 0 || deltaK != 0){
 			currentPos[0] = followPath(deltaI, currentPos[0]);
@@ -119,8 +122,19 @@ public class WordSearch3D {
 	 * no satisfying grid could be found.
 	 */
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
-		// TODO: implement me
-		return null;
+		final Random rng = new Random();
+		final char[][][] grid = new char[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
+		int currentIterations = MAX_ITERATIONS;
+
+		for(int i = 0; i < grid.length; i++){
+			for(int j = 0; j < grid[0].length; j++) {
+				for(int k = 0; k < grid[0][0].length; k++){
+					grid[i][j][k] = (char) (rng.nextInt(26) + 'a');
+				}
+			}
+		}
+
+		return grid;
 	}
 
 	/**
