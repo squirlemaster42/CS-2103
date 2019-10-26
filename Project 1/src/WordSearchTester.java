@@ -106,9 +106,9 @@ public class WordSearchTester {
 	public void testWordBiggerThanGrid(){
 		char[][][] testGrid = {
 				{{'a', 'b'},
-						{'c', 'd'}},
-				{{'t', 'r'},
-						{'w', 'z'}}
+						{'c', 'e'}},
+				{{'e', 'r'},
+						{'w', 'e'}}
 		};
 		assertNull(_wordSearch.search(testGrid, "wee"));
 	}
