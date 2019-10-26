@@ -129,10 +129,27 @@ public class WordSearch3D {
 	 * no satisfying grid could be found.
 	 */
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
+
+		int currentIterations = 0;
+		while(currentIterations <= MAX_ITERATIONS){
+			//TODO change grid to a LockableCharacter 3D array
+			final char[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+
+			//gets out of loop
+			boolean isOK = true;
+			if(isOK){
+				return grid;
+			}
+		}
+
+		return null;
+	}
+
+	//TODO change grid to a LockableCharacter 3D array
+
+	private char[][][] randomlyGenGrid(int sizeX, int sizeY, int sizeZ){
 		final Random rng = new Random();
 		final char[][][] grid = new char[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
-		int currentIterations = MAX_ITERATIONS;
-
 		for(int i = 0; i < grid.length; i++){
 			for(int j = 0; j < grid[0].length; j++) {
 				for(int k = 0; k < grid[0][0].length; k++){
@@ -140,9 +157,10 @@ public class WordSearch3D {
 				}
 			}
 		}
-
 		return grid;
 	}
+
+
 
 	/**
 	 * Exports to a file the list of lists of 3-d coordinates.
