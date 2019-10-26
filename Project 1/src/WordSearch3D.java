@@ -128,7 +128,7 @@ public class WordSearch3D {
 	}
 
 	private boolean canFitInGrid(final char[][][] grid, final String word){
-		return grid.length < word.length() || grid[0].length < word.length() || grid[0][0].length < word.length();
+		return grid.length >= word.length() || grid[0].length >= word.length() || grid[0][0].length >= word.length();
 	}
 
 	/**

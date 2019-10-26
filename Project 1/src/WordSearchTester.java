@@ -162,7 +162,7 @@ public class WordSearchTester {
 									{'p', 's', 'j'}}
 		};
 		int[][] coord = {{1, 2, 1},
-						 {4, 2, 1}};
+						 {3, 2, 1}};
 		assertArrayEquals(coord,_wordSearch.search(testGrid,"svg"));
 	}
 	@Test
