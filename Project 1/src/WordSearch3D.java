@@ -176,6 +176,7 @@ public class WordSearch3D {
 	 * no satisfying grid could be found.
 	 */
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
+		final Random rng = new Random();
 		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
 			final LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 
@@ -193,8 +194,39 @@ public class WordSearch3D {
 						ArrayList<int[]> v = entry.getValue();
 						for (int[] pos : v) {
 							//try to place word at pos
-							//using pos in word, go back until 0, up until length
-							//use follow path
+							int deltaI = rng.nextInt(3) - 1;
+							int deltaJ = rng.nextInt(3) - 1;
+							int deltaK = rng.nextInt(3) - 1;
+
+							//Try to place left half
+							//TODO Double check math
+							for(int i = currentWord.length() - entry.getKey(); i >= 0; i--){
+								//TODO Make this method
+								if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+									final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+									final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+									final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+									grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
+
+								}else{
+									break;
+								}
+							}
+
+							//Try to place right half
+							//TODO Check math
+							for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
+								if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+									final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+									final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+									final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+									grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
+
+								}else{
+									break;
+								}
+							}
+							
 							wordPlaced = true;
 							//TODO Figure out how to break out of more loops
 							break;
@@ -212,6 +244,14 @@ public class WordSearch3D {
 		return null;
 	}
 
+	private boolean canPlaceWord(LockableCharacter curr, char toPlace){
+		//return true if curr is same as toPlace or false and therefore we can change cur
+		return curr.getChar() == toPlace || !curr.getIsLocked();
+	}
+
+	private int getDirection(int compare, int master){
+		return compare < master ? -1 : 1;
+	}
 	/**
 	 * Converts an array of LockableChars to an array of chars
 	 * @param grid The array of LockableChars
