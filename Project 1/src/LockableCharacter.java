@@ -26,4 +26,9 @@ class LockableCharacter {
     boolean getIsLocked(){
         return isLocked;
     }
+
+    @Override
+    public String toString(){
+        return "" + c;
+    }
 }

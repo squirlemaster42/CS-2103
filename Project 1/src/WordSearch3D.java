@@ -178,60 +178,87 @@ public class WordSearch3D {
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
 		final Random rng = new Random();
 		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
-			final LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+			LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+
+			System.out.println("Here 2");
 
 			for(final String currentWord : words) {
 				final char[][][] charGrid = lockableCharToCharGrid(grid);
+				//TODO Need to reset this
 				final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>();
 				for (int i = 0; i < currentWord.length(); i++) {
 					charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 				}
 
+				System.out.println("Here 1");
+
 				boolean wordPlaced = false;
 				while(!wordPlaced){
+					System.out.println(Arrays.deepToString(grid));
+					System.out.println("Here 3");
 					for (Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) {
+						System.out.println("Here 4");
 						char k = currentWord.charAt(entry.getKey());
 						ArrayList<int[]> v = entry.getValue();
 						for (int[] pos : v) {
+							//TODO Something is not working here
+							System.out.println(Arrays.toString(pos));
 							//try to place word at pos
-							int deltaI = rng.nextInt(3) - 1;
-							int deltaJ = rng.nextInt(3) - 1;
-							int deltaK = rng.nextInt(3) - 1;
+							boolean done = false; //TODO Give this a better name
+							for (int iter = 0; iter < 1000; iter++) {
+								System.out.println("Here 77");
+								int deltaI = rng.nextInt(3) - 1;
+								int deltaJ = rng.nextInt(3) - 1;
+								int deltaK = rng.nextInt(3) - 1;
 
-							//Try to place left half
-							//TODO Double check math
-							for(int i = currentWord.length() - entry.getKey(); i >= 0; i--){
-								//TODO Make this method
-								if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
-									final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
-									final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
-									final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
-									grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
+								//TODO SOMETHING IS INFINITE LOOPING OR SOMETHING
+								try {
+									//Try to place left half
+									//TODO Double check math
+									for(int i = currentWord.length() - entry.getKey() - 1; i >= 0; i--){
+										//TODO Make this method
+										if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+											final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+											final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+											final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+											grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
+										}else{
+											done = true;
+											break;
+										}
+									}
 
-								}else{
+									//Try to place right half
+									//TODO Check math
+									if(!done){
+										for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
+											if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+												final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+												final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+												final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+												grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
+											}else{
+												done = true;
+												break;
+											}
+										}
+									}
+								} catch (ArrayIndexOutOfBoundsException e) {
+									continue;
+								}
+
+								//This might be wrong
+								if(!done){
+									wordPlaced = true;
 									break;
 								}
 							}
-
-							//Try to place right half
-							//TODO Check math
-							for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
-								if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
-									final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
-									final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
-									final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
-									grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
-
-								}else{
-									break;
-								}
+							if(!done){ //TODO Fix this
+								break;
 							}
-							
-							wordPlaced = true;
-							//TODO Figure out how to break out of more loops
-							break;
 						}
 					}
+					grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 				}
 			}
 			//gets out of loop
