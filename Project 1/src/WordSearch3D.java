@@ -142,44 +142,37 @@ public class WordSearch3D {
 	 * no satisfying grid could be found.
 	 */
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
-
-		int currentIterations = 0;
-		while(currentIterations <= MAX_ITERATIONS){
-			//TODO change grid to a LockableCharacter 3D array
+		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
 			final LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 
-			for(int w = 0; w < words.length;w++){
-				char[][][] tempGrid = copyLockableCharToCharGrid(grid);
-				ArrayList<int[]> temp = getInstanceOfChar(tempGrid, words[w].charAt(0));
-				for(int i = 0; i < sizeX; i++){
-					for(int j = 0; j < sizeY; j++){
-						for(int k = 0; k < sizeZ; k++){
-							try {
-								final Random rng = new Random();
-								int deltaI = rng.nextInt(2) - 1;
-								int deltaJ = rng.nextInt(2) - 1;
-								int deltaK = rng.nextInt(2) - 1;
+			for(final String currentWord : words) {
+				final char[][][] charGrid = lockableCharToCharGrid(grid);
+				final Map<Character, ArrayList<int[]>> charMap = new HashMap<>();
+				for (int i = 0; i < currentWord.length(); i++) {
+					charMap.put(currentWord.charAt(i), getInstanceOfChar(charGrid, currentWord.charAt(i)));
+				}
 
-								                    
-							}catch (ArrayIndexOutOfBoundsException e){
-
-							}
+				boolean wordPlaced = false;
+				while(!wordPlaced){
+					charMap.forEach((k, v) -> {
+						for (int[] pos : v) {
+							//try to place word at pos
 						}
-					}
+					});
+					wordPlaced = true;
 				}
 			}
 			//gets out of loop
 			boolean isOK = true;
 			if(isOK){
-				char[][][] finalGrid = copyLockableCharToCharGrid(grid);
-				return finalGrid;
+				return lockableCharToCharGrid(grid);
 			}
 		}
 
 		return null;
 	}
 
-	private char[][][] copyLockableCharToCharGrid(LockableCharacter[][][] grid){
+	private char[][][] lockableCharToCharGrid(LockableCharacter[][][] grid){
 		final char[][][] tempGrid = new char[grid.length][grid[0].length][grid[0][0].length];
 		for(int i = 0; i < tempGrid.length; i++){
 			for(int j = 0; j < tempGrid[0].length;j++){
