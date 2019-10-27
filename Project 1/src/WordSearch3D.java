@@ -35,20 +35,20 @@ public class WordSearch3D {
 	 * word, then the method returns a list of the (3-d) locations of its letters; if not, 
 	 */
 	public int[][] search (char[][][] grid, String word) {
-		if(word == null){
+		if(word == null){ //Checks is the word is null
 			return null;
-		} else if (word.equals("")) {
+		} else if (word.equals("")) { //Checks if the word is an empty String
 			return new int[0][0];
-		} else if (!canFitInGrid(grid, word)){ //TODO Check if we need equals
+		} else if (!canFitInGrid(grid, word)){ //Checks if the word can fit in the grid
 			return null;
 		}
 
-		final char firstChar = word.charAt(0);
-		final char lastChar = word.charAt(word.length() - 1);
+		final char firstChar = word.charAt(0); //The first char of the word
+		final char lastChar = word.charAt(word.length() - 1); //The last char of the word
 
 		//TODO Change to use method for finding chars
-		final ArrayList<int[]> startPos = new ArrayList<>();
-		final ArrayList<int[]> endPos = new ArrayList<>();
+		final ArrayList<int[]> startPos = new ArrayList<>(); //Stores all of the positions of the first char
+		final ArrayList<int[]> endPos = new ArrayList<>(); //Stores all of the positions of that last char
 
 		//TODO Check with words length 1
 		for(int i = 0; i < grid.length; i++){
@@ -63,13 +63,13 @@ public class WordSearch3D {
 			}
 		}
 
+		//Checks that the difference in position on each direction is either 0 or the length of the String - 1
 		for (int[] startE : startPos) {
 			for (int[] endE : endPos) {
 				final int diffI = Math.abs(startE[0] - endE[0]);
 				final int diffJ = Math.abs(startE[1] - endE[1]);
 				final int diffK = Math.abs(startE[2] - endE[2]);
-				//TODO check logic behind this
-				//TODO Test that - 1 is okay to do here for other grids
+				//TODO Make this a method
 				if((diffI == 0 || diffI == word.length() - 1) &&
 						(diffJ == 0 || diffJ == word.length() - 1) &&
 							(diffK == 0 || diffK == word.length() - 1)){
@@ -119,11 +119,17 @@ public class WordSearch3D {
 
 		final StringBuilder str = new StringBuilder();
 		str.append(grid[startPos[0]][startPos[1]][startPos[2]]);
+		//While we have not reached the last char in the String
+		//All deltas will either be 0 or the length of the String - 1
+		//This mean that when one of the deltas that did not start at 0 hits 0
+		//they all hit 0.
 		while(deltaI != 0 || deltaJ != 0 || deltaK != 0){
+			//Updates the current position to follow the path to the last char in the String
 			currentPos[0] = followPath(deltaI, currentPos[0]);
 			currentPos[1] = followPath(deltaJ, currentPos[1]);
 			currentPos[2] = followPath(deltaK, currentPos[2]);
 
+			//Updates the distance to the last char in the String
 			deltaI = endPos[0] - currentPos[0];
 			deltaJ = endPos[1] - currentPos[1];
 			deltaK = endPos[2] - currentPos[2];
@@ -175,26 +181,32 @@ public class WordSearch3D {
 
 			for(final String currentWord : words) {
 				final char[][][] charGrid = lockableCharToCharGrid(grid);
-				final Map<Character, ArrayList<int[]>> charMap = new HashMap<>();
+				final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>();
 				for (int i = 0; i < currentWord.length(); i++) {
-					charMap.put(currentWord.charAt(i), getInstanceOfChar(charGrid, currentWord.charAt(i)));
+					charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 				}
 
 				boolean wordPlaced = false;
 				while(!wordPlaced){
-					charMap.forEach((k, v) -> {
+					for (Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) {
+						char k = currentWord.charAt(entry.getKey());
+						ArrayList<int[]> v = entry.getValue();
 						for (int[] pos : v) {
 							//try to place word at pos
+							//using pos in word, go back until 0, up until length
+							//use follow path
+							wordPlaced = true;
+							//TODO Figure out how to break out of more loops
+							break;
 						}
-					});
-					wordPlaced = true;
+					}
 				}
 			}
 			//gets out of loop
-			boolean isOK = true;
-			if(isOK){
-				return lockableCharToCharGrid(grid);
-			}
+//			boolean isOK = true;
+//			if(isOK){
+//				return lockableCharToCharGrid(grid);
+//			}
 		}
 
 		return null;
