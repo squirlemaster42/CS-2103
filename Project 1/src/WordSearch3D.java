@@ -46,6 +46,7 @@ public class WordSearch3D {
 		final char firstChar = word.charAt(0);
 		final char lastChar = word.charAt(word.length() - 1);
 
+		//TODO Change to use method for finding chars
 		final ArrayList<int[]> startPos = new ArrayList<>();
 		final ArrayList<int[]> endPos = new ArrayList<>();
 
@@ -82,6 +83,12 @@ public class WordSearch3D {
 		return null;
 	}
 
+	/**
+	 * Returns an ArrayList of all positions where a character appears
+	 * @param grid The grid of characters to search through
+	 * @param c The character to search for
+	 * @return An ArrayList of int[]s representing where the char c appears
+	 */
 	private ArrayList<int[]> getInstanceOfChar(char[][][] grid, char c){
 		ArrayList<int[]> pos = new ArrayList<>();
 		for(int i = 0; i < grid.length; i++){
@@ -95,6 +102,15 @@ public class WordSearch3D {
 		}
 		return pos;
 	}
+
+	/**
+	 * Check if the word exists between the start and end positions
+	 * @param grid The grid to search through
+	 * @param word The word to check
+	 * @param startPos The start position of the word
+	 * @param endPos The end positions of the word
+	 * @return Return true if the word exists, false otherwise
+	 */
 	private boolean checkWord(char[][][] grid, String word, int[] startPos, int[] endPos){
 		int[] currentPos = {startPos[0],startPos[1],startPos[2]};
 		int deltaI = endPos[0] - startPos[0];
@@ -116,7 +132,13 @@ public class WordSearch3D {
 		}
 		return word.equals(str.toString());
 	}
-	//TODO change name potentially
+
+	/**
+	 * TODO Figure out how to comment this
+	 * @param delta
+	 * @param curPos
+	 * @return
+	 */
 	private int followPath(int delta, int curPos){
 		if(delta > 0){
 			return curPos + 1;
@@ -127,6 +149,12 @@ public class WordSearch3D {
 		}
 	}
 
+	/**
+	 * Returns true if the word can fit in the grid
+	 * @param grid The grid to check the word against
+	 * @param word The word to check
+	 * @return Returns true of the word will fit in the grid, false otherwise
+	 */
 	private boolean canFitInGrid(final char[][][] grid, final String word){
 		return grid.length >= word.length() || grid[0].length >= word.length() || grid[0][0].length >= word.length();
 	}
@@ -172,6 +200,11 @@ public class WordSearch3D {
 		return null;
 	}
 
+	/**
+	 * Converts an array of LockableChars to an array of chars
+	 * @param grid The array of LockableChars
+	 * @return char array generated from the LockableChar array
+	 */
 	private char[][][] lockableCharToCharGrid(LockableCharacter[][][] grid){
 		final char[][][] tempGrid = new char[grid.length][grid[0].length][grid[0][0].length];
 		for(int i = 0; i < tempGrid.length; i++){
@@ -183,6 +216,14 @@ public class WordSearch3D {
 		}
 		return tempGrid;
 	}
+
+	/**
+	 * TODO Populate
+	 * @param sizeX
+	 * @param sizeY
+	 * @param sizeZ
+	 * @return
+	 */
 	private LockableCharacter[][][] randomlyGenGrid(int sizeX, int sizeY, int sizeZ){
 		final LockableCharacter[][][] grid = new LockableCharacter[sizeX][sizeY][sizeZ]; //TODO Check that sizes are in the correct spot
 		for(int i = 0; i < grid.length; i++){

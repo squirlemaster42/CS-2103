@@ -1,5 +1,6 @@
 import java.util.Random;
 
+//TODO Comment
 class LockableCharacter {
     private char c;
     private boolean isLocked;

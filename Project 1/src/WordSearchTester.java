@@ -66,9 +66,9 @@ public class WordSearchTester {
 		}
 	}
 
-	/* TODO: write more methods for both make and search. */
-
-	//TODO Comment
+	/**
+	 * Test searching for a String that is null
+	 */
 	@Test
 	public void testSearchNullString(){
 		char[][][] testGrid = {
@@ -80,6 +80,9 @@ public class WordSearchTester {
 		assertNull(_wordSearch.search(testGrid, null));
 	}
 
+	/**
+	 * Test searching for a String that is empty
+	 */
 	@Test
 	public void testSearchEmptyString(){
 		char[][][] testGrid = {
@@ -91,6 +94,9 @@ public class WordSearchTester {
 		assertArrayEquals(new int[0][0], _wordSearch.search(testGrid, ""));
 	}
 
+	/**
+	 * Test searching for a String that is not in the grid
+	 */
 	@Test
 	public void testSearchStringNotInGrid(){
 		char[][][] testGrid = {
@@ -102,6 +108,9 @@ public class WordSearchTester {
 		assertNull(_wordSearch.search(testGrid, "we"));
 	}
 
+	/**
+	 * Test finding a word that is larger than the grid
+	 */
 	@Test
 	public void testWordBiggerThanGrid(){
 		char[][][] testGrid = {
@@ -113,6 +122,9 @@ public class WordSearchTester {
 		assertNull(_wordSearch.search(testGrid, "wee"));
 	}
 
+	/**
+	 * Test finding a word that is at an edge of the grid
+	 */
 	@Test
 	public void test3DAtEdge(){
 		char[][][] testGrid = {
@@ -132,6 +144,9 @@ public class WordSearchTester {
 		assertArrayEquals(coord, _wordSearch.search(testGrid,"avw"));
 	}
 
+	/**
+	 * Test finding a word that is not at the edge of the grid
+	 */
 	@Test
 	public void test3DNotAtEdge(){
 		char[][][] testGrid = {
@@ -165,6 +180,7 @@ public class WordSearchTester {
 						 {3, 2, 1}};
 		assertArrayEquals(coord,_wordSearch.search(testGrid,"svg"));
 	}
+
 	@Test
 	/**
 	 * Verifies that search works correctly in a tiny grid that is effectively 2D.
@@ -182,6 +198,8 @@ public class WordSearchTester {
 		assertEquals(location[1][1], 1);
 		assertEquals(location[1][2], 2);
 	}
+
+	//TODO Write a test to find a string that is backwards
 
 	@Before
 	public void setUp () {
