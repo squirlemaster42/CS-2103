@@ -27,8 +27,17 @@ public class WordSearchTester {
 		// Solution is either java or avaj
 		final char[][][] grid = _wordSearch.make(words, 1, 1, 4);
 		final char[] row = grid[0][0];
-		assertTrue((row[0] == 'j' && row[1] == 'a' && row[2] == 'v' && row[3] == 'a') ||
-		           (row[3] == 'j' && row[2] == 'a' && row[1] == 'v' && row[0] == 'a'));
+		assertTrue("Grid was: " + Arrays.toString(row), (row[0] == 'j' && row[1] == 'a' && row[2] == 'v' && row[3] == 'a') ||
+						   (row[3] == 'j' && row[2] == 'a' && row[1] == 'v' && row[0] == 'a'));
+	}
+
+	@Test
+	public void testMake2D () {
+		final String[] words = new String[] {"java", "cpp"};
+		// Solution is either java or avaj
+		final char[][][] grid = _wordSearch.make(words, 1, 2, 4);
+		assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "java"));
+		assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "cpp"));
 	}
 
 	@Test

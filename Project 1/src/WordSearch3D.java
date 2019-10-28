@@ -190,9 +190,12 @@ public class WordSearch3D {
 								try {
 									//Try to place left half
 									for(int i = currentWord.length() - entry.getKey() - 1; i >= 0; i--){
-										LockableCharacter[][][] tempGrid = findABetterName(grid, deltaI, deltaJ, deltaK, entry.getKey(), i, currentWord, pos);
-										if(tempGrid != null){
-											grid = tempGrid;
+										//TODO Make this method
+										if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+											final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+											final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+											final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+											grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 										}else{
 											cannotPlace = true;
 											break;
@@ -203,7 +206,10 @@ public class WordSearch3D {
 										for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
 											LockableCharacter[][][] tempGrid = findABetterName(grid, deltaI, deltaJ, deltaK, entry.getKey(), i, currentWord, pos);
 											if(tempGrid != null){
-												grid = tempGrid;
+												final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
+												final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
+												final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
+												grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 											}else{
 												cannotPlace = true;
 												break;
