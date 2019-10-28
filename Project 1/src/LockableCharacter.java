@@ -13,6 +13,7 @@ class LockableCharacter {
     }
 
     void setChar(final char c){
+        System.out.println(isLocked + " " + c);
         if(!isLocked){
             this.c = c;
             isLocked = true;
