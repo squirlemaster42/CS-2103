@@ -164,33 +164,31 @@ public class WordSearch3D {
 	 * no satisfying grid could be found.
 	 */
 	public char[][][] make (String[] words, int sizeX, int sizeY, int sizeZ) {
+		//TODO Fix the spaget, Test with more words
+		//TODO Might break with more than one word
 		final Random rng = new Random();
+		boolean genNewGrid = true;
 		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
 			LockableCharacter[][][] grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
 			for(final String currentWord : words) {
 				boolean wordPlaced = false;
 				while(!wordPlaced){
 					final char[][][] charGrid = lockableCharToCharGrid(grid);
-					//TODO Need to reset this
 					final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>();
 					for (int i = 0; i < currentWord.length(); i++) {
 						charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 					}
-					System.out.println(Arrays.deepToString(grid));
 					for (Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) {
 						char k = currentWord.charAt(entry.getKey());
 						ArrayList<int[]> v = entry.getValue();
 						for (int[] pos : v) {
-							//TODO Something is not working here
-							System.out.println(Arrays.toString(pos));
-							boolean done = false; //TODO Give this a better name
+							boolean cannotPlace = false;
 							for (int iter = 0; iter < 100; iter++) {
 								int deltaI = rng.nextInt(3) - 1;
 								int deltaJ = rng.nextInt(3) - 1;
 								int deltaK = rng.nextInt(3) - 1;
 								try {
 									//Try to place left half
-									//TODO We need to do something where the letter does not break things if it is already what we need
 									for(int i = currentWord.length() - entry.getKey() - 1; i >= 0; i--){
 										//TODO Make this method
 										if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
@@ -199,50 +197,58 @@ public class WordSearch3D {
 											final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
 											grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 										}else{
-											done = true;
+											cannotPlace = true;
 											break;
 										}
 									}
-
 									//Try to place right half
-									if(!done){
+									if(!cannotPlace){
 										for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
+											findABetterName(grid, deltaI, deltaJ, deltaK, entry.getKey(), i, currentWord, pos);
 											if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 												final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
 												final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
 												final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
 												grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 											}else{
-												done = true;
+												cannotPlace = true;
 												break;
 											}
 										}
 									}
-									//TODO The problem is down here
 								} catch (ArrayIndexOutOfBoundsException e) {
 									continue;
 								}
-								//This might be wrong
-								if(!done){
+								if(search(lockableCharToCharGrid(grid), currentWord) != null){
 									wordPlaced = true;
+									genNewGrid = false;
 									break;
 								}
 							}
-							if(!done){ //TODO Fix this
-								break;
-							}
 						}
 					}
-					//TODO Return the correct thing
-					//This line is the problem. We need to make it so if one word has been places, we do not generate another grid
-					grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+					if(genNewGrid){
+						grid = randomlyGenGrid(sizeX,sizeY,sizeZ);
+					}
 				}
-				//TODO Fix stuff not getting set correctly
-				System.out.println(Arrays.deepToString(lockableCharToCharGrid(grid)));
 				return lockableCharToCharGrid(grid);
 			}
 		}
 		return null;
+	}
+
+	//TODO Clean up args, find a better name
+	//TODO Fix params
+	private LockableCharacter[][][] findABetterName(LockableCharacter[][][] grid, int dI, int dJ, int dK, int charPos, int currentCharPos, String currentWord, int[] pos){
+		if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]], currentWord.charAt(currentCharPos))){
+			final int iPos = pos[0] + (dI * currentCharPos * getDirection(currentCharPos, charPos));
+			final int jPos = pos[1] + (dJ * currentCharPos * getDirection(currentCharPos, charPos));
+			final int kPos = pos[2] + (dJ * currentCharPos * getDirection(currentCharPos, charPos));
+			grid[iPos][jPos][kPos].setChar(currentWord.charAt(currentCharPos));
+		}else{
+			return null;
+		}
+		return grid;
 	}
 
 	/**

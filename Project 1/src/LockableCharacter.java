@@ -19,7 +19,6 @@ class LockableCharacter {
      * @param c The character to set _c to
      */
     void setChar(final char c){
-        System.out.println(_isLocked + " " + c);
         if(!_isLocked){
             this._c = c;
             _isLocked = true;
