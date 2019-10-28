@@ -17,7 +17,7 @@ public class WordSearch3D {
 	 * You should not need to modify this method.
 	 * @param grid the grid of characters comprising the word search puzzle
 	 * @param words the words to search for
-	 * @param /a list of lists of locations of the letters in the words
+	 * @return /a list of lists of locations of the letters in the words
 	 */
 	public int[][][] searchForAll (char[][][] grid, String[] words) {
 		final int[][][] locations = new int[words.length][][];
@@ -32,7 +32,8 @@ public class WordSearch3D {
 	 * @param grid the grid of characters comprising the word search puzzle
 	 * @param word the word to search for
 	 * @return If the grid contains the
-	 * word, then the method returns a list of the (3-d) locations of its letters; if not, 
+	 * word, then the method returns a list of the (3-d) locations of its letters; if not,
+	 * returns null
 	 */
 	public int[][] search (char[][][] grid, String word) {
 		if(word == null){ //Checks is the word is null
@@ -47,21 +48,8 @@ public class WordSearch3D {
 		final char lastChar = word.charAt(word.length() - 1); //The last char of the word
 
 		//TODO Change to use method for finding chars
-		final ArrayList<int[]> startPos = new ArrayList<>(); //Stores all of the positions of the first char
-		final ArrayList<int[]> endPos = new ArrayList<>(); //Stores all of the positions of that last char
-
-		//TODO Check with words length 1
-		for(int i = 0; i < grid.length; i++){
-			for(int j = 0; j < grid[0].length; j++) { //TODO Check if we need to handle arrays that are not rectangles
-				for(int k = 0; k < grid[0][0].length; k++){
-					if(grid[i][j][k] == firstChar){
-						startPos.add(new int[]{i, j, k});
-					} else if (grid[i][j][k] == lastChar){
-						endPos.add(new int[]{i, j, k});
-					}
-				}
-			}
-		}
+		final ArrayList<int[]> startPos = getInstanceOfChar(grid, firstChar); //Stores all of the positions of the first char
+		final ArrayList<int[]> endPos = getInstanceOfChar(grid, lastChar); //Stores all of the positions of that last char
 
 		//Checks that the difference in position on each direction is either 0 or the length of the String - 1
 		for (int[] startE : startPos) {
@@ -202,9 +190,10 @@ public class WordSearch3D {
 								int deltaK = rng.nextInt(3) - 1;
 								try {
 									//Try to place left half
+									//TODO We need to do something where the letter does not break things if it is already what we need
 									for(int i = currentWord.length() - entry.getKey() - 1; i >= 0; i--){
 										//TODO Make this method
-										if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+										if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 											final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
 											final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
 											final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
@@ -218,7 +207,7 @@ public class WordSearch3D {
 									//Try to place right half
 									if(!done){
 										for(int i = entry.getKey() + 1; i < currentWord.length(); i++){
-											if(canPlaceWord(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
+											if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 												final int iPos = pos[0] + (deltaI * i * getDirection(i,entry.getKey()));
 												final int jPos = pos[1] + (deltaJ * i * getDirection(i,entry.getKey()));
 												final int kPos = pos[2] + (deltaK * i * getDirection(i,entry.getKey()));
@@ -252,18 +241,31 @@ public class WordSearch3D {
 				System.out.println(Arrays.deepToString(lockableCharToCharGrid(grid)));
 				return lockableCharToCharGrid(grid);
 			}
-		}1
+		}
 		return null;
 	}
 
-	private boolean canPlaceWord(LockableCharacter curr, char toPlace){
+	/**
+	 * Determines if a character can be places
+	 * @param curr The character to check against
+	 * @param toPlace The character to place
+	 * @return True if the characters are equal or the current character is not locked
+	 */
+	private boolean canPlaceChar(LockableCharacter curr, char toPlace){
 		//return true if curr is same as toPlace or false and therefore we can change cur
-		return curr.getChar() == toPlace || !curr.getIsLocked();
+		return curr.getChar() == toPlace || !curr.isLocked();
 	}
 
+	/**
+	 * TODO Comment
+	 * @param compare
+	 * @param master
+	 * @return
+	 */
 	private int getDirection(int compare, int master){
 		return compare < master ? -1 : 1;
 	}
+
 	/**
 	 * Converts an array of LockableChars to an array of chars
 	 * @param grid The array of LockableChars

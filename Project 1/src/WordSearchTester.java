@@ -48,6 +48,7 @@ public class WordSearchTester {
 		final String[] words = new String[] { "amc", "dmf", "gmi", "jml", "nmo", "pmr", "smu", "vmx", "yma", "zmq" };
 		final char[][][] grid = _wordSearch.make(words, 3, 3, 3);
 		assertNotNull(grid);
+		//TODO This test is not passing for the correct reason
 	}
 
 	@Test

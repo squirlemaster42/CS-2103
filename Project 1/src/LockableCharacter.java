@@ -1,35 +1,49 @@
 import java.util.Random;
 
-//TODO Comment
-//TODO mke code pretty
 class LockableCharacter {
-    private char c;
-    private boolean isLocked;
+    private char _c;
+    private boolean _isLocked;
 
+    /**
+     * Creates a character than can be locked.
+     * When a character is locked it cannot be changed
+     */
     LockableCharacter(){
         final Random rng = new Random();
-        c = (char) (rng.nextInt(26) + 'a');
-        isLocked = false;
+        _c = (char) (rng.nextInt(26) + 'a');
+        _isLocked = false;
     }
 
+    /**
+     * Sets _c to c if it is not locked
+     * @param c The character to set _c to
+     */
     void setChar(final char c){
-        System.out.println(isLocked + " " + c);
-        if(!isLocked){
-            this.c = c;
-            isLocked = true;
+        System.out.println(_isLocked + " " + c);
+        if(!_isLocked){
+            this._c = c;
+            _isLocked = true;
         }
     }
 
+    /**
+     * Returns the character
+     * @return a char
+     */
     char getChar(){
-        return c;
+        return _c;
     }
 
-    boolean getIsLocked(){
-        return isLocked;
+    /**
+     * True if the char is locked
+     * @return a boolean
+     */
+    boolean isLocked(){
+        return _isLocked;
     }
 
     @Override
     public String toString(){
-        return "" + c;
+        return "" + _c;
     }
 }
