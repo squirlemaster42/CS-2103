@@ -7,10 +7,12 @@ import java.io.*;
  */
 public class WordSearch3D {
 
-	//TODO Comments
 	private static final int MAX_ITERATIONS = 1000;
+	
+	private final Random _rng;
 
 	public WordSearch3D () {
+		_rng = new Random();
 	}
 
 	/**
@@ -154,63 +156,51 @@ public class WordSearch3D {
 	}
 
 	/**
-	 * Tries to create a word search puzzle of the specified size with the specified
-	 * list of words.
+	 * Tries to create a word search puzzle of the specified size with the specified list of words.
 	 * @param words the list of words to embed in the grid
 	 * @param sizeX size of the grid along first dimension
 	 * @param sizeY size of the grid along second dimension
 	 * @param sizeZ size of the grid along third dimension
-	 * @return a 3-d char array if successful that contains all the words, or <tt>null</tt> if
-	 * no satisfying grid could be found.
+	 * @return a 3-d char array if successful that contains all the words, or <tt>null</tt> if no satisfying grid could be found.
 	 */
 	public char[][][] make (final String[] words, final int sizeX, final int sizeY, final int sizeZ) {
-		boolean genNewGrid = true;
-		LockableCharacter[][][] grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
-		System.out.println(Arrays.deepToString(grid));
-		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
-			System.out.println("Iteration with: " + Arrays.deepToString(grid));
+		boolean genNewGrid; //Tracks if a new grid needs to be created
+		LockableCharacter[][][] grid = randomlyGenGrid(sizeX, sizeY, sizeZ); //Inits a grid that will have all random chars that are not locked
+		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){ //Limits iterations to MAX_ITERATIONS
 			genNewGrid = true;
-			for(final String currentWord : words) {
+			for(final String currentWord : words) { //Try to place all words in the current grid
 				boolean wordPlaced = false;
-				int counter = 0;
+				int counter = 0; //Limits the number of times we can try to place a word in a grid
 				while(!wordPlaced){
 					final char[][][] charGrid = lockableCharToCharGrid(grid);
-					System.out.println("         Placing: " + currentWord + " in " + Arrays.deepToString(charGrid));
-					//Something is wrong with placing in 3d
-					final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>();
-					for (int i = 0; i < currentWord.length(); i++) {
+					final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>(); //Init a Map that will store the position of a char and the places it appears in the grid
+					for(int i = 0; i < currentWord.length(); i++) { //Populate the map with the positions each character appears
 						charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 					}
-					//TODO Something is prob not being reset properly
-					//TODO More letters are being placed than should be
-					//Grid ends up just being all the same letters
-					//Need to figure out where the grid needs to be reset
-					for (final Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) {
+					for (final Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) { //Loop through each char position stored in the map
 						final ArrayList<int[]> v = entry.getValue();
-						for (int[] pos : v) {
-							//This might be getting called more than it needs to
+						for (int[] pos : v) { //Loop through the positions for the character
 							final LockableCharacter[][][] newGrid = placeWordInGrid(currentWord, pos, entry.getKey(), grid);
-							if(newGrid != null){ //Maybe change to search for word and only change when it is actually placed
-								grid = newGrid; //This might be getting run when it should not
+							if(newGrid != null){ //Will run in a space has been found to place the word
+								grid = newGrid;
 								wordPlaced = true;
 								genNewGrid = false;
 								break;
 							}
 						}
 					}
-					if(genNewGrid){
+					if(genNewGrid){ //Generates a new grid if needed
 						grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
 					}
 					counter++;
 					if(counter > 30){
 						break;
 					}
-					System.out.println("Finished Placing: " + currentWord + " in " + Arrays.deepToString(charGrid));
 				}
 			}
-			if(containsAllWords(lockableCharToCharGrid(grid), words)){
+			if(containsAllWords(lockableCharToCharGrid(grid), words)){ //Return the grid as a char[][][] if all words have been added
 				return lockableCharToCharGrid(grid);
-			}else{
+			}else{ //Generate a new grid
 				grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
 			}
 		}
@@ -241,17 +231,14 @@ public class WordSearch3D {
 	 * @return a lockablecharacter grid with the word in it
 	 */
 	private LockableCharacter[][][] placeWordInGrid(final String currentWord, final int[] pos, final int charPos, final LockableCharacter[][][] grid){
-		final Random rng = new Random();
 		final LockableCharacter[][][] tempGrid = grid.clone();
 		boolean cannotPlace = false;
 		for (int iter = 0; iter < 100; iter++) {
-			final int deltaI = rng.nextInt(3) - 1;
-			final int deltaJ = rng.nextInt(3) - 1;
-			final int deltaK = rng.nextInt(3) - 1;
+			final int deltaI = _rng.nextInt(3) - 1;
+			final int deltaJ = _rng.nextInt(3) - 1;
+			final int deltaK = _rng.nextInt(3) - 1;
 			try {
-				//trying to place on the left half
-				//TODO Something is prob not being reset properly
-				for(int i = currentWord.length() - charPos - 1; i >= 0; i--){
+				for(int i = currentWord.length() - charPos - 1; i >= 0; i--){ //Tries to place the left half of the word
 					if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 						final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
 						final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
@@ -262,8 +249,7 @@ public class WordSearch3D {
 						break;
 					}
 				}
-				//Try to place right half
-				if(!cannotPlace){
+				if(!cannotPlace){ //Tries to place the right half of the word
 					for(int i = charPos + 1; i < currentWord.length(); i++){
 						if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 							final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
