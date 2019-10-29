@@ -60,6 +60,7 @@ public class WordSearchTester {
 	public void testMake3D(){
 		final String[] words = new String[] {"top", "cpp","at","cak"};
 		final char[][][] grid = _wordSearch.make(words,3,3,3);
+		System.out.println(Arrays.deepToString(grid)); //Does not think it can create this grid
 		assertNotNull(_wordSearch.search(grid,"top"));
 		assertNotNull(_wordSearch.search(grid,"cpp"));
 		assertNotNull(_wordSearch.search(grid,"at"));

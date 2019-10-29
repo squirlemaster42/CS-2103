@@ -7,6 +7,7 @@ import java.io.*;
  */
 public class WordSearch3D {
 
+	//TODO Comments
 	private static final int MAX_ITERATIONS = 1000;
 
 	public WordSearch3D () {
@@ -165,22 +166,29 @@ public class WordSearch3D {
 	public char[][][] make (final String[] words, final int sizeX, final int sizeY, final int sizeZ) {
 		boolean genNewGrid = true;
 		LockableCharacter[][][] grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
+		System.out.println(Arrays.deepToString(grid));
 		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){
 			for(final String currentWord : words) {
 				boolean wordPlaced = false;
 				int counter = 0;
 				while(!wordPlaced){
 					final char[][][] charGrid = lockableCharToCharGrid(grid);
+					System.out.println("         Placing: " + currentWord + " in " + Arrays.deepToString(charGrid));
+					//Something is wrong with placing in 3d
 					final Map<Integer, ArrayList<int[]>> charMap = new HashMap<>();
 					for (int i = 0; i < currentWord.length(); i++) {
 						charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 					}
+					//TODO Something is prob not being reset properly
+					//Grid ends up just being all the same letters
+					//Need to figure out where the grid needs to be reset
 					for (final Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) {
 						final ArrayList<int[]> v = entry.getValue();
 						for (int[] pos : v) {
+							//This might be getting called more than it needs to
 							final LockableCharacter[][][] newGrid = placeWordInGrid(currentWord, pos, entry.getKey(), grid);
 							if(newGrid != null){
-								grid = newGrid;
+								grid = newGrid; //This might be getting run when it should not
 								wordPlaced = true;
 								genNewGrid = false;
 							}
@@ -193,6 +201,7 @@ public class WordSearch3D {
 					if(counter > 30){
 						break;
 					}
+					System.out.println("Finished Placing: " + currentWord + " in " + Arrays.deepToString(charGrid));
 				}
 			}
 			if(containsAllWords(lockableCharToCharGrid(grid), words)){
@@ -236,11 +245,13 @@ public class WordSearch3D {
 			final int deltaK = rng.nextInt(3) - 1;
 			try {
 				//trying to place on the left half
+				//TODO Something is prob not being reset properly
 				for(int i = currentWord.length() - charPos - 1; i >= 0; i--){
 					if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
 						final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
 						final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
 						final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+						System.out.println("Trying to place: " + currentWord.charAt(i));
 						grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 					}else{
 						cannotPlace = true;
@@ -254,6 +265,7 @@ public class WordSearch3D {
 							final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
 							final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
 							final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+							System.out.println("Trying to place: " + currentWord.charAt(i));
 							grid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 						}else{
 							cannotPlace = true;
