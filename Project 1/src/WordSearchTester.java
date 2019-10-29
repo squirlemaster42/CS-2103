@@ -9,15 +9,6 @@ import java.util.*;
 public class WordSearchTester {
 	private WordSearch3D _wordSearch;
 
-	//TODO Use search to test all words are in the grid
-	//TODO Verify that we can deal with something impossible
-
-	//TODO Test this 2 x 3 Grid
-	// X X X
-	// X X X
-	
-	//abc, def, cd, ad
-
 	@Test
 	/**
 	 * Verifies that make can generate a very simple puzzle that is effectively 1d.
@@ -45,9 +36,35 @@ public class WordSearchTester {
 	 * Verifies that make returns null when it's impossible to construct a puzzle.
 	 */
 	public void testMakeImpossible () {
-		// TODO: implement me
+		final String[] words = new String[] {"abc", "def", "cd", "ad"};
+		final char[][][] grid = _wordSearch.make(words,2,3,1);
+		assertNull(grid);
 	}
 
+	@Test
+	public void test3DOverlap(){
+		final String[] words = new String[] {"ta","ak","at"};
+		final char[][][] grid = _wordSearch.make(words,2,2,2);
+		assertNotNull(grid);
+	}
+	@Test
+	public void test2DOverlap(){
+		final String[] words = new String[] {"tak","ak","ta"};
+		final char[][][] grid = _wordSearch.make(words,3,2,1);
+		assertNotNull(grid);
+	}
+	/**
+	 * Verifies that make can generate a 3D grid
+	 */
+	@Test
+	public void testMake3D(){
+		final String[] words = new String[] {"top", "cpp","at","cak"};
+		final char[][][] grid = _wordSearch.make(words,3,3,3);
+		assertNotNull(_wordSearch.search(grid,"top"));
+		assertNotNull(_wordSearch.search(grid,"cpp"));
+		assertNotNull(_wordSearch.search(grid,"at"));
+		assertNotNull(_wordSearch.search(grid,"cak"));
+	}
 	@Test
 	/**
 	 * Verifies that make can generate a grid when it's *necessary* for words to share
@@ -57,7 +74,6 @@ public class WordSearchTester {
 		final String[] words = new String[] { "amc", "dmf", "gmi", "jml", "nmo", "pmr", "smu", "vmx", "yma", "zmq" };
 		final char[][][] grid = _wordSearch.make(words, 3, 3, 3);
 		assertNotNull(grid);
-		//TODO This test is not passing for the correct reason
 	}
 
 	@Test
@@ -155,10 +171,11 @@ public class WordSearchTester {
 	}
 
 	/**
-	 * Test finding a word that is not at the edge of the grid
+	 * Test finding a word that is not at the edge of the grid that is also backwards
+	 * TODO Fix this
 	 */
 	@Test
-	public void test3DNotAtEdge(){
+	public void test3DNotAtEdgeAndBackwards(){
 		char[][][] testGrid = {
 				{{'a', 'b' ,'c'},
 						{'x', 'z', 'y'},
@@ -186,9 +203,9 @@ public class WordSearchTester {
 								{'g', 'o', 'b'},
 									{'p', 's', 'j'}}
 		};
-		int[][] coord = {{1, 2, 1},
-						 {3, 2, 1}};
-		assertArrayEquals(coord,_wordSearch.search(testGrid,"svg"));
+		int[][] coord = {{3, 2, 1},
+						 {1, 2, 1}};
+		assertArrayEquals(coord,_wordSearch.search(testGrid,"gvs"));
 	}
 
 	@Test
