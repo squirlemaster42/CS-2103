@@ -1,6 +1,6 @@
 import java.util.Random;
 
-class LockableCharacter {
+class LockableCharacter{
     private char _c;
     private boolean _isLocked;
 
@@ -12,6 +12,16 @@ class LockableCharacter {
         final Random rng = new Random();
         _c = (char) (rng.nextInt(26) + 'a');
         _isLocked = false;
+    }
+
+    /**
+     * Only used to copy TODO Better comment
+     * @param c
+     * @param locked
+     */
+    private LockableCharacter(final char c, final boolean locked){
+        _c = c;
+        _isLocked = locked;
     }
 
     /**
@@ -39,6 +49,10 @@ class LockableCharacter {
      */
     boolean isLocked(){
         return _isLocked;
+    }
+
+    LockableCharacter copy(){
+        return new LockableCharacter(_c, _isLocked);
     }
 
     @Override

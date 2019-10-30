@@ -179,15 +179,12 @@ public class WordSearch3D {
 						charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 					}
 					//I think this runs too many times
-					System.out.println("Now here");
 					for (final Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) { //Loop through each char position stored in the map
 						final ArrayList<int[]> v = entry.getValue();
-						System.out.println("Here I am");
 						for (int[] pos : v) { //Loop through the positions for the character
 							System.out.println("Sending: " + Arrays.deepToString(grid));
 							final LockableCharacter[][][] newGrid = placeWordInGrid(currentWord, pos, entry.getKey(), grid);
 							if(newGrid != null){ //Will run in a space has been found to place the word
-								System.out.println("here");
 								grid = newGrid;
 								wordPlaced = true;
 								genNewGrid = false;
@@ -199,7 +196,6 @@ public class WordSearch3D {
 						}
 					}
 					if(genNewGrid){ //Generates a new grid if needed
-						System.out.println("Making new grid");
 						grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
 					}
 					counter++;
@@ -250,7 +246,8 @@ public class WordSearch3D {
 			final int deltaJ = _rng.nextInt(3) - 1;
 			final int deltaK = _rng.nextInt(3) - 1;
 			//System.out.println("Grid Reset");
-			tempGrid = grid.clone();
+			tempGrid = deepCopy(grid);
+			System.out.println("Temp Grid: " + Arrays.deepToString(tempGrid));
 			try {
 				//TODO The problem is here...Tries to place the same parts of the word more than one
 				//Some math is wrong
@@ -282,14 +279,27 @@ public class WordSearch3D {
 					}
 				}
 			} catch (ArrayIndexOutOfBoundsException e) {
-				continue;
+				System.out.print("");
 			}
+			//System.out.println("Searching");
 			if(search(lockableCharToCharGrid(tempGrid), currentWord) != null){
 				System.out.println("End Place: " + Arrays.deepToString(tempGrid));
 				return tempGrid;
 			}
 		}
 		return null;
+	}
+
+	private LockableCharacter[][][] deepCopy(final LockableCharacter[][][] arr){
+		final LockableCharacter[][][] newArr = new LockableCharacter[arr.length][arr[0].length][arr[0][0].length];
+		for(int i = 0; i < arr.length; i++){
+			for(int j = 0; j < arr[0].length; j++){
+				for(int k = 0; k < arr[0][0].length; k++){
+					newArr[i][j][k] = arr[i][j][k];
+				}
+			}
+		}
+		return newArr;
 	}
 
 	/**
