@@ -180,6 +180,7 @@ public class WordSearch3D {
 					}
 				}
 			}
+			System.out.println("Grid is: " + Arrays.deepToString(grid));
 			if(containsAllWords(grid, words)){
 				return fillBlankSpaces(grid);
 			}
@@ -187,11 +188,12 @@ public class WordSearch3D {
 		return null;
 	}
 
+	//TODO too much is changing
 	private char[][][] placeWord(final String word, char[][][] grid, final int iPos, final int jPos, final int kPos){
 		final int deltaI = _rng.nextInt(3) - 1;
 		final int deltaJ = _rng.nextInt(3) - 1;
 		final int deltaK = _rng.nextInt(3) - 1;
-		char[][][] tempGrid = grid.clone(); //Might need  a deep copy
+		char[][][] tempGrid = deepCopy(grid); //Might need  a deep copy
 		try{
 			for(int i = 0; i < word.length(); i++){
 				final int iPlacePos = iPos + deltaI * i;
@@ -237,13 +239,11 @@ public class WordSearch3D {
 		return true;
 	}
 
-	private LockableCharacter[][][] deepCopy(final LockableCharacter[][][] arr){
-		final LockableCharacter[][][] newArr = new LockableCharacter[arr.length][arr[0].length][arr[0][0].length];
+	private char[][][] deepCopy(final char[][][] arr){
+		final char[][][] newArr = new char[arr.length][arr[0].length][arr[0][0].length];
 		for(int i = 0; i < arr.length; i++){
 			for(int j = 0; j < arr[0].length; j++){
-				for(int k = 0; k < arr[0][0].length; k++){
-					newArr[i][j][k] = arr[i][j][k];
-				}
+				System.arraycopy(arr[i][j], 0, newArr[i][j], 0, arr[0][0].length);
 			}
 		}
 		return newArr;
@@ -257,7 +257,6 @@ public class WordSearch3D {
 	 */
 	private boolean canPlaceChar(final char curr, final char toPlace){
 		//return true if curr is same as toPlace or false and therefore we can change cur
-		System.out.println("Compare: " + curr + " to + " + toPlace);
 		return curr == toPlace || curr == '\u0000';
 	}
 
