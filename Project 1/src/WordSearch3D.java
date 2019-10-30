@@ -167,10 +167,14 @@ public class WordSearch3D {
 		for(int iter = 0; iter < MAX_ITERATIONS; iter++){ //Limits iterations to 1000
 			char[][][] grid = new char[sizeX][sizeY][sizeZ];
 			for(String word : words){ //Runs through each word
+			    if(word == null){
+			        return null;
+                }
 				for (int wordIter = 0; wordIter < 10; wordIter++) { //Tries to place the word in ten places
 					final int iPos = _rng.nextInt(sizeX);
 					final int jPos = _rng.nextInt(sizeY);
 					final int kPos = _rng.nextInt(sizeZ);
+					//checks if the word has already been placed and breaks out of the loop so that it won't try placing it again
 					if(search(grid, word) != null){
 						break;
 					}
@@ -190,34 +194,49 @@ public class WordSearch3D {
 		return null;
 	}
 
-	//TODO too much is changing
+    /**
+     * Places the word into the 3D grid
+     * @param word word to be placed
+     * @param grid grid to place the word into
+     * @param iPos x position of where to place the word
+     * @param jPos y position of where to place the word
+     * @param kPos z position of where to place the word
+     * @return 3D grid of characters with the word placed in it
+     */
 	private char[][][] placeWord(final String word, char[][][] grid, final int iPos, final int jPos, final int kPos){
-		final int deltaI = _rng.nextInt(3) - 1;
+		//deltas define the direction (I, J, and K components) that the word will be placed
+	    final int deltaI = _rng.nextInt(3) - 1;
 		final int deltaJ = _rng.nextInt(3) - 1;
 		final int deltaK = _rng.nextInt(3) - 1;
-		char[][][] tempGrid = deepCopy(grid); //Might need  a deep copy
+		char[][][] tempGrid = deepCopy(grid);
 		try{
 			for(int i = 0; i < word.length(); i++){
 				final int iPlacePos = iPos + deltaI * i;
 				final int jPlacePos = jPos + deltaJ * i;
 				final int kPlacePos = kPos + deltaK * i;
-				if(canPlaceChar(grid[iPlacePos][jPlacePos][kPlacePos], word.charAt(i))){
+				if(canPlaceChar(grid[iPlacePos][jPlacePos][kPlacePos], word.charAt(i))){ //tries placing the word into the location
 					tempGrid[iPlacePos][jPlacePos][kPlacePos] = word.charAt(i);
 				}else{
 					return null;
 				}
 			}
 			return tempGrid;
-		}catch (ArrayIndexOutOfBoundsException e){
+		}catch (ArrayIndexOutOfBoundsException e){ //catches if the direction vector that was defined would go out of bounds
 			return null;
 		}
 	}
 
+    /**
+     * fills the empty spaces of the grid with a random character
+     * @param grid 3D grid of characters
+     * @return 3D grid where all the empty character locations have beeb filled with a randomly generated character
+     */
 	private char[][][] fillBlankSpaces(final char[][][] grid){
 		for(int i = 0; i < grid.length; i++){
 			for(int j = 0; j < grid[0].length; j++){
 				for(int k = 0; k < grid[0][0].length; k++){
-					if(grid[i][j][k] == '\u0000'){
+					//finds empty characters in the grid and fills them with a random character
+				    if(grid[i][j][k] == '\u0000'){
 						grid[i][j][k] = (char) (_rng.nextInt(26) + 'a');
 					}
 				}
@@ -233,7 +252,8 @@ public class WordSearch3D {
 	 * @return true if the grid contains all the words false otherwise
 	 */
 	private boolean containsAllWords(final char[][][] grid, final String[] words){
-		for(final String word : words){
+		//searhes the grid for each word in the list of words
+	    for(final String word : words){
 			if(search(grid, word) == null){
 				return false;
 			}
@@ -241,7 +261,13 @@ public class WordSearch3D {
 		return true;
 	}
 
+    /**
+     * creates a deep copy of the given array
+     * @param arr array to be copied
+     * @return a new 3D array with the same characters as the given array
+     */
 	private char[][][] deepCopy(final char[][][] arr){
+	    //copies the given array into a new array in order to avoid pointer conflicts
 		final char[][][] newArr = new char[arr.length][arr[0].length][arr[0][0].length];
 		for(int i = 0; i < arr.length; i++){
 			for(int j = 0; j < arr[0].length; j++){

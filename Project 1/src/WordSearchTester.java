@@ -9,13 +9,11 @@ import java.util.*;
 public class WordSearchTester {
 	private WordSearch3D _wordSearch;
 
-	//TODO Write tests for null string, string too long, empty string
-	//TODO Test with word length one
 
-	@Test
 	/**
 	 * Verifies that make can generate a very simple puzzle that is effectively 1d.
 	 */
+    @Test
 	public void testMake1D () {
 		final String[] words = new String[] { "java" };
 		// Solution is either java or avaj
@@ -25,6 +23,9 @@ public class WordSearchTester {
 						   (row[3] == 'j' && row[2] == 'a' && row[1] == 'v' && row[0] == 'a'));
 	}
 
+    /**
+     * Verifies that make can generate a 2D grid
+     */
 	@Test
 	public void testMake2D () {
 		final String[] words = new String[] {"java", "cpp"};
@@ -34,47 +35,89 @@ public class WordSearchTester {
 		assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "cpp"));
 	}
 
-	@Test
+    /**
+     * Verifies that make can generate a 3D grid
+     */
+    @Test
+    public void testMake3D(){
+        final String[] words = new String[] {"top", "cpp","at","cak"};
+        final char[][][] grid = _wordSearch.make(words,3,3,3);
+        assertNotNull(_wordSearch.search(grid,"top"));
+        assertNotNull(_wordSearch.search(grid,"cpp"));
+        assertNotNull(_wordSearch.search(grid,"at"));
+        assertNotNull(_wordSearch.search(grid,"cak"));
+    }
+
+
 	/**
 	 * Verifies that make returns null when it's impossible to construct a puzzle.
 	 */
+    @Test
 	public void testMakeImpossible () {
 		final String[] words = new String[] {"abc", "def", "cd", "ad"};
 		final char[][][] grid = _wordSearch.make(words,2,3,1);
 		assertNull(grid);
 	}
 
-	//TODO This test is wrong
+    /**
+     * Verifies that make returns null when the words given are null
+     */
 	@Test
-	public void test3DOverlap(){
-		final String[] words = new String[] {"ta","ak","at"};
+	public void testMakeNullString(){
+		final String[] words = new String[4];
 		final char[][][] grid = _wordSearch.make(words,2,2,2);
-		assertNotNull(grid);
+		assertNull(grid);
 	}
+
+    /**
+     * Verifies that make works when a given word is an empty string
+     */
 	@Test
+    public void testMakeEmptyString(){
+	    final String[] words = new String[]{"","abc","dee"};
+	    final char[][][] grid = _wordSearch.make(words,3,3,3);
+	    assertNotNull(grid);
+    }
+
+    /**
+     * Verifies that make returns null when a given word is too long to fit into the grid
+     */
+    @Test
+    public void testMakeWordTooLong(){
+        final String[] words = new String[]{"lmao","ab","de"};
+        final char[][][] grid = _wordSearch.make(words,2,2,2);
+        assertNull(grid);
+    }
+
+    /**
+     * Verifies that make generates a grid when a given word has a length of one
+     */
+    @Test
+    public void testMakeWordLengthOne(){
+        final String[] words = new String[]{"a","cee","fff"};
+        final char[][][] grid = _wordSearch.make(words,3,3,3);
+        assertNotNull(grid);
+        assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "a"));
+        assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "cee"));
+        assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "fff"));
+    }
+
+    /**
+     * Verifies that make can generate a grid in which the letters of the given words can overlap
+     */
+    @Test
 	public void test2DOverlap(){
 		final String[] words = new String[] {"tak","ak","ta"};
 		final char[][][] grid = _wordSearch.make(words,3,2,1);
 		assertNotNull(grid);
 	}
-	/**
-	 * Verifies that make can generate a 3D grid
-	 */
-	@Test
-	public void testMake3D(){
-		final String[] words = new String[] {"top", "cpp","at","cak"};
-		final char[][][] grid = _wordSearch.make(words,3,3,3);
-		assertNotNull(_wordSearch.search(grid,"top"));
-		assertNotNull(_wordSearch.search(grid,"cpp"));
-		assertNotNull(_wordSearch.search(grid,"at"));
-		assertNotNull(_wordSearch.search(grid,"cak"));
-	}
-	@Test
+
 	/**
 	 * Verifies that make can generate a grid when it's *necessary* for words to share
 	 * some common letter locations.
 	 */
-	public void testMakeWithIntersection () {
+    @Test
+    public void testMakeWithIntersection () {
 		final String[] words = new String[] { "amc", "dmf", "gmi", "jml", "nmo", "pmr", "smu", "vmx", "yma", "zmq" };	
 		final char[][][] grid = _wordSearch.make(words, 3, 3, 3);
 		assertNotNull(grid);
@@ -176,7 +219,6 @@ public class WordSearchTester {
 
 	/**
 	 * Test finding a word that is not at the edge of the grid that is also backwards
-	 * TODO Fix this
 	 */
 	@Test
 	public void test3DNotAtEdgeAndBackwards(){
@@ -212,6 +254,19 @@ public class WordSearchTester {
 		assertArrayEquals(coord,_wordSearch.search(testGrid,"gvs"));
 	}
 
+    /**
+     * Finding a word with a length of one
+     */
+	@Test
+    public void testSearchWordLengthOne(){
+        final char[][][] grid = new char[][][]
+                { { { 'a', 'b', 'c' },
+                    { 'd', 'f', 'e' } } };
+        int[][] coord = {{0,0,1},
+                         {0,0,1}};
+        assertArrayEquals(coord,_wordSearch.search(grid, "b"));
+    }
+
 	@Test
 	/**
 	 * Verifies that search works correctly in a tiny grid that is effectively 2D.
@@ -229,8 +284,6 @@ public class WordSearchTester {
 		assertEquals(location[1][1], 1);
 		assertEquals(location[1][2], 2);
 	}
-
-	//TODO Write a test to find a string that is backwards
 
 	@Before
 	public void setUp () {
