@@ -171,6 +171,9 @@ public class WordSearch3D {
 					final int iPos = _rng.nextInt(sizeX);
 					final int jPos = _rng.nextInt(sizeY);
 					final int kPos = _rng.nextInt(sizeZ);
+					if(search(grid, word) != null){
+						break;
+					}
 					for(int dirIter = 0; dirIter < 10; dirIter++){ //Tries to place the word 10 different ways
 						char[][][] tempGrid = placeWord(word, grid, iPos, jPos, kPos);
 						if(tempGrid != null){
@@ -180,7 +183,6 @@ public class WordSearch3D {
 					}
 				}
 			}
-			System.out.println("Grid is: " + Arrays.deepToString(grid));
 			if(containsAllWords(grid, words)){
 				return fillBlankSpaces(grid);
 			}
