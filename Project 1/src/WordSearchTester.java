@@ -24,18 +24,6 @@ public class WordSearchTester {
 	}
 
     /**
-     * Verifies that make can generate a 2D grid
-     */
-	@Test
-	public void testMake2D () {
-		final String[] words = new String[] {"java", "cpp"};
-		// Solution is either java or avaj
-		final char[][][] grid = _wordSearch.make(words, 1, 2, 4);
-		assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "java"));
-		assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "cpp"));
-	}
-
-    /**
      * Verifies that make can generate a 3D grid
      */
     @Test
@@ -101,16 +89,6 @@ public class WordSearchTester {
         assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "cee"));
         assertNotNull("Grid was: " + Arrays.deepToString(grid), _wordSearch.search(grid, "fff"));
     }
-
-    /**
-     * Verifies that make can generate a grid in which the letters of the given words can overlap
-     */
-    @Test
-	public void test2DOverlap(){
-		final String[] words = new String[] {"tak","ak","ta"};
-		final char[][][] grid = _wordSearch.make(words,3,2,1);
-		assertNotNull(grid);
-	}
 
 	/**
 	 * Verifies that make can generate a grid when it's *necessary* for words to share

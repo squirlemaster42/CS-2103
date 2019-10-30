@@ -203,12 +203,12 @@ public class WordSearch3D {
      * @param kPos z position of where to place the word
      * @return 3D grid of characters with the word placed in it
      */
-	private char[][][] placeWord(final String word, char[][][] grid, final int iPos, final int jPos, final int kPos){
+	private char[][][] placeWord(final String word, final char[][][] grid, final int iPos, final int jPos, final int kPos){
 		//deltas define the direction (I, J, and K components) that the word will be placed
 	    final int deltaI = _rng.nextInt(3) - 1;
 		final int deltaJ = _rng.nextInt(3) - 1;
 		final int deltaK = _rng.nextInt(3) - 1;
-		char[][][] tempGrid = deepCopy(grid);
+		final char[][][] tempGrid = deepCopy(grid);
 		try{
 			for(int i = 0; i < word.length(); i++){
 				final int iPlacePos = iPos + deltaI * i;
