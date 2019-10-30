@@ -169,6 +169,7 @@ public class WordSearch3D {
 		for(int iteration = 0; iteration < MAX_ITERATIONS; iteration++){ //Limits iterations to MAX_ITERATIONS
 			genNewGrid = true;
 			for(final String currentWord : words) { //Try to place all words in the current grid
+				System.out.println(Arrays.deepToString(grid));
 				boolean wordPlaced = false;
 				int counter = 0; //Limits the number of times we can try to place a word in a grid
 				while(!wordPlaced){
@@ -177,19 +178,28 @@ public class WordSearch3D {
 					for(int i = 0; i < currentWord.length(); i++) { //Populate the map with the positions each character appears
 						charMap.put(i, getInstanceOfChar(charGrid, currentWord.charAt(i)));
 					}
+					//I think this runs too many times
+					System.out.println("Now here");
 					for (final Map.Entry<Integer, ArrayList<int[]>> entry : charMap.entrySet()) { //Loop through each char position stored in the map
 						final ArrayList<int[]> v = entry.getValue();
+						System.out.println("Here I am");
 						for (int[] pos : v) { //Loop through the positions for the character
+							System.out.println("Sending: " + Arrays.deepToString(grid));
 							final LockableCharacter[][][] newGrid = placeWordInGrid(currentWord, pos, entry.getKey(), grid);
 							if(newGrid != null){ //Will run in a space has been found to place the word
+								System.out.println("here");
 								grid = newGrid;
 								wordPlaced = true;
 								genNewGrid = false;
 								break;
 							}
 						}
+						if (wordPlaced){
+							break;
+						}
 					}
 					if(genNewGrid){ //Generates a new grid if needed
+						System.out.println("Making new grid");
 						grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
 					}
 					counter++;
@@ -201,6 +211,7 @@ public class WordSearch3D {
 			if(containsAllWords(lockableCharToCharGrid(grid), words)){ //Return the grid as a char[][][] if all words have been added
 				return lockableCharToCharGrid(grid);
 			}else{ //Generate a new grid
+				System.out.println("Genning new grid");
 				grid = randomlyGenGrid(sizeX, sizeY, sizeZ);
 			}
 		}
@@ -230,19 +241,26 @@ public class WordSearch3D {
 	 * @param grid grid to place the word in
 	 * @return a lockablecharacter grid with the word in it
 	 */
-	private LockableCharacter[][][] placeWordInGrid(final String currentWord, final int[] pos, final int charPos, final LockableCharacter[][][] grid){
-		final LockableCharacter[][][] tempGrid = grid.clone();
+	private LockableCharacter[][][] placeWordInGrid(final String currentWord, final int[] pos, final int charPos, final LockableCharacter[][][] grid){ //The input grid is changing when it shouldn't be
+		System.out.println("Start Place: " + Arrays.deepToString(grid));
+		LockableCharacter[][][] tempGrid;
 		boolean cannotPlace = false;
 		for (int iter = 0; iter < 100; iter++) {
 			final int deltaI = _rng.nextInt(3) - 1;
 			final int deltaJ = _rng.nextInt(3) - 1;
 			final int deltaK = _rng.nextInt(3) - 1;
+			//System.out.println("Grid Reset");
+			tempGrid = grid.clone();
 			try {
-				for(int i = currentWord.length() - charPos - 1; i >= 0; i--){ //Tries to place the left half of the word
-					if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
-						final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
-						final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
-						final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+				//TODO The problem is here...Tries to place the same parts of the word more than one
+				//Some math is wrong
+				//Please dont be dummy and fix your code
+				for(int i = charPos - 1; i >= 0; i--){ //Tries to place the left half of the word
+					final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
+					final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
+					final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+					if(canPlaceChar(grid[iPos][jPos][kPos], currentWord.charAt(i))){
+						//System.out.println("Set A " + currentWord + " " + currentWord.charAt(charPos) + " " +currentWord.charAt(i));
 						tempGrid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 					}else{
 						cannotPlace = true;
@@ -251,10 +269,11 @@ public class WordSearch3D {
 				}
 				if(!cannotPlace){ //Tries to place the right half of the word
 					for(int i = charPos + 1; i < currentWord.length(); i++){
-						if(canPlaceChar(grid[pos[0]][pos[1]][pos[2]],currentWord.charAt(i))){
-							final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
-							final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
-							final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+						final int iPos = pos[0] + (deltaI * i * getDirection(i, charPos));
+						final int jPos = pos[1] + (deltaJ * i * getDirection(i, charPos));
+						final int kPos = pos[2] + (deltaK * i * getDirection(i, charPos));
+						if(canPlaceChar(grid[iPos][jPos][kPos], currentWord.charAt(i))){
+							//System.out.println("Set B " + currentWord + " " + currentWord.charAt(charPos) + " " +currentWord.charAt(i));
 							tempGrid[iPos][jPos][kPos].setChar(currentWord.charAt(i));
 						}else{
 							cannotPlace = true;
@@ -265,7 +284,8 @@ public class WordSearch3D {
 			} catch (ArrayIndexOutOfBoundsException e) {
 				continue;
 			}
-			if(search(lockableCharToCharGrid(grid), currentWord) != null){
+			if(search(lockableCharToCharGrid(tempGrid), currentWord) != null){
+				System.out.println("End Place: " + Arrays.deepToString(tempGrid));
 				return tempGrid;
 			}
 		}

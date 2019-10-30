@@ -9,6 +9,9 @@ import java.util.*;
 public class WordSearchTester {
 	private WordSearch3D _wordSearch;
 
+	//TODO Write tests for null string, string too long, empty string
+	//TODO Test with word length one
+
 	@Test
 	/**
 	 * Verifies that make can generate a very simple puzzle that is effectively 1d.
