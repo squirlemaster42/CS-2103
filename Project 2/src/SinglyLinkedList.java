@@ -1,4 +1,4 @@
-public class SinglyLinkedList<T> {
+class SinglyLinkedList<K, T> {
 
     //TODO Make sure generics are correct
     //TODO Implement a size?
@@ -10,7 +10,7 @@ public class SinglyLinkedList<T> {
         tail = null;
     }
 
-    void push(Node<T> node) {
+    void push(Node<K, T> node) {
         if (head == null) {
             head = node;
             tail = node;
@@ -21,30 +21,34 @@ public class SinglyLinkedList<T> {
         tempHead.prev = head;
     }
 
-    void removeTail(){
+    K removeTail(){
         Node tempTail = tail;
         tail = tempTail.prev;
-        tempTail = null;
+        //TODO Fix
+        return (K) tempTail.key;
     }
 
-    public Node getHead(){
+    Node getHead(){
         return head;
     }
 
-    public Node getTail(){
+    Node getTail(){
         return tail;
     }
 
-    static class Node<T> {
+    static class Node<K, T> {
 
-        T value;
-        Node prev;
+        //TODO Format with _
+        private T value;
+        private K key;
+        private Node prev;
 
-        Node(final T value){
+        Node(final K key, final T value){
             this.value = value;
+            this.key = key;
         }
 
-        public T getValue(){
+        T getValue(){
             return value;
         }
 
