@@ -44,14 +44,14 @@ public class LinkedHashMap <K, V>{
 
     //TODO Test when not moving from tail
     private void moveToHead(final Node<K, V> node){
-        if(node == tail){
+       if(node == tail && size != 1){
             tail = node.prev;
             tail.next = null;
             node.prev = null;
             node.next = head;
             head.prev = node;
             head = node;
-        }else{
+        }else if(size != 1){
             node.next.prev = node.prev;
             node.prev.next = node.next;
             node.prev = null;
@@ -61,6 +61,7 @@ public class LinkedHashMap <K, V>{
     }
 
     //TODO Make sure it gets removed from memory
+    //TODO Fix when size is 1
     void evictTail(){
         size--;
         tail.prev.next = null;
@@ -80,6 +81,11 @@ public class LinkedHashMap <K, V>{
         private Node(final K key, final V value){
             this.key = key;
             this.value = value;
+        }
+
+        @Override
+        public String toString(){
+            return key + " " + value;
         }
     }
 }
