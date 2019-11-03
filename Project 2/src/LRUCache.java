@@ -1,27 +1,22 @@
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * An implementation of <tt>Cache</tt> that uses a least-recently-used (LRU)
  * eviction policy.
  */
 public class LRUCache<T, U> implements Cache<T, U> {
 
-	private Map<T, SinglyLinkedList.Node<T, U>> _map;
-	private SinglyLinkedList<T, U> _linkedList;
 	private final int _capacity;
 	private final DataProvider<T, U> _provider;
 	private int misses = 0;
+	private final LinkedHashMap<T, U> _backingStore; //TODO Look at name
 
 	/**
 	 * @param provider the data provider to consult for a cache miss
 	 * @param capacity the exact number of (key,value) pairs to store in the cache
 	 */
 	public LRUCache (final DataProvider<T, U> provider, final int capacity) {
-		this._map = new HashMap<>();
-		this._linkedList = new SinglyLinkedList<>();
 		this._capacity = capacity;
 		this._provider = provider;
+		_backingStore = new LinkedHashMap<>();
 	}
 
 	/**
@@ -30,19 +25,15 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 * @return the value associated with the key
 	 */
 	public U get (T key) {
-		if(_map.containsKey(key)){
-			return _map.get(key).getValue();
-		}else{
+		U returnVal = _backingStore.get(key);
+		if(returnVal == null){
 			misses++;
-			if(_map.size() == _capacity){
-				_map.remove(_linkedList.removeTail());
+			if(_backingStore.getSize() >= _capacity){
+				_backingStore.evictTail();
 			}
-			final U data = _provider.get(key);
-			final SinglyLinkedList.Node<T, U> node = new SinglyLinkedList.Node<>(key, data);
-			_map.put(key, node);
-			_linkedList.push(node);
-			return data;
+			_backingStore.put(key, _provider.get(key));
 		}
+		return _backingStore.get(key);
 	}
 
 	/**
