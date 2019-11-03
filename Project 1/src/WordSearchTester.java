@@ -47,6 +47,12 @@ public class WordSearchTester {
 		assertNull(grid);
 	}
 
+    @Test
+    public void testMakeZeroLen () {
+        final String[] words = new String[0];
+        final char[][][] grid = _wordSearch.make(words,0,0,0);
+        assertNotNull(grid);
+    }
     /**
      * Verifies that make returns null when the words given are null
      */
