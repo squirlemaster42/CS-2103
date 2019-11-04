@@ -5,6 +5,7 @@ import org.junit.Test;
 /**
  * Code to test an <tt>LRUCache</tt> implementation.
  */
+//TODO Make a more complex test
 public class CacheTest {
 	@Test
 	public void leastRecentlyUsedIsCorrect () {
@@ -59,13 +60,13 @@ public class CacheTest {
 		provider.addData(9,"rectangle");
 		provider.addData(4,"triangle");
 
-		assertEquals(0,cache.getNumMisses());
+		assertEquals(0, cache.getNumMisses());
 		cache.get(2);
-		assertEquals(1,cache.getNumMisses());
+		assertEquals(1, cache.getNumMisses());
 		cache.get(2);
-		assertEquals(1,cache.getNumMisses());
+		assertEquals(1, cache.getNumMisses());
 		cache.get(4);
-		assertEquals(2,cache.getNumMisses());
+		assertEquals(2, cache.getNumMisses());
 	}
 
 	//TODO better name for this
@@ -77,13 +78,15 @@ public class CacheTest {
 		provider.addData(2,"b");
 		provider.addData(6,"c");
 
+		//TODO I think this might be wrong
+		//TODO Make sure the right stuff is getting removed
 		cache.get(0);
 		cache.get(2);
-		assertEquals(2,cache.getNumMisses());
+		assertEquals(2, cache.getNumMisses());
 		cache.get(6);
-		assertEquals(3,cache.getNumMisses());
+		assertEquals(3, cache.getNumMisses());
 		cache.get(0);
-		assertEquals(4,cache.getNumMisses());
+		assertEquals(4, cache.getNumMisses());
 	}
 
 	@Test
