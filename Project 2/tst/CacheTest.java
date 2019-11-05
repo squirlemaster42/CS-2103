@@ -9,8 +9,20 @@ import org.junit.Test;
 public class CacheTest {
 	@Test
 	public void leastRecentlyUsedIsCorrect () {
-		StringProvider provider = new StringProvider(); // Need to instantiate an actual DataProvider
-		Cache<Integer,String> cache = new LRUCache<Integer,String>(provider, 5);
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider,1);
+		provider.addData(2,"circle");
+		provider.addData(1,"square");
+		provider.addData(9,"rectangle");
+		provider.addData(4,"triangle");
+
+		assertEquals(0, cache.getNumMisses());
+		cache.get(2);
+		assertEquals(1, cache.getNumMisses());
+		cache.get(2);
+		assertEquals(1, cache.getNumMisses());
+		cache.get(4);
+		assertEquals(2, cache.getNumMisses());
 	}
 
 	@Test
@@ -42,32 +54,15 @@ public class CacheTest {
 		assertEquals("light", cache.get(10));
 	}
 
-	//TODO edit after we find out what happens when the capacity is 0
 	@Test
 	public void testWorkWithCapacityZero(){
 		StringProvider provider = new StringProvider();
 		Cache<Integer, String> cache = new LRUCache<>(provider,0);
 		provider.addData(13,"apple");
-		assertNull("apple", cache.get(13));
+		assertEquals("apple",cache.get(13));
 	}
 
-	@Test
-	public void testMiss(){
-		StringProvider provider = new StringProvider();
-		Cache<Integer, String> cache = new LRUCache<>(provider,1);
-		provider.addData(2,"circle");
-		provider.addData(1,"square");
-		provider.addData(9,"rectangle");
-		provider.addData(4,"triangle");
 
-		assertEquals(0, cache.getNumMisses());
-		cache.get(2);
-		assertEquals(1, cache.getNumMisses());
-		cache.get(2);
-		assertEquals(1, cache.getNumMisses());
-		cache.get(4);
-		assertEquals(2, cache.getNumMisses());
-	}
 
 	//TODO better name for this
 	@Test
@@ -108,5 +103,52 @@ public class CacheTest {
 		provider.addData(0,'s');
 		provider.addData(1,'l');
 		assertNull(cache.get(3));
+	}
+
+	//TODO Make sure we dont miss when we shouldnt
+	@Test
+	public void testNegOneCap(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider,-1);
+		provider.addData(3,"test");
+
+	}
+
+	@Test
+	public void testProviderHasNoData(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider, 2);
+		assertNull(cache.get(0));
+	}
+
+	@Test
+	public void testGetRetrieved(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider, 2);
+		provider.addData(1,"apple");
+		provider.addData(3,"duck");
+		provider.addData(19, "garlicBread");
+		cache.get(3);
+		cache.get(19);
+		assertEquals(2,provider.getRetrieves());
+		cache.get(19);
+		assertEquals(2,provider.getRetrieves());
+		cache.get(1);
+		assertEquals(3,provider.getRetrieves());
+	}
+
+	@Test
+	public void testSettingKeyToNewData(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider, 4);
+		provider.addData(1,"apple");
+		provider.addData(3,"duck");
+		provider.addData(19, "garlicBread");
+		provider.addData(3, "pineapple");
+		assertEquals("pineapple", cache.get(3));
+		provider.addData(5,"bee");
+		provider.addData(3 , "bee");
+		provider.addData(5, "apple");
+		assertEquals("apple", cache.get(5));
 	}
 }

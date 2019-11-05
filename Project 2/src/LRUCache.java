@@ -26,7 +26,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 */
 	public U get (T key) {
 		if(_capacity == 0){
-			return null;
+			return _provider.get(key);
 		}
 		U returnVal = _backingStore.get(key);
 		if(returnVal == null){
