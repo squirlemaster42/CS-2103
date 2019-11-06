@@ -78,7 +78,6 @@ public class CacheTest {
 		provider.addData(2,"b");
 		provider.addData(6,"c");
 
-		//TODO I think this might be wrong
 		//TODO Make sure the right stuff is getting removed
 		cache.get(0);
 		cache.get(2);

@@ -1,6 +1,7 @@
 import java.util.HashMap;
 import java.util.Map;
 
+//TODO Do something with number of fetches
 public class StringProvider implements DataProvider<Integer, String> {
 
     private final Map<Integer, String> _map;
