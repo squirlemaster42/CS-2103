@@ -32,6 +32,7 @@ public class CacheTest {
 	/**
 	 * Tests cache when looking a a null value stored behind a non-null key
 	 */
+	//TODO Test that number of retrieves are correct
 	@Test
 	public void testNullValue(){
 		StringProvider provider = new StringProvider();
@@ -40,8 +41,11 @@ public class CacheTest {
 		provider.addData(8, "8");
 		provider.addData(1, "1");
 		assertNull(cache.get(5));
+		assertEquals(1, provider.getRetrieves());
 		assertEquals("8", cache.get(8));
+		assertEquals(2, provider.getRetrieves());
 		assertNull(cache.get(5));
+		assertEquals(2, provider.getRetrieves());
 	}
 
 	/**
