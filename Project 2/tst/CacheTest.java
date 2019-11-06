@@ -30,7 +30,7 @@ public class CacheTest {
 	}
 
 	/**
-	 * Tests cache when looking a a null value stored behind a non-null key
+	 * Tests cache when looking at a null value stored behind a non-null key
 	 */
 	//TODO Test that number of retrieves are correct
 	@Test
@@ -49,7 +49,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests cache using StringProvider
 	 */
 	@Test
 	public void testGetWithStringProvider(){
@@ -63,7 +63,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests cache trying to get a key that doesn't exist using StringProvider
 	 */
 	@Test
 	public void testGetNotExistingStringProvider(){
@@ -75,6 +75,9 @@ public class CacheTest {
 		assertNull(cache.get(3));
 	}
 
+	/**
+	 * Tests tht the cache works properly when it has a capacity of one
+	 */
 	@Test
 	public void testWorkWithCapacityOfOne(){
 		StringProvider provider = new StringProvider();
@@ -84,7 +87,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests that the cache works properly when it has a capacity of zero
 	 */
 	@Test
 	public void testWorkWithCapacityZero(){
@@ -94,14 +97,11 @@ public class CacheTest {
 		assertEquals("apple",cache.get(13));
 	}
 
-
-
-	//TODO better name for this
 	/**
-	 *
+	 * Tests that the getNumMisses method works properly
 	 */
 	@Test
-	public void testCapDoesntChange(){
+	public void testGetNumMiss(){
 		StringProvider provider = new StringProvider();
 		Cache<Integer, String> cache = new LRUCache<>(provider,2);
 		provider.addData(0,"a");
@@ -119,7 +119,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests cache using CharacterProvider
 	 */
 	@Test
 	public void testGetWithCharacterProvider(){
@@ -136,7 +136,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests cache trying to get a key that doesn't exist using CharacterProvider
 	 */
 	@Test
 	public void testGetNotExistingCharacterProvider(){
@@ -162,7 +162,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests the cache works when the provider has no data
 	 */
 	@Test
 	public void testProviderHasNoData(){
@@ -191,7 +191,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests that the cache works properly when an existing key gets set to new data
 	 */
 	@Test
 	public void testSettingKeyToNewData(){
