@@ -7,6 +7,10 @@ import org.junit.Test;
  */
 //TODO Make a more complex test
 public class CacheTest {
+
+	/**
+	 *
+	 */
 	@Test
 	public void leastRecentlyUsedIsCorrect () {
 		StringProvider provider = new StringProvider();
@@ -25,6 +29,24 @@ public class CacheTest {
 		assertEquals(2, cache.getNumMisses());
 	}
 
+	/**
+	 * Tests cache when looking a a null value stored behind a non-null key
+	 */
+	@Test
+	public void testNullValue(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider, 5);
+		provider.addData(5, null);
+		provider.addData(8, "8");
+		provider.addData(1, "1");
+		assertNull(cache.get(5));
+		assertEquals("8", cache.get(8));
+		assertNull(cache.get(5));
+	}
+
+	/**
+	 *
+	 */
 	@Test
 	public void testGetWithStringProvider(){
 		StringProvider provider = new StringProvider();
@@ -36,6 +58,9 @@ public class CacheTest {
 		assertEquals("yes", cache.get(0));
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testGetNotExistingStringProvider(){
 		StringProvider provider = new StringProvider();
@@ -54,6 +79,9 @@ public class CacheTest {
 		assertEquals("light", cache.get(10));
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testWorkWithCapacityZero(){
 		StringProvider provider = new StringProvider();
@@ -65,6 +93,9 @@ public class CacheTest {
 
 
 	//TODO better name for this
+	/**
+	 *
+	 */
 	@Test
 	public void testCapDoesntChange(){
 		StringProvider provider = new StringProvider();
@@ -83,6 +114,9 @@ public class CacheTest {
 		assertEquals(4, cache.getNumMisses());
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testGetWithCharacterProvider(){
 		CharacterProvider provider = new CharacterProvider();
@@ -92,8 +126,14 @@ public class CacheTest {
 		provider.addData(1,'g');
 		provider.addData(3,'r');
 		assertEquals(Character.valueOf('a'), cache.get(0));
+		assertEquals(Character.valueOf('s'), cache.get(2));
+		assertEquals(Character.valueOf('g'), cache.get(1));
+		assertEquals(Character.valueOf('s'), cache.get(2));
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testGetNotExistingCharacterProvider(){
 		CharacterProvider provider = new CharacterProvider();
@@ -105,6 +145,10 @@ public class CacheTest {
 	}
 
 	//TODO Make sure we dont miss when we shouldnt
+	//TODO Finish
+	/**
+	 *
+	 */
 	@Test
 	public void testNegOneCap(){
 		StringProvider provider = new StringProvider();
@@ -113,6 +157,9 @@ public class CacheTest {
 
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testProviderHasNoData(){
 		StringProvider provider = new StringProvider();
@@ -120,6 +167,9 @@ public class CacheTest {
 		assertNull(cache.get(0));
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testGetRetrieved(){
 		StringProvider provider = new StringProvider();
@@ -129,13 +179,16 @@ public class CacheTest {
 		provider.addData(19, "garlicBread");
 		cache.get(3);
 		cache.get(19);
-		assertEquals(2,provider.getRetrieves());
+		assertEquals(2, provider.getRetrieves());
 		cache.get(19);
-		assertEquals(2,provider.getRetrieves());
+		assertEquals(2, provider.getRetrieves());
 		cache.get(1);
-		assertEquals(3,provider.getRetrieves());
+		assertEquals(3, provider.getRetrieves());
 	}
 
+	/**
+	 *
+	 */
 	@Test
 	public void testSettingKeyToNewData(){
 		StringProvider provider = new StringProvider();

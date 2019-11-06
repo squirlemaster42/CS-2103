@@ -25,16 +25,16 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 * @return the value associated with the key
 	 */
 	public U get (T key) {
-		if(_capacity == 0){
+		if(_capacity == 0){ //Handle the case where the capacity of the c
 			return _provider.get(key);
 		}
-		U returnVal = _backingStore.get(key);
-		if(returnVal == null){
+
+		if(!_backingStore.containsKey(key)){ //If the data was not in the cache, retrieve it from the DataProvider
 			misses++;
-			if(_backingStore.getSize() >= _capacity){
+			if(_backingStore.getSize() >= _capacity){ //Evict the tail if the Cache gets too large
 				_backingStore.evictTail();
 			}
-			_backingStore.put(key, _provider.get(key));
+			_backingStore.put(key, _provider.get(key)); //Adds the key and value to the backing store
 		}
 		return _backingStore.get(key);
 	}
