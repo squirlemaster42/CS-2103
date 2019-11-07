@@ -1,28 +1,22 @@
 import java.util.HashMap;
 import java.util.Map;
-
-//TODO Name this better because it is not exactly a linked hashmap
-//In the way it works
-
 /**
  * An implementation of HashMap that stores it data in a predictable manner
  * @param <K> The type of the key
  * @param <V> The type of the value
  */
 public class LinkedHashMap<K, V> {
-    //Ask about implementing List
 
-    //TODO Add _
-    private final Map<K, Node<K, V>> map;
-    private Node<K, V> head, tail;
-    private int size;
+    private final Map<K, Node<K, V>> _map;
+    private Node<K, V> _head, _tail;
+    private int _size;
 
     /**
-     * Constructs a LinkedHashMap
+     * Constructs a LinkedHash_map
      */
     LinkedHashMap() {
-        map = new HashMap<>();
-        size = 0;
+        _map = new HashMap<>();
+        _size = 0;
     }
 
     /**
@@ -31,17 +25,17 @@ public class LinkedHashMap<K, V> {
      * @param value The value to be stored
      */
     void put(final K key, final V value) {
-        size++; //Increments size
+        _size++; //Increments size
         Node<K, V> node = new Node<>(key, value); //Constructs a node with the input data
-        if (head == null) { //Sets head and tail to null
-            head = node;
-            tail = node;
+        if (_head == null) { //Sets head and tail to null
+            _head = node;
+            _tail = node;
         } else { //Sets the created node as the new head
-            node.next = head;
-            head.prev = node;
-            head = node;
+            node.next = _head;
+            _head.prev = node;
+            _head = node;
         }
-        map.put(key, node); //Adds the node to the HashMap
+        _map.put(key, node); //Adds the node to the HashMap
     }
 
     /**
@@ -50,13 +44,10 @@ public class LinkedHashMap<K, V> {
      * @return The value stored under the key
      */
     V get(final K key) {
-        Node<K, V> node = map.get(key); //Gets the node from the map
-        if (node != null) { //Moves the node to the head of the LinkedList and returns its value
-            moveToHead(node);
-            return node.value;
-        } else {
-            return null;
-        }
+        Node<K, V> node = _map.get(key); //Gets the node from the map
+        //Moves the node to the head of the LinkedList and returns its value
+        moveToHead(node);
+        return node.value;
     }
 
     /**
@@ -64,40 +55,38 @@ public class LinkedHashMap<K, V> {
      * @param node The node to move
      */
     private void moveToHead(final Node<K, V> node) {
-        if(node == head){ //If the node is already at the head do nothing
+        if(node == _head){ //If the node is already at the head do nothing
             //The node is already at the head of the LinkedList
-        }else if (node == tail && size != 1) { //Move the node to the head if the node is at the tail
-            tail = node.prev;
-            tail.next = null;
+        }else if (node == _tail && _size != 1) { //Move the node to the head if the node is at the tail
+            _tail = node.prev;
+            _tail.next = null;
             node.prev = null;
-            node.next = head;
-            head.prev = node;
-            head = node;
-        } else if (size != 1) { //Mode the node to head
+            node.next = _head;
+            _head.prev = node;
+            _head = node;
+        } else if (_size != 1) { //Mode the node to head
             node.next.prev = node.prev;
             node.prev.next = node.next;
             node.prev = null;
-            node.next = head;
-            head = node;
+            node.next = _head;
+            _head = node;
         }
     }
 
-    //TODO Make sure it gets removed from memory
-    //TODO Fix when size is 1
     /**
      * Removed the tail of the LinkedList. This was always be the value that was used least recently
      */
     void evictTail() {
-        if (size == 1) {
-            map.remove(head.key);
-            head = null;
-            tail = null;
-            size--;
-        }else{
-            size--;
-            tail.prev.next = null;
-            map.remove(tail.key);
-            tail = tail.prev;
+        if (_size == 1) { //When the size is 1, remove head, sets head and tail to null and decrease the size by 1
+            _map.remove(_head.key);
+            _head = null;
+            _tail = null;
+            _size--;
+        }else{ //When the size is greater than 1, decrease the size by 1, set the next value of the previous value of the tail to null.
+            _size--;
+            _tail.prev.next = null;
+            _map.remove(_tail.key);
+            _tail = _tail.prev;
         }
     }
 
@@ -106,16 +95,16 @@ public class LinkedHashMap<K, V> {
      * @return The size of the LinkedHashMap
      */
     int getSize() {
-        return size;
+        return _size;
     }
 
     /**
-     * TODO Comment
-     * @param key
-     * @return
+     * Checks that the specified key exists within the linked list
+     * @param key the key to check for
+     * @return true if it exists within the linked list, false otherwise
      */
     public boolean containsKey(K key) {
-        return map.containsKey(key);
+        return _map.containsKey(key);
     }
 
     /**

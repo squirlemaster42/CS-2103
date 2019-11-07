@@ -5,11 +5,10 @@ import org.junit.Test;
 /**
  * Code to test an <tt>LRUCache</tt> implementation.
  */
-//TODO Make a more complex test
 public class CacheTest {
 
 	/**
-	 *
+	 * Tests if the LRU cache is implemented corretly
 	 */
 	@Test
 	public void leastRecentlyUsedIsCorrect () {
@@ -32,7 +31,6 @@ public class CacheTest {
 	/**
 	 * Tests cache when looking at a null value stored behind a non-null key
 	 */
-	//TODO Test that number of retrieves are correct
 	@Test
 	public void testNullValue(){
 		StringProvider provider = new StringProvider();
@@ -98,27 +96,6 @@ public class CacheTest {
 	}
 
 	/**
-	 * Tests that the getNumMisses method works properly
-	 */
-	@Test
-	public void testGetNumMiss(){
-		StringProvider provider = new StringProvider();
-		Cache<Integer, String> cache = new LRUCache<>(provider,2);
-		provider.addData(0,"a");
-		provider.addData(2,"b");
-		provider.addData(6,"c");
-
-		//TODO Make sure the right stuff is getting removed
-		cache.get(0);
-		cache.get(2);
-		assertEquals(2, cache.getNumMisses());
-		cache.get(6);
-		assertEquals(3, cache.getNumMisses());
-		cache.get(0);
-		assertEquals(4, cache.getNumMisses());
-	}
-
-	/**
 	 * Tests cache using CharacterProvider
 	 */
 	@Test
@@ -148,17 +125,15 @@ public class CacheTest {
 		assertNull(cache.get(3));
 	}
 
-	//TODO Make sure we dont miss when we shouldnt
-	//TODO Finish
 	/**
-	 *
+	 * Tests that the cache works correctly if it has a capacity of -1
 	 */
 	@Test
 	public void testNegOneCap(){
 		StringProvider provider = new StringProvider();
 		Cache<Integer, String> cache = new LRUCache<>(provider,-1);
 		provider.addData(3,"test");
-
+		assertEquals("test",cache.get(3));
 	}
 
 	/**
@@ -172,7 +147,7 @@ public class CacheTest {
 	}
 
 	/**
-	 *
+	 * Tests that the getRetrieves method works as intended
 	 */
 	@Test
 	public void testGetRetrieved(){
@@ -206,5 +181,16 @@ public class CacheTest {
 		provider.addData(3 , "bee");
 		provider.addData(5, "apple");
 		assertEquals("apple", cache.get(5));
+	}
+
+	/**
+	 * Tests that the cache works properly when the given key is null
+	 */
+	@Test
+	public void testNullKey(){
+		StringProvider provider = new StringProvider();
+		Cache<Integer, String> cache = new LRUCache<>(provider, 4);
+		provider.addData(null,"apple");
+		assertEquals("apple",cache.get(null));
 	}
 }

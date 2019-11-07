@@ -7,7 +7,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	private final int _capacity;
 	private final DataProvider<T, U> _provider;
 	private int misses = 0;
-	private final LinkedHashMap<T, U> _backingStore; //TODO Look at name
+	private final LinkedHashMap<T, U> _backingStore;
 
 	/**
 	 * @param provider the data provider to consult for a cache miss
@@ -25,7 +25,7 @@ public class LRUCache<T, U> implements Cache<T, U> {
 	 * @return the value associated with the key
 	 */
 	public U get (T key) {
-		if(_capacity == 0){ //Handle the case where the capacity of the c
+		if(_capacity <= 0){ //Handle the case where the capacity of the c
 			return _provider.get(key);
 		}
 		if(!_backingStore.containsKey(key)){ //If the data was not in the cache, retrieve it from the DataProvider
