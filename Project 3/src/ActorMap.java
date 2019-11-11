@@ -25,4 +25,11 @@ public class ActorMap {
     ActorNode getActor(final String key){
         return actorMap.get(key);
     }
+
+    @Override
+    public String toString() {
+        return "ActorMap{" +
+                "actorMap=" + actorMap +
+                '}';
+    }
 }

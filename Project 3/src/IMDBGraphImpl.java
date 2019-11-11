@@ -44,7 +44,7 @@ public class IMDBGraphImpl implements IMDBGraph{
     //TODO Make this nicer
     private void parseMovie(final String movieLine, final ActorNode actor){
         if(movieLine.contains("(TV)") || movieLine.substring(0, movieLine.indexOf("(")).trim().matches("\"(?:[^\"\\\\]|\\\\.)*\"")){
-            return; //TODO Test
+            return;
         }
         final String prunedLine = movieLine.substring(0, movieLine.indexOf(")") + 1);
         if(MovieMap.getInstance().contains(prunedLine)){

@@ -25,4 +25,11 @@ public class MovieNode implements Node {
     public Collection<? extends Node> getNeighbors() {
         return neighbors;
     }
+
+    @Override
+    public String toString() {
+        return "MovieNode{" +
+                "title='" + title + '\'' +
+                '}';
+    }
 }

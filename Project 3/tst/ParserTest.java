@@ -16,7 +16,7 @@ public class ParserTest {
             actor1.addMovie(movie1);
             movie1.addActor(actor1);
             assertEquals(actor1.getName(), ActorMap.getInstance().getActor("Actor1").getName());
-
+            System.out.println(ActorMap.getInstance());
         } catch (IOException e) {
             e.printStackTrace();
         }

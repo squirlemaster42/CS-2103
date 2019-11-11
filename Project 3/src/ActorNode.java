@@ -24,4 +24,12 @@ public class ActorNode implements Node {
     public Collection<? extends Node> getNeighbors() {
         return neighbors;
     }
+
+    @Override
+    public String toString() {
+        return "ActorNode{" +
+                "name='" + name + '\'' +
+                ", neighbors=" + neighbors +
+                '}';
+    }
 }
