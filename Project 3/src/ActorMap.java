@@ -36,6 +36,10 @@ public class ActorMap {
         return actorMap.size();
     }
 
+    Map<String, ActorNode> getActorMap(){
+        return actorMap;
+    }
+
     @Override
     public String toString() {
         return "ActorMap{" +

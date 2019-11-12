@@ -33,4 +33,8 @@ public class MovieMap {
     int size() {
         return movieMap.size();
     }
+
+    Map<String, MovieNode> getMovieMap(){
+        return movieMap;
+    }
 }
