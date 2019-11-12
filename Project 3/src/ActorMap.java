@@ -26,6 +26,16 @@ public class ActorMap {
         return actorMap.get(key);
     }
 
+    void removeActorWithNoMovies(ActorNode lastActor) {
+        if(lastActor.getNeighbors().size() == 0){
+            actorMap.remove(lastActor.getName(), lastActor);
+        }
+    }
+
+    int size() {
+        return actorMap.size();
+    }
+
     @Override
     public String toString() {
         return "ActorMap{" +

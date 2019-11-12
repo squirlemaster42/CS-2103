@@ -7,14 +7,17 @@ import java.util.Scanner;
 
 public class IMDBGraphImpl implements IMDBGraph{
 
+    //TODO Look up HashSet for node neighbors and maybe to replace HashMap in MovieMap and ActorMap
+    //TODO Throw exceptions
     IMDBGraphImpl(final String actorPath, final String actressPath) throws IOException {
         final Scanner actorScanner = new Scanner(new File(actorPath), StandardCharsets.ISO_8859_1);
         final Scanner actressScanner = new Scanner(new File(actressPath), StandardCharsets.ISO_8859_1);
         load(actorScanner);
         load(actressScanner);
+        System.out.println(ActorMap.getInstance().size());
+        System.out.println(MovieMap.getInstance().size());
     }
 
-    //TODO need to remove actors/actresses who only are on tv
     private void load(final Scanner file){
         boolean pastHeader = false;
         ActorNode lastActor = null;
@@ -34,7 +37,9 @@ public class IMDBGraphImpl implements IMDBGraph{
                 parseMovie(line.trim(), lastActor);
             } else {
                 //We have an actor line
-                //TODO Check if last actor has enough movies
+                if(lastActor != null && lastActor.getNeighbors().size() == 0){
+                    ActorMap.getInstance().removeActorWithNoMovies(lastActor);
+                }
                 lastActor = parseActor(line.substring(0, line.indexOf("\t")));
                 parseMovie(line.substring(line.indexOf("\t")).trim(), lastActor);
             }
@@ -51,7 +56,7 @@ public class IMDBGraphImpl implements IMDBGraph{
             actor.addMovie(MovieMap.getInstance().getMovie(prunedLine));
             MovieMap.getInstance().getMovie(prunedLine).addActor(actor);
         }else{
-            final MovieNode movie = new MovieNode(prunedLine, new ArrayList<>());
+            final MovieNode movie = new MovieNode(prunedLine);
             actor.addMovie(movie);
             movie.addActor(actor);
             MovieMap.getInstance().addMovie(movie);
@@ -59,7 +64,7 @@ public class IMDBGraphImpl implements IMDBGraph{
     }
 
     private ActorNode parseActor(final String actorLine){
-        final ActorNode actor = new ActorNode(actorLine, new ArrayList<>());
+        final ActorNode actor = new ActorNode(actorLine);
         ActorMap.getInstance().addActor(actor);
         return actor;
     }

@@ -1,14 +1,15 @@
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ActorNode implements Node {
 
     private final String name;
-    private final List<MovieNode> neighbors;
+    private final Set<MovieNode> neighbors;
 
-    ActorNode(final String name, final List<MovieNode> neighbors){
+    ActorNode(final String name){
         this.name = name;
-        this.neighbors = neighbors;
+        this.neighbors = new HashSet<>();
     }
 
     void addMovie(final MovieNode movie){

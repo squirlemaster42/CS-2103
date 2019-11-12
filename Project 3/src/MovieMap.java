@@ -29,4 +29,8 @@ public class MovieMap {
     void addMovie(final MovieNode movie){
         movieMap.put(movie.getName(), movie);
     }
+
+    int size() {
+        return movieMap.size();
+    }
 }
