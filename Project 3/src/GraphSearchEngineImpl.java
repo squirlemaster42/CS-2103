@@ -37,6 +37,7 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         Set<TrackedNode> toAdd = new HashSet<>();
         curr.node.getNeighbors().forEach(e ->{
             //TODO This is a problem
+            //Need to make Queue and Discovered set act differently
             if(!discovered.contains(e)){
                 toAdd.add(new TrackedNode(e, curr));
             }
