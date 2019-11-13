@@ -13,6 +13,7 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
             if(curr.node == t){
                 return getPathTo(curr);
             }
+            //TODO Might not need to do this because sets will not allow for things to be added twice
             final Collection<TrackedNode> notDiscovered = notDiscovered(discovered, curr);
             queue.addAll(notDiscovered);
             discovered.addAll(notDiscovered);
@@ -34,15 +35,17 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
     }
 
     private Collection<TrackedNode> notDiscovered(final Collection<TrackedNode> discovered, final TrackedNode curr){
-        Set<TrackedNode> toAdd = new HashSet<>();
+        Set<TrackedNode> uniqueNodes = new HashSet<>();
         curr.node.getNeighbors().forEach(e ->{
-            //TODO This is a problem
-            //Need to make Queue and Discovered set act differently
-            if(!discovered.contains(e)){
-                toAdd.add(new TrackedNode(e, curr));
+            final TrackedNode toAdd =  new TrackedNode(e, curr);
+            //TODO this version of contains will not work because the parents will not be equal if it has already been added
+            //TODO need to figure out how to make it so contains will only check the node field and not the parent field of TrackedNode
+            //TODO the overridden equals might fix it but might not
+            if(!discovered.contains(toAdd)){
+                uniqueNodes.add(toAdd);
             }
         });
-        return toAdd;
+        return uniqueNodes;
     }
 
     private static class TrackedNode{
@@ -52,6 +55,19 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         private TrackedNode(final Node node, final TrackedNode parent){
             this.node = node;
             this.parent = parent;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            TrackedNode that = (TrackedNode) o;
+            return Objects.equals(node, that.node);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(node);
         }
     }
 }
