@@ -36,6 +36,7 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
     private Collection<TrackedNode> notDiscovered(final Collection<TrackedNode> discovered, final TrackedNode curr){
         Set<TrackedNode> toAdd = new HashSet<>();
         curr.node.getNeighbors().forEach(e ->{
+            //TODO This is a problem
             if(!discovered.contains(e)){
                 toAdd.add(new TrackedNode(e, curr));
             }
