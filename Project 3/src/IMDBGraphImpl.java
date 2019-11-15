@@ -6,11 +6,8 @@ import java.util.Scanner;
 
 public class IMDBGraphImpl implements IMDBGraph {
 
-    //TODO Look up HashSet for node neighbors and maybe to replace HashMap in MovieMap and ActorMap
     //TODO Throw exceptions
-    //TODO Make stuff thread-safe
     //TODO Check that names are being loaded correctly
-    //TODO Test with 10000 lines and check against number in email
     IMDBGraphImpl(final String actorPath, final String actressPath) throws IOException {
         final Scanner actorScanner = new Scanner(new File(actorPath), StandardCharsets.ISO_8859_1);
         final Scanner actressScanner = new Scanner(new File(actressPath), StandardCharsets.ISO_8859_1);
