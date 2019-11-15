@@ -11,6 +11,8 @@ public class GraphPartialTester {
 	IMDBGraph imdbGraph;
 	GraphSearchEngine searchEngine;
 
+	//TODO Test Aaker, Dee and Aaker, Lee
+
 	/**
 	 * Verifies that there is no shortest path between a specific and actor and actress.
 	 */
