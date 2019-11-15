@@ -1,17 +1,28 @@
+import java.lang.reflect.Array;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingDeque;
 
 public class GraphSearchEngineImpl implements GraphSearchEngine {
 
+    /**
+     * Finds the shortest path between two given nodes
+     * @param s the start node.
+     * @param t the target node.
+     * @return A list containing the shortest path between the two nodes
+     */
     @Override
     public List<Node> findShortestPath(Node s, Node t) {
-        final Queue<TrackedNode> queue = new PriorityQueue<>();
+        final Queue<TrackedNode> queue = new LinkedBlockingDeque<>();
         final Set<TrackedNode> discovered = new HashSet<>();
         discovered.add(new TrackedNode(s, null));
         queue.add(new TrackedNode(s, null));
+        ArrayList<Node> path = new ArrayList<Node>();
         while(!queue.isEmpty()){
             TrackedNode curr = queue.poll();
             if(curr.node == t){
-                return getPathTo(curr);
+                path.add(s);
+                path.addAll(getPathTo(curr));
+                return path;
             }
             //TODO Might not need to do this because sets will not allow for things to be added twice
             final Collection<TrackedNode> notDiscovered = notDiscovered(discovered, curr);
@@ -22,6 +33,11 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         return null;
     }
 
+    /**
+     * Gets the path to a given node
+     * @param goal End node to  find a path to
+     * @return A list containing a path to the goal node
+     */
     private List<Node> getPathTo(final TrackedNode goal){
         final List<Node> path = new ArrayList<>();
         TrackedNode curr = goal;
@@ -34,6 +50,12 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         return path;
     }
 
+    /**
+     *
+     * @param discovered
+     * @param curr
+     * @return
+     */
     private Collection<TrackedNode> notDiscovered(final Collection<TrackedNode> discovered, final TrackedNode curr){
         Set<TrackedNode> uniqueNodes = new HashSet<>();
         curr.node.getNeighbors().forEach(e ->{
@@ -48,7 +70,8 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         return uniqueNodes;
     }
 
-    private static class TrackedNode{
+    //ask jakob about something i hope to remember later
+    private static class TrackedNode implements Comparable{
         private final Node node;
         private final TrackedNode parent;
 
@@ -68,6 +91,11 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         @Override
         public int hashCode() {
             return Objects.hash(node);
+        }
+
+        @Override
+        public int compareTo(Object o) {
+            return 0;
         }
     }
 }

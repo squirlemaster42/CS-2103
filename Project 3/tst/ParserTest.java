@@ -21,4 +21,18 @@ public class ParserTest {
             e.printStackTrace();
         }
     }
+
+    //TODO make this not an aids name
+    @Test
+    public void testingStuff(){
+        try{
+            IMDBGraph graph = new IMDBGraphImpl("actors_test.list", "actresses.list");
+
+        }
+        catch (IOException e){
+            e.printStackTrace();
+        }
+    }
+
+
 }
