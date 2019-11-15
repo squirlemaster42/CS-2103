@@ -96,21 +96,39 @@ public class IMDBGraphImpl implements IMDBGraph {
         return actor;
     }
 
+    /**
+     * Gets the actors
+     * @return collection of the actors
+     */
     @Override
     public Collection<? extends Node> getActors() {
         return ActorMap.getInstance().getActorMap().values();
     }
 
+    /**
+     * Gets the movies
+     * @return collection of the movies
+     */
     @Override
     public Collection<? extends Node> getMovies() {
         return MovieMap.getInstance().getMovieMap().values();
     }
 
+    /**
+     *  Gets the the specified move from the map
+     * @param name the name of the requested movie
+     * @return a node of the specified movie
+     */
     @Override
     public Node getMovie(String name) {
         return MovieMap.getInstance().getMovie(name);
     }
 
+    /**
+     * Gets the specified actor from the map
+     * @param name the name of the requested actor
+     * @return a node of the spcified actor
+     */
     @Override
     public Node getActor(String name) {
         return ActorMap.getInstance().getActor(name);
