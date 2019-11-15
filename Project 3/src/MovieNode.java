@@ -8,7 +8,7 @@ public class MovieNode implements Node {
     private final Set<ActorNode> neighbors;
 
     /**
-     * An implementation of Node to store Movies
+     * Constructs a MovieNode
      * @param title Title of the movie
      */
     MovieNode(final String title){
@@ -20,7 +20,7 @@ public class MovieNode implements Node {
      * Adds an actor to the movie node
      * @param actor actor to add
      */
-    public void addActor(final ActorNode actor){
+    void addActor(final ActorNode actor){
         neighbors.add(actor);
     }
 

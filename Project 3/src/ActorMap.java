@@ -3,17 +3,28 @@ import java.util.Map;
 
 public class ActorMap {
 
+    //Start of singleton declaration
+    //This is used to make ActorMap a singleton.
+    //This means that only one instance can ever be created.
     private static ActorMap instance;
 
+    /**
+     * Return an instance of ActorMap
+     * @return an ActorMap
+     */
     static ActorMap getInstance(){
         if(instance == null){
             instance = new ActorMap();
         }
         return instance;
     }
+    //End singleton declaration
 
     private final Map<String, ActorNode> actorMap;
 
+    /**
+     * Creates an ActorMap
+     */
     private ActorMap(){
         actorMap = new HashMap<>();
     }
@@ -41,6 +52,7 @@ public class ActorMap {
      */
     void removeActorWithNoMovies(ActorNode lastActor) {
         if(lastActor.getNeighbors().size() == 0){
+            //Removed the actor if it has no neighbors
             actorMap.remove(lastActor.getName(), lastActor);
         }
     }
@@ -62,8 +74,8 @@ public class ActorMap {
     }
 
     /**
-     * Stores the actor map into a string
-     * @return a string with the actor map
+     * Creates a String representation of the actor map
+     * @return a String with the actor map
      */
     @Override
     public String toString() {

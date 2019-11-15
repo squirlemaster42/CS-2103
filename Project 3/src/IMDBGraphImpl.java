@@ -6,11 +6,8 @@ import java.util.Scanner;
 
 public class IMDBGraphImpl implements IMDBGraph {
 
-    //TODO Throw exceptions
-    //TODO Check that names are being loaded correctly
-
     /**
-     *
+     * Constructs a IMDBGraphImpl
      * @param actorPath
      * @param actressPath
      * @throws IOException

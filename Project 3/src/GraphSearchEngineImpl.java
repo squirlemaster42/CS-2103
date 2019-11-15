@@ -65,8 +65,6 @@ public class GraphSearchEngineImpl implements GraphSearchEngine {
         return uniqueNodes;
     }
 
-    //TODO ask jakob about something i hope to remember later
-
     /**
      * A class used to store a node and the path used to get to that node
      */

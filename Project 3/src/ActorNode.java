@@ -7,9 +7,8 @@ public class ActorNode implements Node {
     private final String name;
     private final Set<MovieNode> neighbors;
 
-    //ask
     /**
-     * An implementation of Node to store Actors
+     * Constructs an ActorNode
      * @param name Name of actor
      */
     ActorNode(final String name){
@@ -44,8 +43,8 @@ public class ActorNode implements Node {
     }
 
     /**
-     * Places the actor name and neighbors into a printable string
-     * @return String with the actors name and neighbors formatted nicely
+     * Creates a String representation of the ActorNode
+     * @return A String representation of the current instance of ActorNode
      */
     @Override
     public String toString() {

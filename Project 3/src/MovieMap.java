@@ -3,6 +3,9 @@ import java.util.Map;
 
 public class MovieMap {
 
+    //Start singleton declaration
+    //This is used to make ActorMap a singleton.
+    //This means that only one instance can ever be created.
     private static MovieMap instance;
 
     static MovieMap getInstance(){
@@ -11,9 +14,13 @@ public class MovieMap {
         }
         return instance;
     }
+    //End singleton declaration
 
     private final Map<String, MovieNode> movieMap;
 
+    /**
+     * Constructs a MovieMap
+     */
     private MovieMap(){
         movieMap = new HashMap<>();
     }
