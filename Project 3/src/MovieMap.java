@@ -8,6 +8,10 @@ public class MovieMap {
     //This means that only one instance can ever be created.
     private static MovieMap instance;
 
+    /**
+     * Returns the instance of MovieMap
+     * @return an instance of MovieMap
+     */
     static MovieMap getInstance(){
         if(instance == null){
             instance = new MovieMap();
