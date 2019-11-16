@@ -17,8 +17,6 @@ public class IMDBGraphImpl implements IMDBGraph {
         final Scanner actressScanner = new Scanner(new File(actressPath), StandardCharsets.ISO_8859_1);
         load(actorScanner);
         load(actressScanner);
-        System.out.println("Actors: " + ActorMap.getInstance().size());
-        System.out.println("Movies: " + MovieMap.getInstance().size());
     }
 
     /**

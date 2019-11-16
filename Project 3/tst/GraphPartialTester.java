@@ -11,8 +11,6 @@ public class GraphPartialTester {
 	IMDBGraph imdbGraph;
 	GraphSearchEngine searchEngine;
 
-	//TODO Test Aaker, Dee and Aaker, Lee
-
 	/**
 	 * Verifies that there is no shortest path between a specific and actor and actress.
 	 */
@@ -84,5 +82,22 @@ public class GraphPartialTester {
 			}
 		}
 		assertTrue(found);
+	}
+
+	/**
+	 * Tests that we do not find a path when there are no connections
+	 */
+	@Test
+	public void testSearch(){
+		try{
+			IMDBGraph graph = new IMDBGraphImpl("actors_test.list", "actresses_test.list");
+			ActorNode act1 = ActorMap.getInstance().getActor("A1");
+			ActorNode act2 = ActorMap.getInstance().getActor("A15");
+			GraphSearchEngine searchEngine = new GraphSearchEngineImpl();
+			assertNull(searchEngine.findShortestPath(act1, act2));
+		}
+		catch (IOException e){
+			e.printStackTrace();
+		}
 	}
 }

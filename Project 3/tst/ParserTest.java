@@ -10,7 +10,7 @@ public class ParserTest {
     @Test
     public void testFindsEndOfHeader(){
         try {
-            IMDBGraph graph = new IMDBGraphImpl("actors_first_10000_lines.list", "actresses_first_10000_lines.list");
+            IMDBGraph graph = new IMDBGraphImpl("actors.list", "actresses.list");
             //ActorNode actor1 = new ActorNode("Actor1");
             //MovieNode movie1 = new MovieNode("Movie1");
             //actor1.addMovie(movie1);
@@ -21,18 +21,4 @@ public class ParserTest {
             e.printStackTrace();
         }
     }
-
-    //TODO make this not an aids name
-    @Test
-    public void testingStuff(){
-        try{
-            IMDBGraph graph = new IMDBGraphImpl("actors_test.list", "actresses.list");
-
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-
-
 }
