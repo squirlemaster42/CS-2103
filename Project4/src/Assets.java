@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 
 public class Assets {
 
+    //TODO Rework this class to store images in an array or may instead of as individuals
     static Image HORSE, DUCK, GOAT;
 
     static void init() throws FileNotFoundException {

@@ -71,6 +71,8 @@ public class GameImpl extends Pane implements Game {
 		//TODO Rework loop
 		//TODO Do some math to make it more flexible
 		Image[] assets = new Image[]{Assets.HORSE, Assets.DUCK, Assets.GOAT};
+		//TODO Think about switching data structures to something that will removed holes
+		//Like an array list
 		animals = new Animal[4][4];
 		for(int i = 0; i < animals.length ; i++){
 			for(int j = 0; j < animals[0].length; j++){

@@ -85,6 +85,7 @@ public class Ball {
 	}
 
 	void checkAnimalCollision(final Animal[][] animals){
+		//TODO Will need to use iterators so that we can remove things from the list
 		for(Animal[] animalArr : animals){
 			for(Animal animal : animalArr){
 				//TODO Need to determine if we are hitting from the left, right, top, or bottom
