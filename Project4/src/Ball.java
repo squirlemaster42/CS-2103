@@ -1,4 +1,6 @@
 import java.awt.*;
+
+import javafx.geometry.Bounds;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -25,6 +27,7 @@ public class Ball {
 	private double x, y;
 	private double vx, vy;
 	private Circle circle;
+	private int bottomWallHits = 0;
 
 	/**
 	 * @return the Circle object that represents the ball on the game board.
@@ -57,10 +60,46 @@ public class Ball {
 	public void updatePosition (long deltaNanoTime) {
 		double dx = vx * deltaNanoTime;
 		double dy = vy * deltaNanoTime;
+		//TODO Cleanup
+		//TODO Fix getting stuck
+		if((x - BALL_RADIUS + dx < 0 && vx < 0) || (x + BALL_RADIUS + dx > GameImpl.WIDTH && vx > 0)){
+			vx *= -1;
+		}
+		//TODO Split up to detect collision with bottom wall
+		//TODO Store times collided with bottom wall
+		if((y - BALL_RADIUS + dy < 0 && vy < 0) || (y + BALL_RADIUS + dy > GameImpl.HEIGHT && vy > 0)){
+			vy *= -1;
+		}
 		x += dx;
 		y += dy;
 
 		circle.setTranslateX(x - (circle.getLayoutX() + BALL_RADIUS));
 		circle.setTranslateY(y - (circle.getLayoutY() + BALL_RADIUS));
+	}
+
+	void checkPaddleCollision(final Bounds paddleBounds){
+		if(paddleBounds.intersects(circle.getBoundsInParent())){
+			System.out.println("Collision with paddle");
+			vy *= -1;
+		}
+	}
+
+	void checkAnimalCollision(final Animal[][] animals){
+		for(Animal[] animalArr : animals){
+			for(Animal animal : animalArr){
+				//TODO Need to determine if we are hitting from the left, right, top, or bottom
+				if(circle.getBoundsInParent().intersects(animal.getBounds())){
+					System.out.println("Collision with animal");
+					//TODO Fine tune speed increase
+					vx *= -1.1;
+					vy *= -1.1;
+					animal.deactivate();
+				}
+			}
+		}
+	}
+
+	int getBottomWallHits(){
+		return bottomWallHits;
 	}
 }

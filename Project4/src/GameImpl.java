@@ -1,8 +1,13 @@
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.control.Label;
 import javafx.animation.AnimationTimer;
 import javafx.scene.input.MouseEvent;
 import javafx.event.*;
+
+import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 public class GameImpl extends Pane implements Game {
@@ -26,12 +31,22 @@ public class GameImpl extends Pane implements Game {
 	// Instance variables
 	private Ball ball;
 	private Paddle paddle;
+	private Random rng;
+	private Animal[][] animals;
 
 	/**
 	 * Constructs a new GameImpl.
 	 */
 	public GameImpl () {
 		setStyle("-fx-background-color: white;");
+
+		try {
+			Assets.init();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		rng = new Random();
 
 		restartGame(GameState.NEW);
 	}
@@ -52,7 +67,18 @@ public class GameImpl extends Pane implements Game {
 		getChildren().add(ball.getCircle());  // Add the ball to the game board
 
 		// Create and add animals ...
-		//TODO
+		//TODO Check if it should actually be random
+		//TODO Rework loop
+		//TODO Do some math to make it more flexible
+		Image[] assets = new Image[]{Assets.HORSE, Assets.DUCK, Assets.GOAT};
+		animals = new Animal[4][4];
+		for(int i = 0; i < animals.length ; i++){
+			for(int j = 0; j < animals[0].length; j++){
+				//TODO Clean up
+				animals[i][j] = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
+				getChildren().add(animals[i][j].getImageView());
+			}
+		}
 
 		// Create and add paddle
 		paddle = new Paddle();
@@ -121,7 +147,24 @@ public class GameImpl extends Pane implements Game {
 	 * @return the current game state
 	 */
 	public GameState runOneTimestep (long deltaNanoTime) {
+		ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
 		ball.updatePosition(deltaNanoTime);
+		ball.checkAnimalCollision(animals);
+		int numDeactive = 0;
+		for(Animal[] animalsArr: animals){
+			for (Animal animal : animalsArr){
+				if(!animal.isActive()){
+					//TODO This is not working \/
+					numDeactive++;
+					getChildren().remove(animal.getImageView());
+				}
+			}
+		}
+		if(ball.getBottomWallHits() >= 5){
+			return GameState.LOST;
+		}else if(numDeactive >= animals.length * animals[0].length){
+			return GameState.WON;
+		}
 		return GameState.ACTIVE;
 	}
 }
