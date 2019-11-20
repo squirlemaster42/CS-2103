@@ -150,19 +150,20 @@ public class GameImpl extends Pane implements Game {
 		ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
 		ball.updatePosition(deltaNanoTime);
 		ball.checkAnimalCollision(animals);
-		int numDeactive = 0;
+		int numActive = 0;
 		for(Animal[] animalsArr: animals){
 			for (Animal animal : animalsArr){
 				if(!animal.isActive()){
 					//TODO This is not working \/
-					numDeactive++;
 					getChildren().remove(animal.getImageView());
+				}else{
+					numActive++;
 				}
 			}
 		}
 		if(ball.getBottomWallHits() >= 5){
 			return GameState.LOST;
-		}else if(numDeactive >= animals.length * animals[0].length){
+		}else if(numActive <= 0){
 			return GameState.WON;
 		}
 		return GameState.ACTIVE;
