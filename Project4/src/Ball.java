@@ -98,7 +98,10 @@ public class Ball {
 				if(circle.getBoundsInParent().intersects(animal.getBounds())){
 
 					//TODO check on logic
-					//TODO need to fix ball clipping through the immages possibly not registering hits
+					//TODO need to fix ball clipping through the images possibly not registering hits
+					//TODO Separate x and y collision
+					//TODO Check that direction we are traveling in addition to hitting
+					//Ex. we should only collide with the bottom if we are moving up
 					if(animal.getBounds().getMaxX() < (x - BALL_RADIUS + 1)){
 						//checks for hitting right side of animals
 						System.out.println("hits on the right");
