@@ -133,7 +133,13 @@ public class GameImpl extends Pane implements Game {
 						stop();
 						// Restart the game, with a message that depends on whether
 						// the user won or lost the game.
+
+						//checks if ball has hit bottom wall 5 times, resulting in a loss
 						restartGame(state);
+						if(checkForLoss(ball)){
+							//sets the gamestate to LOST indicating game over
+							state = GameState.LOST;
+						}
 					}
 				}
 				// Keep track of how much time actually transpired since the last clock-tick.
@@ -169,5 +175,9 @@ public class GameImpl extends Pane implements Game {
 			return GameState.WON;
 		}
 		return GameState.ACTIVE;
+	}
+
+	public boolean checkForLoss(Ball b){
+		return b.getBottomWallHits() == 5;
 	}
 }
