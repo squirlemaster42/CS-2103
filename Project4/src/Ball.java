@@ -1,6 +1,7 @@
 import java.awt.*;
 
 import javafx.geometry.Bounds;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
@@ -66,11 +67,15 @@ public class Ball {
 		}
 		//TODO Split up to detect collision with bottom wall
 		//TODO Store times collided with bottom wall
-		if((y - BALL_RADIUS + dy < 0 && vy < 0) || (y + BALL_RADIUS + dy > GameImpl.HEIGHT && vy > 0)){
+		if((y + BALL_RADIUS + dy > GameImpl.HEIGHT && vy > 0)){
 			vy *= -1;
 			bottomWallHits++;
 			System.out.println("Hit the bottom wall " + bottomWallHits + " times.");
 		}
+		else if((y - BALL_RADIUS + dy < 0 && vy < 0)){
+			vy *= -1;
+		}
+
 		x += dx;
 		y += dy;
 
@@ -92,46 +97,51 @@ public class Ball {
 				//TODO Need to determine if we are hitting from the left, right, top, or bottom
 				if(circle.getBoundsInParent().intersects(animal.getBounds())){
 
-					 double prevX = (x - circle.getRadius() + 1);
-					 double prevY = (y - circle.getRadius() + 1);
-					 double nextX = (x + circle.getRadius() - 1);
-					 double nextY = (y + circle.getRadius() - 1);
-
 					//TODO check on logic
 					//TODO need to fix ball clipping through the immages possibly not registering hits
-					if(animal.getBounds().getMaxX() <= prevX){
+					if(animal.getBounds().getMaxX() < (x - BALL_RADIUS + 1)){
 						//checks for hitting right side of animals
 						System.out.println("hits on the right");
 						if((vy < 0 && vx < 0) || (vy > 0 && vx < 0)){
 							vx *= -1;
+							animal.deactivate();
 						}
 					}
-					else if(animal.getBounds().getMinX() <= nextX){
+					else if(animal.getBounds().getMinX() > (x + BALL_RADIUS - 1)){
 						//checks for hit on left side
 						System.out.println(" hits on left ");
 						if((vy < 0 && vx > 0) || (vy > 0 && vx > 0)){
 							vx *= -1;
+							animal.deactivate();
 						}
 					}
-					else if(animal.getBounds().getMaxY() <= prevY){
+					else if(animal.getBounds().getMaxY() < (y - BALL_RADIUS + 1)){
 						//checks for hits on bottom side
 						System.out.println("hits on the bottom");
 						if((vy < 0 && vx > 0) || (vy > 0 && vx > 0)){
 							vy *= -1;
+							animal.deactivate();
 						}
 					}
-					else if(animal.getBounds().getMinY() <= nextY){
+					else if(animal.getBounds().getMinY() > (y + BALL_RADIUS - 1)){
 						//checks for hit on top
 						System.out.println("hits on top");
 						if((vy > 0 && vx > 0) || vy < 0 && vx > 0){
 							vy *= -1;
+							animal.deactivate();
 						}
 					}
-
-					System.out.println("Collision with animal");
-					if(animal.isActive()){
-						animal.deactivate();
+					else{
+						vx *= -1;
+						vy *= -1;
 					}
+					System.out.println("Collision with " +animal.toString());
+					System.out.println("circle x " + x);
+					System.out.println("circle y " + y);
+					System.out.println("maxX " + animal.getBounds().getMaxX() + "\n" +
+									   "maxY " + animal.getBounds().getMaxY() + "\n" +
+									   "minX " + animal.getBounds().getMinX() + "\n" +
+							           "minY " + animal.getBounds().getMinY());
 				}
 			}
 		}
