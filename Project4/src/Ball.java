@@ -29,6 +29,9 @@ public class Ball {
     private Circle circle;
     private int bottomWallHits = 0;
 
+    //Tolerance value for detecting collision
+    private final int COLLISION_TOLERANCE = 15;
+
     /**
      * @return the Circle object that represents the ball on the game board.
      */
@@ -101,27 +104,27 @@ public class Ball {
                 //TODO Separate x and y collision
                 //TODO Check that direction we are traveling in addition to hitting
                 //Ex. we should only collide with the bottom if we are moving up
-                if (animal.getBounds().getMaxX() < (x - BALL_RADIUS + 3) && vx < 0) {
+                if (animal.getBounds().getMaxX() < (int)(x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
                     //checks for hitting right side of animals
                     System.out.println("hits on the right");
-                    vx *= -1.1;
+                    vx *= -1.2;
                     animal.deactivate();
-                } else if (animal.getBounds().getMinX() > (x + BALL_RADIUS - 3) && vx > 0) {
+                } else if (animal.getBounds().getMinX() > (int)(x + BALL_RADIUS - COLLISION_TOLERANCE) && vx > 0) {
                     //checks for hit on left side
                     System.out.println(" hits on left ");
-                    vx *= -1.1;
+                    vx *= -1.2;
                     animal.deactivate();
                 }
 
-                if (animal.getBounds().getMaxY() < (y - BALL_RADIUS + 3) && vy < 0) {
+                if (animal.getBounds().getMaxY() < (int)(y - BALL_RADIUS + COLLISION_TOLERANCE) && vy < 0) {
                     //checks for hits on bottom side
                     System.out.println("hits on the bottom");
-                    vy *= -1.1;
+                    vy *= -1.2;
                     animal.deactivate();
-                } else if (animal.getBounds().getMinY() > (y + BALL_RADIUS - 3) && vy > 0) {
+                } else if (animal.getBounds().getMinY() > (int)(y + BALL_RADIUS - COLLISION_TOLERANCE) && vy > 0) {
                     //checks for hit on top
                     System.out.println("hits on top");
-                    vy *= -1.1;
+                    vy *= -1.2;
                     animal.deactivate();
                 }
                 System.out.println("Collision with " + animal.toString());
