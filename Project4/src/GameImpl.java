@@ -25,7 +25,7 @@ public class GameImpl extends Pane implements Game {
     private Ball ball;
     private Paddle paddle;
     private Random rng;
-    private List<Animal> animals;
+    private final List<Animal> animals;
 
     /**
      * Constructs a new GameImpl.
@@ -40,6 +40,7 @@ public class GameImpl extends Pane implements Game {
         }
 
         rng = new Random();
+		animals = Collections.synchronizedList(new ArrayList<>());
 
         restartGame(GameState.NEW);
     }
@@ -60,13 +61,8 @@ public class GameImpl extends Pane implements Game {
         getChildren().add(ball.getCircle());  // Add the ball to the game board
 
         // Create and add animals ...
-        //TODO Check if it should actually be random
-        //TODO Rework loop
-        //TODO Do some math to make it more flexible
         Image[] assets = new Image[]{Assets.HORSE, Assets.DUCK, Assets.GOAT};
-        //TODO Think about switching data structures to something that will removed holes
         //Like an array list
-        animals = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
             	Animal animal = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
@@ -153,18 +149,18 @@ public class GameImpl extends Pane implements Game {
         ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
         ball.updatePosition(deltaNanoTime);
         ball.checkAnimalCollision(animals);
-        int numActive = 0;
-        for (Animal animal : animals) {
-            if (!animal.isActive()) {
-                getChildren().remove(animal.getImageView());
-                animals.remove(animal);
-            } else {
-                numActive++;
-            }
-        }
+        //TODO Problem here
+		synchronized (animals){
+			animals.forEach(animal -> {
+				if (!animal.isActive()) {
+					getChildren().remove(animal.getImageView());
+					animals.remove(animal);
+				}
+			});
+		}
         if (ball.getBottomWallHits() >= 5) {
             return GameState.LOST;
-        } else if (numActive <= 0) {
+        } else if (animals.size() <= 0) {
             return GameState.WON;
         }
         return GameState.ACTIVE;
