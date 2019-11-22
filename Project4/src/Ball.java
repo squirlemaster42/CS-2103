@@ -91,15 +91,8 @@ public class Ball {
     }
 
     void checkAnimalCollision(final List<Animal> animals) {
-        //TODO Will need to use iterators so that we can remove things from the list
         for (Animal animal : animals) {
-            //TODO Need to determine if we are hitting from the left, right, top, or bottom
             if (circle.getBoundsInParent().intersects(animal.getBounds())) {
-
-                //TODO check on logic
-                //TODO need to fix ball clipping through the images possibly not registering hits
-                //TODO Separate x and y collision
-                //TODO Check that direction we are traveling in addition to hitting
                 //Ex. we should only collide with the bottom if we are moving up
                 if (animal.getBounds().getMaxX() < (x - BALL_RADIUS + 3) && vx < 0) {
                     //checks for hitting right side of animals
@@ -125,12 +118,6 @@ public class Ball {
                     animal.deactivate();
                 }
                 System.out.println("Collision with " + animal.toString());
-                System.out.println("circle x " + x);
-                System.out.println("circle y " + y);
-                System.out.println("maxX " + animal.getBounds().getMaxX() + "\n" +
-                        "maxY " + animal.getBounds().getMaxY() + "\n" +
-                        "minX " + animal.getBounds().getMinX() + "\n" +
-                        "minY " + animal.getBounds().getMinY());
             }
         }
 

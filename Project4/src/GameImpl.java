@@ -40,7 +40,7 @@ public class GameImpl extends Pane implements Game {
         }
 
         rng = new Random();
-		animals = Collections.synchronizedList(new ArrayList<>());
+        animals = new ArrayList<>();
 
         restartGame(GameState.NEW);
     }
@@ -65,7 +65,7 @@ public class GameImpl extends Pane implements Game {
         //Like an array list
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
-            	Animal animal = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
+                Animal animal = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
                 animals.add(animal);
                 getChildren().add(animal.getImageView());
             }
@@ -149,14 +149,16 @@ public class GameImpl extends Pane implements Game {
         ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
         ball.updatePosition(deltaNanoTime);
         ball.checkAnimalCollision(animals);
-        //TODO Problem here
-		synchronized (animals){
+        try{
 			animals.forEach(animal -> {
 				if (!animal.isActive()) {
+					getChildren().remove(animal.getImageView());
 					getChildren().remove(animal.getImageView());
 					animals.remove(animal);
 				}
 			});
+		}catch (ConcurrentModificationException e){
+			System.out.print("");
 		}
         if (ball.getBottomWallHits() >= 5) {
             return GameState.LOST;
