@@ -86,6 +86,8 @@ public class Ball {
         circle.setTranslateY(y - (circle.getLayoutY() + BALL_RADIUS));
     }
 
+    //TODO add comments and shiet
+	
     void checkPaddleCollision(final Bounds paddleBounds) {
         if (paddleBounds.intersects(circle.getBoundsInParent())) {
             System.out.println("Collision with paddle");
@@ -96,13 +98,7 @@ public class Ball {
     void checkAnimalCollision(final List<Animal> animals) {
         //TODO Will need to use iterators so that we can remove things from the list
         for (Animal animal : animals) {
-            //TODO Need to determine if we are hitting from the left, right, top, or bottom
             if (circle.getBoundsInParent().intersects(animal.getBounds())) {
-
-                //TODO check on logic
-                //TODO need to fix ball clipping through the images possibly not registering hits
-                //TODO Separate x and y collision
-                //TODO Check that direction we are traveling in addition to hitting
                 //Ex. we should only collide with the bottom if we are moving up
                 if (animal.getBounds().getMaxX() < (int)(x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
                     //checks for hitting right side of animals
@@ -115,7 +111,6 @@ public class Ball {
                     vx *= -1.2;
                     animal.deactivate();
                 }
-
                 if (animal.getBounds().getMaxY() < (int)(y - BALL_RADIUS + COLLISION_TOLERANCE) && vy < 0) {
                     //checks for hits on bottom side
                     System.out.println("hits on the bottom");
