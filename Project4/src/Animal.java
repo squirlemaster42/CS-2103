@@ -8,35 +8,30 @@ public class Animal {
     private double x, y;
     private boolean active;
     private final Bounds bounds;
-    private final Image image;
+    private final ImageView image;
 
-    Animal(final Image image, final double initX, final double initY){
+    Animal(final Image image, final double initX, final double initY) {
         this.x = initX;
         this.y = initY;
         active = true;
-        this.image = image;
+        this.image = new ImageView(image);
         bounds = new BoundingBox(x, y, image.getWidth(), image.getHeight());
     }
 
-    ImageView getImageView(){
-        if(active){
-            final ImageView imageView = new ImageView(this.image);
-            imageView.relocate(x, y);
-            return imageView;
-        }else{
-            return null;
-        }
+    ImageView getImageView() {
+        image.relocate(x, y);
+        return image;
     }
 
-    Bounds getBounds(){
+    Bounds getBounds() {
         return bounds;
     }
 
-    void deactivate(){
+    void deactivate() {
         active = false;
     }
 
-    boolean isActive(){
+    boolean isActive() {
         return active;
     }
 
