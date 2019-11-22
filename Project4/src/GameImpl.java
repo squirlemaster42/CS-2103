@@ -149,6 +149,7 @@ public class GameImpl extends Pane implements Game {
         ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
         ball.updatePosition(deltaNanoTime);
         ball.checkAnimalCollision(animals);
+        //TODO Move this
         try{
 			animals.forEach(animal -> {
 				if (!animal.isActive()) {

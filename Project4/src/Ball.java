@@ -96,6 +96,7 @@ public class Ball {
     }
 
     void checkAnimalCollision(final List<Animal> animals) {
+    	//TODO use iterators and remove stuff
         for (Animal animal : animals) {
             if (circle.getBoundsInParent().intersects(animal.getBounds())) {
                 //Ex. we should only collide with the bottom if we are moving up
