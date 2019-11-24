@@ -66,25 +66,27 @@ public class Ball {
         double dx = vx * deltaNanoTime;
         double dy = vy * deltaNanoTime;
 
+        //Checks if the ball is hitting the left or right of the screen
         if ((x - BALL_RADIUS + dx < 0 && vx < 0) || (x + BALL_RADIUS + dx > GameImpl.WIDTH && vx > 0)) {
             vx *= -1;
         }
 
+        //Checks if the ball is hitting the top or bottom of the screen
         if ((y + BALL_RADIUS + dy > GameImpl.HEIGHT && vy > 0)) {
             vy *= -1;
-            bottomWallHits++;
+            bottomWallHits++; //Increases the number of times the bottom wall has been hit
         } else if ((y - BALL_RADIUS + dy < 0 && vy < 0)) {
             vy *= -1;
         }
 
+        //Updates the x and y coords
         x += dx;
         y += dy;
 
+        //Moves the ball to the new x and y coords
         circle.setTranslateX(x - (circle.getLayoutX() + BALL_RADIUS));
         circle.setTranslateY(y - (circle.getLayoutY() + BALL_RADIUS));
     }
-
-    //TODO add comments and shiet
 
     /**
      * Checks if the ball is colliding with the paddle

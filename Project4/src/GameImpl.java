@@ -65,12 +65,16 @@ public class GameImpl extends Pane implements Game {
         getChildren().add(ball.getCircle());  // Add the ball to the game board
 
         // Create and add animals ...
+        //Creates a list of assets to use for animal images
         Image[] assets = new Image[]{Assets.HORSE, Assets.DUCK, Assets.GOAT};
-        //Like an array list
-        for (int i = 0; i < 4; i++) {
+        //Creates a list with 16 animals
+        for (int i = 0; i < 4; i++) { //TODO remove magic numbers
             for (int j = 0; j < 4; j++) {
+                //Chooses a random image for the animal and gives it coords
                 Animal animal = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
+                //Adds the new animal to the list of animals
                 animals.add(animal);
+                //Adds the image of the animal to the GUI
                 getChildren().add(animal.getImageView());
             }
         }
@@ -150,10 +154,14 @@ public class GameImpl extends Pane implements Game {
      * @return the current game state
      */
     public GameState runOneTimestep(long deltaNanoTime) {
+        //Checks if the ball is colliding with the paddle
         ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
+        //Updates the position of the ball
         ball.updatePosition(deltaNanoTime);
+        //Checks if the ball is colliding with any animals
         ball.checkAnimalCollision(animals);
         try{
+            //Removes animals that are no longer active
 			animals.forEach(animal -> {
 				if (!animal.isActive()) {
 					getChildren().remove(animal.getImageView());
@@ -164,7 +172,8 @@ public class GameImpl extends Pane implements Game {
 		}catch (ConcurrentModificationException e){
 			System.out.print("");
 		}
-        if (ball.getBottomWallHits() >= 5) {
+        //Updates the GameState if needed
+        if (checkForLoss(ball)) {
             return GameState.LOST;
         } else if (animals.size() <= 0) {
             return GameState.WON;
