@@ -26,8 +26,10 @@ public class Ball {
      */
     public static final int COLLISION_TOLERANCE = 15;
 
-    // Instance variables
-    // (x,y) is the position of the center of the ball.
+    /**
+     * Instance variables
+     * (x,y) is the position of the center of the ball.
+     */
     private double x, y;
     private double vx, vy;
     private Circle circle;
@@ -107,9 +109,12 @@ public class Ball {
     void checkAnimalCollision(final List<Animal> animals) {
         for (Animal animal : animals) {
             //Check is we are colliding with an animal
+            //checks which side of the animal we collide with
+            //increasing the velocity on every hit
+            //changing the ball's direction based on which side of the animal the ball hits
             if (circle.getBoundsInParent().intersects(animal.getBounds())) {
                 if (animal.getBounds().getMaxX() < (int) (x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
-                    //checks for hitting right side of animals
+                    //checks for hitting right side of animal
                     System.out.println("hits on the right");
                     vx *= -1.2;
                     animal.deactivate();

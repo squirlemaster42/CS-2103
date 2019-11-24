@@ -131,7 +131,6 @@ public class GameImpl extends Pane implements Game {
                         stop();
                         // Restart the game, with a message that depends on whether
                         // the user won or lost the game.
-
                         //checks if ball has hit bottom wall 5 times, resulting in a loss
                         restartGame(state);
                         if (checkForLoss(ball)) {
