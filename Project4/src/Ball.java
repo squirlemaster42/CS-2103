@@ -25,6 +25,10 @@ public class Ball {
      * Tolerance value for detecting collision
      */
     public static final int COLLISION_TOLERANCE = 15;
+    /**
+     * The amount to change the speed when the ball hits an animal
+     */
+    public static final double BALL_SPEED_MULTIPLIER = 1.2;
 
     /**
      * Instance variables
@@ -116,23 +120,23 @@ public class Ball {
                 if (animal.getBounds().getMaxX() < (int) (x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
                     //checks for hitting right side of animal
                     System.out.println("hits on the right");
-                    vx *= -1.2;
+                    vx *= -BALL_SPEED_MULTIPLIER;
                     animal.deactivate();
                 } else if (animal.getBounds().getMinX() > (int) (x + BALL_RADIUS - COLLISION_TOLERANCE) && vx > 0) {
                     //checks for hit on left side
                     System.out.println(" hits on left ");
-                    vx *= -1.2;
+                    vx *= -BALL_SPEED_MULTIPLIER;
                     animal.deactivate();
                 }
                 if (animal.getBounds().getMaxY() < (int)(y - BALL_RADIUS + COLLISION_TOLERANCE) && vy < 0) {
                     //checks for hits on bottom side
                     System.out.println("hits on the bottom");
-                    vy *= -1.2;
+                    vy *= -BALL_SPEED_MULTIPLIER;
                     animal.deactivate();
                 } else if (animal.getBounds().getMinY() > (int)(y + BALL_RADIUS - COLLISION_TOLERANCE) && vy > 0) {
                     //checks for hit on top
                     System.out.println("hits on top");
-                    vy *= -1.2;
+                    vy *= -BALL_SPEED_MULTIPLIER;
                     animal.deactivate();
                 }
             }

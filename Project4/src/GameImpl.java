@@ -24,7 +24,17 @@ public class GameImpl extends Pane implements Game {
     /**
      * The number of times the ball has to hit the bottom wall to lose
      */
-    private static final int LOSS_HITS = 5;
+    public static final int LOSS_HITS = 5;
+    /**s
+     * The space to leave before drawing the images
+     */
+    public static final int X_PADDING = 50;
+    public static final int Y_PADDING = 10;
+    /**
+     * The distance between each image
+     */
+    public static final int DIST_BETWEEN_IMAGE = 80;
+
     // Instance variables
     private Ball ball;
     private Paddle paddle;
@@ -57,7 +67,8 @@ public class GameImpl extends Pane implements Game {
         return this;
     }
 
-    private void restartGame(GameState state) {
+    private void
+    restartGame(GameState state) {
         getChildren().clear();  // remove all components from the game
 
         // Create and add ball
@@ -68,10 +79,12 @@ public class GameImpl extends Pane implements Game {
         //Creates a list of assets to use for animal images
         Image[] assets = new Image[]{Assets.HORSE, Assets.DUCK, Assets.GOAT};
         //Creates a list with 16 animals
-        for (int i = 0; i < 4; i++) { //TODO remove magic numbers
+        for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 4; j++) {
                 //Chooses a random image for the animal and gives it coords
-                Animal animal = new Animal(assets[rng.nextInt(assets.length)], 50 + 80 * j, 10 + 80 * i);
+                final int xCoord = X_PADDING + DIST_BETWEEN_IMAGE * j;
+                final int yCoord = Y_PADDING + DIST_BETWEEN_IMAGE * i;
+                Animal animal = new Animal(assets[rng.nextInt(assets.length)], xCoord, yCoord);
                 //Adds the new animal to the list of animals
                 animals.add(animal);
                 //Adds the image of the animal to the GUI
