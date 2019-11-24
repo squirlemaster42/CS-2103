@@ -21,6 +21,10 @@ public class GameImpl extends Pane implements Game {
      * The height of the game board.
      */
     public static final int HEIGHT = 600;
+    /**
+     * The number of times the ball has to hit the bottom wall to lose
+     */
+    private static final int LOSS_HITS = 5;
     // Instance variables
     private Ball ball;
     private Paddle paddle;
@@ -149,7 +153,6 @@ public class GameImpl extends Pane implements Game {
         ball.checkPaddleCollision(paddle.getRectangle().getBoundsInParent());
         ball.updatePosition(deltaNanoTime);
         ball.checkAnimalCollision(animals);
-        //TODO Move this
         try{
 			animals.forEach(animal -> {
 				if (!animal.isActive()) {
@@ -169,8 +172,13 @@ public class GameImpl extends Pane implements Game {
         return GameState.ACTIVE;
     }
 
+    /**
+     * Checks if the game should be lost
+     * @param b The ball to check for losses
+     * @return Returns true if the game should be lost, false otherwise
+     */
     private boolean checkForLoss(Ball b) {
-        return b.getBottomWallHits() == 5;
+        return b.getBottomWallHits() == LOSS_HITS;
     }
 
     /**

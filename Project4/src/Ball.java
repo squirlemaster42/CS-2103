@@ -21,6 +21,10 @@ public class Ball {
      * The initial velocity of the ball in the y direction.
      */
     public static final double INITIAL_VY = 1e-7;
+    /**
+     * Tolerance value for detecting collision
+     */
+    public static final int COLLISION_TOLERANCE = 15;
 
     // Instance variables
     // (x,y) is the position of the center of the ball.
@@ -28,9 +32,6 @@ public class Ball {
     private double vx, vy;
     private Circle circle;
     private int bottomWallHits = 0;
-
-    //Tolerance value for detecting collision
-    private final int COLLISION_TOLERANCE = 15;
 
     /**
      * @return the Circle object that represents the ball on the game board.
@@ -64,17 +65,14 @@ public class Ball {
     public void updatePosition(long deltaNanoTime) {
         double dx = vx * deltaNanoTime;
         double dy = vy * deltaNanoTime;
-        //TODO Cleanup
-        //TODO Fix getting stuck
+
         if ((x - BALL_RADIUS + dx < 0 && vx < 0) || (x + BALL_RADIUS + dx > GameImpl.WIDTH && vx > 0)) {
             vx *= -1;
         }
-        //TODO Split up to detect collision with bottom wall
-        //TODO Store times collided with bottom wall
+
         if ((y + BALL_RADIUS + dy > GameImpl.HEIGHT && vy > 0)) {
             vy *= -1;
             bottomWallHits++;
-            System.out.println("Hit the bottom wall " + bottomWallHits + " times.");
         } else if ((y - BALL_RADIUS + dy < 0 && vy < 0)) {
             vy *= -1;
         }
@@ -87,25 +85,33 @@ public class Ball {
     }
 
     //TODO add comments and shiet
-	
+
+    /**
+     * Checks if the ball is colliding with the paddle
+     * @param paddleBounds The bounds of the paddle
+     */
     void checkPaddleCollision(final Bounds paddleBounds) {
+        //Check if the ball is contacting the paddle
         if (paddleBounds.intersects(circle.getBoundsInParent())) {
             System.out.println("Collision with paddle");
-            vy *= -1;
+            vy *= -1; //Reverse the direction of the ball
         }
     }
 
+    /**
+     * Checks if the ball is colliding with with an animal and alters the direction
+     * @param animals A List of animals to check
+     */
     void checkAnimalCollision(final List<Animal> animals) {
-    	//TODO use iterators and remove stuff
         for (Animal animal : animals) {
+            //Check is we are colliding with an animal
             if (circle.getBoundsInParent().intersects(animal.getBounds())) {
-                //Ex. we should only collide with the bottom if we are moving up
-                if (animal.getBounds().getMaxX() < (int)(x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
+                if (animal.getBounds().getMaxX() < (int) (x - BALL_RADIUS + COLLISION_TOLERANCE) && vx < 0) {
                     //checks for hitting right side of animals
                     System.out.println("hits on the right");
                     vx *= -1.2;
                     animal.deactivate();
-                } else if (animal.getBounds().getMinX() > (int)(x + BALL_RADIUS - COLLISION_TOLERANCE) && vx > 0) {
+                } else if (animal.getBounds().getMinX() > (int) (x + BALL_RADIUS - COLLISION_TOLERANCE) && vx > 0) {
                     //checks for hit on left side
                     System.out.println(" hits on left ");
                     vx *= -1.2;
@@ -122,12 +128,14 @@ public class Ball {
                     vy *= -1.2;
                     animal.deactivate();
                 }
-                System.out.println("Collision with " + animal.toString());
             }
         }
-
     }
 
+    /**
+     * Gets the number of times the ball has hit the bottom wall
+     * @return An int representing the number of times the ball has hit the bottom wall
+     */
     int getBottomWallHits() {
         return bottomWallHits;
     }
