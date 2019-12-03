@@ -39,7 +39,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 		System.out.println("Parsing: " + str);
 		if(str.length() == 0){
 			return null;
-		} else if (str.contains("+")) { //TODO Check if in ()
+		} else if (str.contains("+") && !inParens(str, "+")) { //TODO Check if in ()
 			//E → A | X
 			//A → A+M | M
 			Expression rightExp = parseExpression(str.substring(0, str.indexOf("+")), parentExp);
@@ -48,7 +48,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 				return null;
 			}
 			return new AdditiveExpression(List.of(rightExp, leftExp), parentExp);
-		} else if (str.contains("*")) { //TODO Check if in ()
+		} else if (str.contains("*") && !inParens(str, "*")) { //TODO Check if in ()
 			//M := M*M | X
 			Expression rightExp = parseExpression(str.substring(0, str.indexOf("*")), parentExp);
 			Expression leftExp = parseExpression(str.substring(str.indexOf("*") + 1), parentExp);
@@ -71,10 +71,27 @@ public class SimpleExpressionParser implements ExpressionParser {
 	}
 
 	private boolean inParens(String str, String symbol){
-		return false;
+		if(str.contains("(") || str.contains(")")){
+			int symbIndex = str.indexOf(symbol);
+			return symbIndex > str.indexOf("(") && symbIndex < indexOfMatchingParen(str, str.indexOf("("));
+		}else{
+			return false;
+		}
 	}
 
 	private int indexOfMatchingParen(String str, int parenIndex){
-		return 0;
+		int closeParensToFind = 1;
+		for(int i = parenIndex + 1; i < str.length(); i++){
+			if(str.charAt(i) == ')'){
+				closeParensToFind--;
+			}else if(str.charAt(i) == '('){
+				closeParensToFind++;
+			}
+
+			if(closeParensToFind == 0){
+				return i;
+			}
+		}
+		return -1;
 	}
 }
