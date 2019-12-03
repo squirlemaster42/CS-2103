@@ -1,0 +1,36 @@
+public class LiteralExpression implements Expression{
+
+    //TODO Figure out if this should be final
+    private final String value;
+    private CompoundExpression parent;
+
+    LiteralExpression (final String value, final CompoundExpression parent){
+        this.value = value;
+        this.parent = parent;
+    }
+
+    @Override
+    public CompoundExpression getParent() {
+        return parent;
+    }
+
+    @Override
+    public void setParent(CompoundExpression parent) {
+        this.parent = parent;
+    }
+
+    @Override
+    public Expression deepCopy() {
+        return new LiteralExpression(value, (CompoundExpression) parent.deepCopy());
+    }
+
+    @Override
+    public void flatten() {
+        //TODO Implement
+    }
+
+    @Override
+    public void convertToString(StringBuilder stringBuilder, int indentLevel) {
+        //TODO Implement
+    }
+}
