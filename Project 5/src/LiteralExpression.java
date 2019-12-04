@@ -31,7 +31,7 @@ public class LiteralExpression implements Expression{
 
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
-        //TODO Implement
+        stringBuilder.append("\t".repeat(indentLevel)).append(value).append("\n");
     }
 
     public String getValue() {

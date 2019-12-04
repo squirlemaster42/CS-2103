@@ -35,11 +35,9 @@ public class SimpleExpressionParser implements ExpressionParser {
 	}
 
 	private Expression parseExpression(String str, CompoundExpression parentExp) {
-		//TODO Fix issue where left or right is null
-		System.out.println("Parsing: " + str);
 		if(str.length() == 0){
 			return null;
-		} else if (str.contains("+") && !inParens(str, "+")) { //TODO Check if in ()
+		} else if (str.contains("+") && !inParens(str, "+")) {
 			//E → A | X
 			//A → A+M | M
 			Expression rightExp = parseExpression(str.substring(0, str.indexOf("+")), parentExp);
@@ -48,7 +46,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 				return null;
 			}
 			return new AdditiveExpression(List.of(rightExp, leftExp), parentExp);
-		} else if (str.contains("*") && !inParens(str, "*")) { //TODO Check if in ()
+		} else if (str.contains("*") && !inParens(str, "*")) {
 			//M := M*M | X
 			Expression rightExp = parseExpression(str.substring(0, str.indexOf("*")), parentExp);
 			Expression leftExp = parseExpression(str.substring(str.indexOf("*") + 1), parentExp);
@@ -58,7 +56,8 @@ public class SimpleExpressionParser implements ExpressionParser {
 			return new MultiplicationExpression(List.of(rightExp, leftExp), parentExp);
 		} else if (str.contains("(") && str.contains(")") && correctParenOrder(str)) { //TODO Need to deal with when when ) is before (
 			//X → (E) | L
-			return parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")), parentExp);
+			Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")));
+			return expression == null ? null : new ParentheticalExpression(List.of(expression), parentExp);
 		} else if (str.matches("^[0-9A-Za-z]*$")) {
 			//L := [0-9]+ | [a-z]
 			return new LiteralExpression(str, parentExp);

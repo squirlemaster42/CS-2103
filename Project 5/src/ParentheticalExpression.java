@@ -37,7 +37,8 @@ public class ParentheticalExpression implements CompoundExpression {
 
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
-        //TODO Implement
+        stringBuilder.append("\t".repeat(indentLevel)).append("()").append("\n");
+        children.forEach(e -> stringBuilder.append(e.convertToString(indentLevel + 1)));
     }
 
     @Override

@@ -38,18 +38,8 @@ public class MultiplicationExpression implements CompoundExpression {
 
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
-        int temp = indentLevel + 1;
-        if(indentLevel == 0){
-            stringBuilder.append("*");
-            System.out.println(indentLevel);
-            convertToString(stringBuilder,temp);
-        }
-        else if(indentLevel != 0){
-            System.out.println(indentLevel);
-            stringBuilder.append(children);
-            return;
-        }
-        flatten();
+        stringBuilder.append("\t".repeat(indentLevel)).append("*").append("\n");
+        children.forEach(e -> stringBuilder.append(e.convertToString(indentLevel + 1)));
     }
 
     @Override
