@@ -1,3 +1,4 @@
+import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +38,18 @@ public class MultiplicationExpression implements CompoundExpression {
 
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
-        //TODO Implement
+        int temp = indentLevel + 1;
+        if(indentLevel == 0){
+            stringBuilder.append("*");
+            System.out.println(indentLevel);
+            convertToString(stringBuilder,temp);
+        }
+        else if(indentLevel != 0){
+            System.out.println(indentLevel);
+            stringBuilder.append(children);
+            return;
+        }
+        flatten();
     }
 
     @Override
@@ -45,4 +57,9 @@ public class MultiplicationExpression implements CompoundExpression {
         //TODO Make sure that this is correct
         children.add(subexpression);
     }
+
+    public List<Expression> getChildren(){
+        return children;
+    }
+
 }

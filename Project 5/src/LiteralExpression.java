@@ -33,4 +33,8 @@ public class LiteralExpression implements Expression{
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
         //TODO Implement
     }
+
+    public String getValue() {
+        return value;
+    }
 }
