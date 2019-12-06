@@ -1,6 +1,7 @@
 public class LiteralExpression implements Expression{
 
     //TODO Figure out if this should be final
+    //TODO Check deepCopy for all
     private final String value;
     private CompoundExpression parent;
 
