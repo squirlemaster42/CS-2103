@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,50 +36,75 @@ public class SimpleExpressionParser implements ExpressionParser {
 	}
 
 	private Expression parseExpression(String str, CompoundExpression parentExp) {
+		//TODO Parent Expressions are not being set correctly
 		if(str.length() == 0){
 			return null;
-		} else if (str.contains("+") && !inParens(str, "+")) {
+		} else if (firstSymbolNotInParens(str, '+') != -1) {
 			//E → A | X
 			//A → A+M | M
-			Expression rightExp = parseExpression(str.substring(0, str.indexOf("+")), parentExp);
-			Expression leftExp = parseExpression(str.substring(str.indexOf("+") + 1), parentExp);
+			CompoundExpression returnExp = new AdditiveExpression(new ArrayList<>(), parentExp);
+			System.out.println(str.substring(0, str.indexOf("+")) + " and " + str.substring(str.indexOf("+") + 1));
+			Expression rightExp = parseExpression(str.substring(0, str.indexOf("+")), returnExp);
+			Expression leftExp = parseExpression(str.substring(str.indexOf("+") + 1), returnExp);
 			if(leftExp == null || rightExp == null){
 				return null;
 			}
-			return new AdditiveExpression(List.of(rightExp, leftExp), parentExp);
-		} else if (str.contains("*") && !inParens(str, "*")) {
+			returnExp.addSubexpression(rightExp);
+			returnExp.addSubexpression(leftExp);
+			return returnExp;
+		} else if (firstSymbolNotInParens(str, '*') != -1) {
 			//M := M*M | X
-			Expression rightExp = parseExpression(str.substring(0, str.indexOf("*")), parentExp);
-			Expression leftExp = parseExpression(str.substring(str.indexOf("*") + 1), parentExp);
+			System.out.println(str.substring(0, str.indexOf("*")) + " and " + str.substring(str.indexOf("*") + 1));
+			CompoundExpression returnExp = new MultiplicationExpression(new ArrayList<>(), parentExp);
+			Expression rightExp = parseExpression(str.substring(0, str.indexOf("*")), returnExp);
+			Expression leftExp = parseExpression(str.substring(str.indexOf("*") + 1), returnExp);
 			if(leftExp == null || rightExp == null){
 				return null;
 			}
-			return new MultiplicationExpression(List.of(rightExp, leftExp), parentExp);
+			returnExp.addSubexpression(rightExp);
+			returnExp.addSubexpression(leftExp);
+			return returnExp;
 		} else if (str.contains("(") && str.contains(")") && correctParenOrder(str)) { //TODO Need to deal with when when ) is before (
 			//X → (E) | L
-			Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")));
-			return expression == null ? null : new ParentheticalExpression(List.of(expression), parentExp);
+			System.out.println(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")));
+			CompoundExpression returnExp = new ParentheticalExpression(new ArrayList<>(), parentExp);
+			Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")), returnExp);
+			if(expression == null){
+				return null;
+			}
+			returnExp.addSubexpression(expression);
+			return returnExp;
 		} else if (str.matches("^[0-9A-Za-z]*$")) {
 			//L := [0-9]+ | [a-z]
+			//System.out.println(str);
 			return new LiteralExpression(str, parentExp);
 		}
 		return null;
 	}
 
-	private boolean correctParenOrder(String str){
+	private int firstSymbolNotInParens(final String str, final char symbol){
+		for(int i = 0; i < str.length(); i++){
+			if(str.charAt(i) == symbol && !inParens(str, i)){
+				return i;
+			}
+		}
+		return -1;
+	}
+
+	private boolean correctParenOrder(final String str){
 		return str.lastIndexOf(")") > str.indexOf("(");
 	}
 
-	private boolean inParens(String str, String symbol){
+	private boolean inParens(final String str, final int symbolIndex){
+		final char symbol = str.charAt(symbolIndex);
 		if(str.contains("(") || str.contains(")")){
-			int symbIndex = str.indexOf(symbol);
-			return symbIndex > str.indexOf("(") && symbIndex < indexOfMatchingParen(str, str.indexOf("("));
+			return symbolIndex > str.indexOf("(") && symbolIndex < indexOfMatchingParen(str, str.indexOf("("));
 		}else{
 			return false;
 		}
 	}
 
-	private int indexOfMatchingParen(String str, int parenIndex){
+	private int indexOfMatchingParen(final String str, final int parenIndex){
 		int closeParensToFind = 1;
 		for(int i = parenIndex + 1; i < str.length(); i++){
 			if(str.charAt(i) == ')'){

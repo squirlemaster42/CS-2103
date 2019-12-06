@@ -1,6 +1,7 @@
 import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class MultiplicationExpression implements CompoundExpression {
 
@@ -33,7 +34,21 @@ public class MultiplicationExpression implements CompoundExpression {
 
     @Override
     public void flatten() {
-        //TODO Implement
+        if(parent == null){
+            for(Expression child : children){
+                child.flatten();
+            }
+        }
+        ListIterator<Expression> iter = children.listIterator();
+        while (iter.hasNext()){
+            Expression child = iter.next();
+            child.flatten();
+            if(child instanceof MultiplicationExpression){
+                iter.remove();
+                ((MultiplicationExpression) child).children.forEach(e -> e.setParent(this));
+                ((MultiplicationExpression) child).children.forEach(iter::add);
+            }
+        }
     }
 
     @Override
