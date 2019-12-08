@@ -31,7 +31,9 @@ public abstract class AbstractCompoundExpression extends AbstractExpression impl
      */
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
+        //Add ourselves to the StringBuilder
         super.convertToString(stringBuilder, indentLevel);
+        //Add the convertToString calls of out children to the StringBuilder at the next indent level
         children.forEach(e -> stringBuilder.append(e.convertToString(indentLevel + 1)));
     }
 

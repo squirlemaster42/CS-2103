@@ -7,7 +7,7 @@ public class AdditiveExpression extends AbstractCompoundExpression {
     /**
      * Creates an instance of Additive Expression
      * @param children children of the additive expression
-     * @param parent parent of the additive expression
+     * @param parent parent of the additive expsression
      */
     AdditiveExpression(final List<Expression> children, final CompoundExpression parent){
         super(children, parent, "+");

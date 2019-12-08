@@ -38,6 +38,7 @@ public abstract class AbstractExpression implements Expression {
      */
     @Override
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
+        //Add ourselves to the StringBuilder
         stringBuilder.append("\t".repeat(indentLevel)).append(symbol).append("\n");
     }
 }
