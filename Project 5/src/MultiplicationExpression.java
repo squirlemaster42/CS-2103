@@ -19,12 +19,15 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
      */
     @Override
     public Expression deepCopy() {
+        //Create a new instance of the children array
         List<Expression> newArr = new ArrayList<>();
+        //Add deep copies of the children to the new array
         super.getChildren().forEach(e -> {
             Expression newE = e.deepCopy();
             newE.setParent(this);
             newArr.add(newE);
         });
+        //Return a new instance of MultiplicationExpression
         return new MultiplicationExpression(newArr, null);
     }
 
@@ -33,7 +36,10 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
      */
     @Override
     public void flatten() {
+        //If we are at the head of the tree we cannot be flattened
+        //So we just proceed to flattening children
         if(parent == null){
+            //Flatten the children
             for(Expression child : super.getChildren()){
                 child.flatten();
             }
@@ -41,10 +47,15 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
         ListIterator<Expression> iter = super.getChildren().listIterator();
         while (iter.hasNext()){
             Expression child = iter.next();
+            //Flatten the current child
             child.flatten();
+            //Check if the child is an instance of MultiplicationExpression
             if(child instanceof MultiplicationExpression){
+                //Remove the child from children
                 iter.remove();
+                //Set the parents of the child to our parent
                 ((MultiplicationExpression) child).getChildren().forEach(e -> e.setParent(this));
+                //Add the children to our children
                 ((MultiplicationExpression) child).getChildren().forEach(iter::add);
             }
         }

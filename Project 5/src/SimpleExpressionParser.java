@@ -47,55 +47,58 @@ public class SimpleExpressionParser implements ExpressionParser {
 	 * @return A tree that represents the expression
 	 */
 	private Expression parseExpression(String str, CompoundExpression parentExp) {
+		//Check that the String is not length 0
 		if(str.length() == 0){
 			return null;
 		} else if (firstSymbolNotInParens(str, '+') != -1) {
+			//Parse "+"
 			//E → A | X
 			//A → A+M | M
 			final int index = firstSymbolNotInParens(str, '+');
-			CompoundExpression returnExp = new AdditiveExpression(new ArrayList<>(), parentExp);
-			Expression rightExp = parseExpression(str.substring(0, index), returnExp);
-			Expression leftExp = parseExpression(str.substring(index + 1), returnExp);
-			if(leftExp == null || rightExp == null){
-				return null;
-			}
-			returnExp.addSubexpression(rightExp);
-			returnExp.addSubexpression(leftExp);
-			return returnExp;
+			final CompoundExpression returnExp = new AdditiveExpression(new ArrayList<>(), parentExp);
+			return genExpression(str, index, returnExp);
 		} else if (firstSymbolNotInParens(str, '*') != -1) {
+			//Parse "*"
 			//M := M*M | X
 			final int index = firstSymbolNotInParens(str, '*');
-			CompoundExpression returnExp = new MultiplicationExpression(new ArrayList<>(), parentExp);
-			Expression rightExp = parseExpression(str.substring(0, index), returnExp);
-			Expression leftExp = parseExpression(str.substring(index + 1), returnExp);
-			if(leftExp == null || rightExp == null){
-				return null;
-			}
-			returnExp.addSubexpression(rightExp);
-			returnExp.addSubexpression(leftExp);
-			return returnExp;
+			final CompoundExpression returnExp = new MultiplicationExpression(new ArrayList<>(), parentExp);
+			return genExpression(str, index, returnExp);
 		} else if (str.contains("(") && str.contains(")") && correctParenOrder(str)) {
+			//Parse parenthesis
 			//X → (E) | L
-			CompoundExpression returnExp = new ParentheticalExpression(new ArrayList<>(), parentExp);
-			Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")), returnExp);
+			final CompoundExpression returnExp = new ParentheticalExpression(new ArrayList<>(), parentExp);
+			final Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")), returnExp);
 			if(expression == null){
 				return null;
 			}
 			returnExp.addSubexpression(expression);
 			return returnExp;
-		} else if (str.matches("^[0-9A-Za-z]*$")) {
+		} else if (str.matches("^[0-9A-Za-z]*$")) { //Make sure that we only have numbers and letters
+			//Parse number and letters
 			//L := [0-9]+ | [a-z]
 			return new LiteralExpression(str, parentExp);
 		}
+		//We did not parse the Expression because it was invalid
 		return null;
 	}
 
-	public CompoundExpression genExpression(final String str, final int index, final CompoundExpression returnExp){
+	/**
+	 * Generates an expression that will have two children (Addition or Multiplication)
+	 * @param str The String to parse
+	 * @param index The index of the symbol to parse
+	 * @param returnExp An instance of the expression to return
+	 * @return A CompoundExpression with two children
+	 */
+	private CompoundExpression genExpression(final String str, final int index, final CompoundExpression returnExp){
+		//The Expression that represents the right half of the String
 		Expression rightExp = parseExpression(str.substring(0, index), returnExp);
+		//The Expression that represents the left half of the String
 		Expression leftExp = parseExpression(str.substring(index + 1), returnExp);
+		//If either sub expression is null return null
 		if(leftExp == null || rightExp == null){
 			return null;
 		}
+		//Add the sub expressions
 		returnExp.addSubexpression(rightExp);
 		returnExp.addSubexpression(leftExp);
 		return returnExp;
