@@ -1,6 +1,5 @@
 public class LiteralExpression implements Expression{
 
-    //TODO Figure out if this should be final
     //TODO Check deepCopy for all
     //TODO Check single literal
     private final String value;

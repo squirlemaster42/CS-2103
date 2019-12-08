@@ -1,4 +1,3 @@
-import javax.swing.plaf.IconUIResource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -25,7 +24,6 @@ public class MultiplicationExpression implements CompoundExpression {
 
     @Override
     public Expression deepCopy() {
-        //TODO Make sure we want an ArrayList
         //TODO Make sure this is correct
         List<Expression> newArr = new ArrayList<>();
         children.forEach(e -> newArr.add(e.deepCopy()));
@@ -59,12 +57,7 @@ public class MultiplicationExpression implements CompoundExpression {
 
     @Override
     public void addSubexpression(Expression subexpression) {
-        //TODO Make sure that this is correct
         children.add(subexpression);
-    }
-
-    public List<Expression> getChildren(){
-        return children;
     }
 
 }

@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Starter code to implement an ExpressionParser. Your parser methods should use the following grammar:
@@ -36,7 +35,6 @@ public class SimpleExpressionParser implements ExpressionParser {
 	}
 
 	private Expression parseExpression(String str, CompoundExpression parentExp) {
-		//TODO Parent Expressions are not being set correctly
 		if(str.length() == 0){
 			return null;
 		} else if (firstSymbolNotInParens(str, '+') != -1) {
@@ -64,7 +62,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 			returnExp.addSubexpression(rightExp);
 			returnExp.addSubexpression(leftExp);
 			return returnExp;
-		} else if (str.contains("(") && str.contains(")") && correctParenOrder(str)) { //TODO Need to deal with when when ) is before (
+		} else if (str.contains("(") && str.contains(")") && correctParenOrder(str)) { //TODO Need to deal with when when ) is before ( ---- (Write a test for this)
 			//X → (E) | L
 			CompoundExpression returnExp = new ParentheticalExpression(new ArrayList<>(), parentExp);
 			Expression expression = parseExpression(str.substring(str.indexOf("(") + 1, str.lastIndexOf(")")), returnExp);
@@ -97,7 +95,7 @@ public class SimpleExpressionParser implements ExpressionParser {
 		if(str.contains("(") || str.contains(")")){
 			for(int i = 0; i < str.length(); i++){
 				if(str.charAt(i) == '('){
-					return indexOfMatchingParen(str, i) > symbolIndex && symbolIndex > i; //TODO Check left
+					return indexOfMatchingParen(str, i) > symbolIndex && symbolIndex > i;
 				}
 			}
 		}

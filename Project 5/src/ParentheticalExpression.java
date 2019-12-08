@@ -24,7 +24,6 @@ public class ParentheticalExpression implements CompoundExpression {
 
     @Override
     public Expression deepCopy() {
-        //TODO Make sure we want an ArrayList
         //TODO Make sure this is correct
         List<Expression> newArr = new ArrayList<>();
         children.forEach(e -> newArr.add(e.deepCopy()));
@@ -58,7 +57,6 @@ public class ParentheticalExpression implements CompoundExpression {
 
     @Override
     public void addSubexpression(Expression subexpression) {
-        //TODO Make sure that this is correct
         children.add(subexpression);
     }
 }
