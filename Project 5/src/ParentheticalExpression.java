@@ -2,61 +2,51 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ParentheticalExpression implements CompoundExpression {
+public class ParentheticalExpression extends AbstractCompoundExpression {
 
-    private final List<Expression> children;
-    private CompoundExpression parent;
-
+    /**
+     * Creates an instance of Parenthetical Expression
+     * @param children children of the additive expression
+     * @param parent parent of the additive expression
+     */
     ParentheticalExpression(final List<Expression> children, final CompoundExpression parent){
-        this.children = children;
-        this.parent = parent;
+        super(children, parent, "()");
     }
 
-    @Override
-    public CompoundExpression getParent() {
-        return parent;
-    }
-
-    @Override
-    public void setParent(CompoundExpression parent) {
-        this.parent = parent;
-    }
-
+    /**
+     * Creates a deep copy of the expression
+     * @return the deep copy that was created
+     */
     @Override
     public Expression deepCopy() {
-        //TODO Make sure this is correct
         List<Expression> newArr = new ArrayList<>();
-        children.forEach(e -> newArr.add(e.deepCopy()));
-        return new MultiplicationExpression(newArr, (CompoundExpression) parent.deepCopy());
+        super.getChildren().forEach(e -> {
+            Expression newE = e.deepCopy();
+            newE.setParent(this);
+            newArr.add(newE);
+        });
+        return new ParentheticalExpression(newArr, null);
     }
 
+    /**
+     * Combines common symbols to simplify the tree
+     */
     @Override
     public void flatten() {
         if(parent == null){
-            for(Expression child : children){
+            for(Expression child : super.getChildren()){
                 child.flatten();
             }
         }
-        ListIterator<Expression> iter = children.listIterator();
+        ListIterator<Expression> iter = super.getChildren().listIterator();
         while (iter.hasNext()){
             Expression child = iter.next();
             child.flatten();
             if(child instanceof ParentheticalExpression){
                 iter.remove();
-                ((ParentheticalExpression) child).children.forEach(e -> e.setParent(this));
-                ((ParentheticalExpression) child).children.forEach(iter::add);
+                ((ParentheticalExpression) child).getChildren().forEach(e -> e.setParent(this));
+                ((ParentheticalExpression) child).getChildren().forEach(iter::add);
             }
         }
-    }
-
-    @Override
-    public void convertToString(StringBuilder stringBuilder, int indentLevel) {
-        stringBuilder.append("\t".repeat(indentLevel)).append("()").append("\n");
-        children.forEach(e -> stringBuilder.append(e.convertToString(indentLevel + 1)));
-    }
-
-    @Override
-    public void addSubexpression(Expression subexpression) {
-        children.add(subexpression);
     }
 }

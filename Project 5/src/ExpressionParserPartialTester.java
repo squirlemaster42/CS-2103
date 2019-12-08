@@ -57,6 +57,44 @@ public class ExpressionParserPartialTester {
 		assertEquals(parseTreeStr, _parser.parse(expressionStr, false).convertToString(0));
 	}
 
+	@Test(expected = ExpressionParseException.class)
+	/**
+	 * Verifies that a specific expression is parsed into the correct parse tree.
+	 */
+	public void testExpression6 () throws ExpressionParseException {
+		final String expressionStr = "4*)z+5*x(";
+		final String parseTreeStr = "*\n\t4\n\t()\n\t\t+\n\t\t\tz\n\t\t\t*\n\t\t\t\t5\n\t\t\t\tx\n";
+		assertEquals(parseTreeStr, _parser.parse(expressionStr, false).convertToString(0));
+	}
+
+	@Test
+	/**
+	 * Verifies that a specific expression is parsed into the correct parse tree.
+	 */
+	public void testExpression5 () throws ExpressionParseException {
+		final String expressionStr = "(4)*(z+5*x)";
+		final String parseTreeStr = "*\n" +
+				"\t()\n" +
+				"\t\t4\n" +
+				"\t()\n" +
+				"\t\t+\n" +
+				"\t\t\tz\n" +
+				"\t\t\t*\n" +
+				"\t\t\t\t5\n" +
+				"\t\t\t\tx\n";
+		assertEquals(parseTreeStr, _parser.parse(expressionStr, false).convertToString(0));
+	}
+
+	@Test
+	/**
+	 * Verifies that a specific expression is parsed into the correct parse tree.
+	 */
+	public void testExpression4 () throws ExpressionParseException {
+		final String expressionStr = "4";
+		final String parseTreeStr = "4\n";
+		assertEquals(parseTreeStr, _parser.parse(expressionStr, false).convertToString(0));
+	}
+
 	@Test
 	/**
 	 * Verifies that a specific expression is parsed into the correct parse tree.
