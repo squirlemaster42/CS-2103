@@ -1,5 +1,3 @@
-import javafx.scene.Node;
-
 public abstract class AbstractExpression implements Expression {
 
     private CompoundExpression parent;
@@ -42,10 +40,5 @@ public abstract class AbstractExpression implements Expression {
     public void convertToString(StringBuilder stringBuilder, int indentLevel) {
         //Add ourselves to the StringBuilder
         stringBuilder.append("\t".repeat(indentLevel)).append(symbol).append("\n");
-    }
-
-    @Override
-    public Node getNode(){
-        return null;
     }
 }
