@@ -1,9 +1,15 @@
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Font;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
 public class ParentheticalExpression extends AbstractCompoundExpression {
 
+    private List<Expression> _children;
     /**
      * Creates an instance of Parenthetical Expression
      * @param children children of the additive expression
@@ -11,6 +17,7 @@ public class ParentheticalExpression extends AbstractCompoundExpression {
      */
     ParentheticalExpression(final List<Expression> children, final CompoundExpression parent){
         super(children, parent, "()");
+        _children = children;
     }
 
     /**
@@ -59,5 +66,18 @@ public class ParentheticalExpression extends AbstractCompoundExpression {
                 ((ParentheticalExpression) child).getChildren().forEach(iter::add);
             }
         }
+    }
+
+    @Override
+    public Node getNode() {
+        final HBox hBox = new HBox();
+        final Label left = new Label("(");
+        left.setFont(_FONT);
+        hBox.getChildren().add(left);
+        hBox.getChildren().add(super.getChildren().get(0).getNode());
+        final Label right = new Label(")");
+        right.setFont(_FONT);
+        hBox.getChildren().add(right);
+        return hBox;
     }
 }

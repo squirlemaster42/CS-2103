@@ -1,3 +1,7 @@
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -59,5 +63,24 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
                 ((MultiplicationExpression) child).getChildren().forEach(iter::add);
             }
         }
+    }
+
+    @Override
+    public Node getNode() {
+        final HBox hBox = new HBox();
+
+        for(int i = 0 ; i < super.getChildren().size(); i++){
+            if(i == super.getChildren().size() - 1){
+                hBox.getChildren().add(super.getChildren().get(i).getNode());
+            }
+            else{
+                hBox.getChildren().add(super.getChildren().get(i).getNode());
+                final Label times = new Label("*");
+                times.setFont(_FONT);
+                hBox.getChildren().add(times);
+            }
+        }
+
+        return hBox;
     }
 }

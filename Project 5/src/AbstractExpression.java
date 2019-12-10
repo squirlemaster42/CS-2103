@@ -1,10 +1,11 @@
 import javafx.scene.Node;
+import javafx.scene.text.Font;
 
 public abstract class AbstractExpression implements Expression {
 
     private CompoundExpression parent;
     private final String symbol;
-
+    public static final Font _FONT = new Font("Comic Sans", 36);
     /**
      * An abstract implementation of Expression
      * @param parent The parent of the expression

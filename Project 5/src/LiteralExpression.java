@@ -1,3 +1,7 @@
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.text.Font;
+
 public class LiteralExpression extends AbstractExpression implements Expression{
 
     private final String value;
@@ -26,5 +30,12 @@ public class LiteralExpression extends AbstractExpression implements Expression{
     @Override
     public void flatten() {
         //Literal expressions are not flattened
+    }
+
+    @Override
+    public Node getNode() {
+        final Label label = new Label(value);
+        label.setFont(_FONT);
+        return label;
     }
 }
