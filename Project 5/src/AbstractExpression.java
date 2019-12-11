@@ -44,9 +44,4 @@ public abstract class AbstractExpression implements Expression {
         //Add ourselves to the StringBuilder
         stringBuilder.append("\t".repeat(indentLevel)).append(symbol).append("\n");
     }
-
-    @Override
-    public Node getNode() {
-        return null;
-    }
 }
