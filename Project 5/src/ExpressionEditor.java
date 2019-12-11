@@ -1,4 +1,6 @@
 import javafx.application.Application;
+
+import java.awt.event.MouseListener;
 import java.util.*;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
@@ -6,21 +8,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.event.EventType;
 import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.*;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.w3c.dom.ls.LSOutput;
 
 public class ExpressionEditor extends Application {
 	public static void main (String[] args) {
 		launch(args);
 	}
+
+	private final int EXPRESSION_POSY = WINDOW_HEIGHT/4;
+	private final int EXPRESSION_POSX = WINDOW_WIDTH/8;
 
 	/**
 	 * Mouse event handler for the entire pane that constitutes the ExpressionEditor
@@ -81,9 +84,25 @@ public class ExpressionEditor extends Application {
 					if (expression instanceof CompoundExpression) {
 						((Pane) expression.getNode()).setBorder(Expression.NO_BORDER);
 						final MouseEventHandler eventHandler = new MouseEventHandler(expressionPane, (CompoundExpression) expression);
-						expressionPane.setOnMousePressed(eventHandler);
-						expressionPane.setOnMouseDragged(eventHandler);
-						expressionPane.setOnMouseReleased(eventHandler);
+						expressionPane.setOnMousePressed(new EventHandler<MouseEvent>() {
+							@Override
+							public void handle(MouseEvent mouseEvent) {
+								System.out.println("aa");
+							}
+						});
+						expressionPane.setOnMouseDragged(new EventHandler<MouseEvent>() {
+							@Override
+							public void handle(MouseEvent mouseEvent) {
+								expressionPane.setTranslateX(mouseEvent.getX());
+								expressionPane.setTranslateY(mouseEvent.getY());
+							}
+						});
+						expressionPane.setOnMouseReleased(new EventHandler<MouseEvent>() {
+							@Override
+							public void handle(MouseEvent mouseEvent) {
+
+							}
+						});
 					}
 				} catch (ExpressionParseException epe) {
 					// If we can't parse the expression, then mark it in red
@@ -91,6 +110,9 @@ public class ExpressionEditor extends Application {
 				}
 			}
 		});
+		expressionPane.setTranslateY(EXPRESSION_POSY);
+		expressionPane.setTranslateX(EXPRESSION_POSX);
+
 		queryPane.getChildren().add(button);
 
 		// Reset the color to black whenever the user presses a key
@@ -103,4 +125,5 @@ public class ExpressionEditor extends Application {
 		primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
 		primaryStage.show();
 	}
+
 }
