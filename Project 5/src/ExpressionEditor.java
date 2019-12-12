@@ -70,19 +70,20 @@ public class ExpressionEditor extends Application {
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
             expressionPane.getChildren().add(movingExpression.getNode());
-
             changeFocus(mouseEvent);
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
+            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void handleReleased(MouseEvent mouseEvent) {
             expressionPane.getChildren().remove(movingExpression.getNode());
             movingExpression = null;
             setColor(rootExpression.getNode(), Color.BLACK);
+            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void changeFocus(final MouseEvent e) {
@@ -114,6 +115,7 @@ public class ExpressionEditor extends Application {
 					}*/
 				}
 			}
+            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void setColor(final Node n, final Color c) {
@@ -176,9 +178,6 @@ public class ExpressionEditor extends Application {
                 expressionPane.setOnMousePressed(mouseHandler);
                 expressionPane.setOnMouseDragged(mouseHandler);
                 expressionPane.setOnMouseReleased(mouseHandler);
-				if(focus != null) {
-					((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
-				}
 			} catch (ExpressionParseException epe) {
                 // If we can't parse the expression, then mark it in red
                 textField.setStyle("-fx-text-fill: red");
