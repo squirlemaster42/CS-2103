@@ -46,13 +46,9 @@ public class ExpressionEditor extends Application {
         }
 
         public void handle(MouseEvent event) {
-            //TODO Change to use MouseEventHandler class
-            // Try to parse the expression
-            //TODO Set focus
             // Success! Add the expression's Node to the expressionPane
 
             // If the parsed expression is a CompoundExpression, then register some callbacks
-            //TODO Figure out why it moves on first click
             ((Pane) rootExpression.getNode()).setBorder(Expression.NO_BORDER);
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
                 handlePressed(event);
@@ -63,6 +59,7 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        //TODO Remove boarder once no longer focused
         private void handlePressed(MouseEvent mouseEvent) {
 			changeFocus(mouseEvent);
 			setColor(focus.getNode(), Expression.GHOST_COLOR);
@@ -89,26 +86,19 @@ public class ExpressionEditor extends Application {
         private void changeFocus(final MouseEvent e) {
 			if(focus == null){
 				focus = rootExpression;
-			}
-			else if(focus instanceof CompoundExpression){
+			}else if(focus instanceof CompoundExpression){
 				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
 				for (Expression ex : children){
-
-					//System.out.println("node " + ex.getNode() + ex.getNode().get);
-
 					if(inNode(e,ex.getNode())){
 						focus = ex;
-						System.out.println("node " + ex.getNode());
 						return;
 					}
 				}
-			}
-			else{
+			}else{
 				List<Expression> children = ((AbstractCompoundExpression)(rootExpression)).getChildren();
 				for (Expression ex : children){
 					if(inNode(e,ex.getNode())){
 						focus = ex;
-						System.out.println(" focus got here it is  " + focus.toString());
 						return;
 					}
 				}
