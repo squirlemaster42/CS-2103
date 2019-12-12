@@ -71,21 +71,18 @@ public class ExpressionEditor extends Application {
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
             expressionPane.getChildren().add(movingExpression.getNode());
 
-            focus = rootExpression;
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            changeFocus(mouseEvent);
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void handleReleased(MouseEvent mouseEvent) {
             expressionPane.getChildren().remove(movingExpression.getNode());
             movingExpression = null;
             setColor(rootExpression.getNode(), Color.BLACK);
-            ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
         }
 
         private void changeFocus(final MouseEvent e) {
@@ -95,6 +92,7 @@ public class ExpressionEditor extends Application {
 			else if(focus instanceof CompoundExpression){
 				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
 				System.out.println("here");
+				System.out.println(focus.convertToString(0));
 				for (Expression ex : children){
 					System.out.println(ex.getNode());
 					/*if(inNode(e,ex.getNode())){
@@ -178,7 +176,10 @@ public class ExpressionEditor extends Application {
                 expressionPane.setOnMousePressed(mouseHandler);
                 expressionPane.setOnMouseDragged(mouseHandler);
                 expressionPane.setOnMouseReleased(mouseHandler);
-            } catch (ExpressionParseException epe) {
+				if(focus != null) {
+					((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+				}
+			} catch (ExpressionParseException epe) {
                 // If we can't parse the expression, then mark it in red
                 textField.setStyle("-fx-text-fill: red");
             }
