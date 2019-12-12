@@ -3,6 +3,7 @@ import javafx.application.Application;
 import java.awt.event.MouseListener;
 import java.util.*;
 
+import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
@@ -63,14 +64,13 @@ public class ExpressionEditor extends Application {
         }
 
         private void handlePressed(MouseEvent mouseEvent) {
-            //TODO Set color
-            setColor(rootExpression.getNode(), Expression.GHOST_COLOR);
-            movingExpression = rootExpression.deepCopy();
+			changeFocus(mouseEvent);
+			setColor(focus.getNode(), Expression.GHOST_COLOR);
+            movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
             expressionPane.getChildren().add(movingExpression.getNode());
-            changeFocus(mouseEvent);
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
@@ -92,27 +92,25 @@ public class ExpressionEditor extends Application {
 			}
 			else if(focus instanceof CompoundExpression){
 				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
-				System.out.println("here");
-				System.out.println(focus.convertToString(0));
 				for (Expression ex : children){
-					System.out.println(ex.getNode());
-					/*if(inNode(e,ex.getNode())){
+
+					//System.out.println("node " + ex.getNode() + ex.getNode().get);
+
+					if(inNode(e,ex.getNode())){
 						focus = ex;
+						System.out.println("node " + ex.getNode());
 						return;
-					}*/
+					}
 				}
 			}
 			else{
 				List<Expression> children = ((AbstractCompoundExpression)(rootExpression)).getChildren();
-				System.out.println("here2");
 				for (Expression ex : children){
-					System.out.println(ex.getNode());
-					/*
 					if(inNode(e,ex.getNode())){
 						focus = ex;
 						System.out.println(" focus got here it is  " + focus.toString());
 						return;
-					}*/
+					}
 				}
 			}
             ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
@@ -128,9 +126,8 @@ public class ExpressionEditor extends Application {
 
         private boolean inNode(final MouseEvent e, final Node n) {
             //TODO Check if we should use bounds instead
-			System.out.println("e " + e);
-			System.out.println("node " +n);
-            return n.contains(new Point2D(e.getX(), e.getY()));
+			Bounds boundsInScence = n.localToScene(n.getBoundsInLocal());
+			return boundsInScence.contains(new Point2D(e.getSceneX(),e.getSceneY()));
         }
     }
 

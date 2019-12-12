@@ -1,5 +1,6 @@
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 
 public class LiteralExpression extends AbstractExpression implements Expression{
@@ -40,8 +41,10 @@ public class LiteralExpression extends AbstractExpression implements Expression{
 
     @Override
     public void calculateNode() {
+        final HBox hBox = new HBox();
         final Label label = new Label(value);
         label.setFont(_FONT);
+        hBox.getChildren().add(label);
         this.node = label;
     }
 
