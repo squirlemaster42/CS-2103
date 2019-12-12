@@ -70,9 +70,8 @@ public class ExpressionEditor extends Application {
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY());
             queryPane.getChildren().add(movingExpression.getNode());
-
-            focus = rootExpression;
-            git
+            changeFocus(mouseEvent);
+            focus = movingExpression.deepCopy();
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
@@ -88,7 +87,33 @@ public class ExpressionEditor extends Application {
         }
 
         private void changeFocus(final MouseEvent e) {
-
+			if(focus == null){
+				focus = rootExpression;
+			}
+			else if(focus instanceof CompoundExpression){
+				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
+				System.out.println("here");
+				for (Expression ex : children){
+					System.out.println(ex.getNode());
+					/*if(inNode(e,ex.getNode())){
+						focus = ex;
+						return;
+					}*/
+				}
+			}
+			else{
+				List<Expression> children = ((AbstractCompoundExpression)(rootExpression)).getChildren();
+				System.out.println("here2");
+				for (Expression ex : children){
+					System.out.println(ex.getNode());
+					/*
+					if(inNode(e,ex.getNode())){
+						focus = ex;
+						System.out.println(" focus got here it is  " + focus.toString());
+						return;
+					}*/
+				}
+			}
         }
 
         private void setColor(final Node n, final Color c) {
@@ -101,6 +126,8 @@ public class ExpressionEditor extends Application {
 
         private boolean inNode(final MouseEvent e, final Node n) {
             //TODO Check if we should use bounds instead
+			System.out.println("e " + e);
+			System.out.println("node " +n);
             return n.contains(new Point2D(e.getX(), e.getY()));
         }
     }
