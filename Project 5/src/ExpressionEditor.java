@@ -90,6 +90,7 @@ public class ExpressionEditor extends Application {
             }
 			if(focus == null){
 				focus = rootExpression;
+				return;
 			}else if(focus instanceof CompoundExpression){
 				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
 				for (Expression ex : children){
@@ -98,15 +99,14 @@ public class ExpressionEditor extends Application {
 						return;
 					}
 				}
-			}else{
-				List<Expression> children = ((AbstractCompoundExpression)(rootExpression)).getChildren();
-				for (Expression ex : children){
-					if(inNode(e,ex.getNode())){
-						focus = ex;
-						return;
-					}
-				}
 			}
+            List<Expression> children = ((AbstractCompoundExpression)(rootExpression)).getChildren();
+            for (Expression ex : children){
+                if(inNode(e,ex.getNode())){
+                    focus = ex;
+                    return;
+                }
+            }
         }
 
         private void setColor(final Node n, final Color c) {
