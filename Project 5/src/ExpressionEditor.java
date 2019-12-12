@@ -69,6 +69,9 @@ public class ExpressionEditor extends Application {
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY());
             queryPane.getChildren().add(movingExpression.getNode());
+
+            focus = rootExpression;
+            git
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
