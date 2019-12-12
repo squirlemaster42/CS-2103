@@ -64,6 +64,7 @@ public class ExpressionEditor extends Application {
 
         private void handlePressed(MouseEvent mouseEvent) {
             //TODO Set color
+            setColor(rootExpression.getNode(), Expression.GHOST_COLOR);
             movingExpression = rootExpression.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
@@ -77,21 +78,21 @@ public class ExpressionEditor extends Application {
             movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - 25);
         }
 
-        private void handleReleased(MouseEvent e) {
-            System.out.println("here");
+        private void handleReleased(MouseEvent mouseEvent) {
             queryPane.getChildren().remove(movingExpression.getNode());
             movingExpression = null;
+            setColor(rootExpression.getNode(), Color.BLACK);
         }
 
         private void changeFocus(final MouseEvent e) {
 
         }
 
-        private void changeColor(final Node n, final Color c) {
+        private void setColor(final Node n, final Color c) {
             if (n instanceof Label) {
                 ((Label) n).setTextFill(c);
             } else {
-                ((HBox) n).getChildren().forEach(e -> changeColor(e, c));
+                ((HBox) n).getChildren().forEach(e -> setColor(e, c));
             }
         }
 
@@ -142,7 +143,7 @@ public class ExpressionEditor extends Application {
                     expressionPane.getChildren().add(expression.getNode());
 
                     final EventHandler<MouseEvent> mouseHandler = new MouseEventHandler(queryPane, (CompoundExpression) expression);
-                    expressionPane.setOnMouseClicked(mouseHandler);
+                    expressionPane.setOnMousePressed(mouseHandler);
                     expressionPane.setOnMouseDragged(mouseHandler);
                     expressionPane.setOnMouseReleased(mouseHandler);
                 } catch (ExpressionParseException epe) {
