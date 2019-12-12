@@ -1,4 +1,5 @@
 import javafx.scene.Node;
+import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 
 public abstract class AbstractExpression implements Expression {
@@ -44,4 +45,13 @@ public abstract class AbstractExpression implements Expression {
         //Add ourselves to the StringBuilder
         stringBuilder.append("\t".repeat(indentLevel)).append(symbol).append("\n");
     }
+
+    public void calculateNode(){
+        final Label label = new Label(getSymbol());
+        label.setFont(_FONT);
+
+    }
+
+    public abstract String getSymbol();
+
 }

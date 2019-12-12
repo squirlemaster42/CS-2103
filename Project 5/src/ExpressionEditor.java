@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import org.w3c.dom.ls.LSOutput;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
+
 public class ExpressionEditor extends Application {
     public static void main(String[] args) {
         launch(args);
@@ -118,10 +120,10 @@ public class ExpressionEditor extends Application {
                 try {
                     // Success! Add the expression's Node to the expressionPane
                     final Expression expression = expressionParser.parse(textField.getText(), true);
+					((AbstractExpression) expression).calculateNode();
                     expressionPane.getChildren().clear();
                     expressionPane.getChildren().add(expression.getNode());
-                    expression.getNode().setLayoutX(WINDOW_WIDTH / 4);
-                    expression.getNode().setLayoutY(WINDOW_HEIGHT / 2);
+
 
                     // If the parsed expression is a CompoundExpression, then register some callbacks
                     if (expression instanceof CompoundExpression) {
@@ -130,15 +132,25 @@ public class ExpressionEditor extends Application {
                         expressionPane.setOnMousePressed(mouseEvent -> {
                             //TODO Set color
                             movingExpression = expression.deepCopy();
+							((AbstractExpression) movingExpression).calculateNode();
+							movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
+							movingExpression.getNode().setTranslateY(mouseEvent.getSceneY());
                             queryPane.getChildren().add(movingExpression.getNode());
                         });
                         expressionPane.setOnMouseDragged(mouseEvent -> {
-                            //TODO Make it move again
-                            movingExpression.getNode().setTranslateX(mouseEvent.getX());
-                            movingExpression.getNode().setTranslateY(mouseEvent.getY());
+							System.out.println("mouse X " + mouseEvent.getSceneX());
+							System.out.println("mouse y " + mouseEvent.getSceneY());
+
+
+							movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() -(expressionPane.getWidth()/2 + 50));
+                            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - 25);
+
+							System.out.println("exp X " + movingExpression.getNode().getTranslateX());
+							System.out.println("exo y " + movingExpression.getNode().getTranslateY());
                         });
                         expressionPane.setOnMouseReleased(mouseEvent -> {
                             queryPane.getChildren().remove(movingExpression.getNode());
+
                             movingExpression = null;
                         });
                     }
@@ -150,6 +162,7 @@ public class ExpressionEditor extends Application {
         });
         expressionPane.setTranslateY(EXPRESSION_POSY);
         expressionPane.setTranslateX(EXPRESSION_POSX);
+
 
         queryPane.getChildren().add(button);
 
@@ -163,4 +176,7 @@ public class ExpressionEditor extends Application {
         primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
         primaryStage.show();
     }
+
+    //takes node and  int
+	//make method
 }

@@ -1,3 +1,5 @@
+import javafx.scene.control.Label;
+
 import java.util.List;
 
 public abstract class AbstractCompoundExpression extends AbstractExpression implements CompoundExpression {
@@ -45,4 +47,8 @@ public abstract class AbstractCompoundExpression extends AbstractExpression impl
     public void addSubexpression(Expression subexpression) {
         children.add(subexpression);
     }
+
+
+    public abstract String getSymbol();
+
 }

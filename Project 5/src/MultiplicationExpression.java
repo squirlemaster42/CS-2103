@@ -8,6 +8,7 @@ import java.util.ListIterator;
 
 public class MultiplicationExpression extends AbstractCompoundExpression {
 
+    private Node node = null;
     /**
      * Creates an instance of Multiplication Expression
      * @param children children of the additive expression
@@ -67,9 +68,20 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
 
     @Override
     public Node getNode() {
+        return this.node;
+    }
+
+    @Override
+    public String getSymbol() {
+        return "*";
+    }
+
+    @Override
+    public void calculateNode(){
         final HBox hBox = new HBox();
 
         for(int i = 0 ; i < super.getChildren().size(); i++){
+            ((AbstractExpression) super.getChildren().get(i)).calculateNode();
             if(i == super.getChildren().size() - 1){
                 hBox.getChildren().add(super.getChildren().get(i).getNode());
             }
@@ -81,6 +93,6 @@ public class MultiplicationExpression extends AbstractCompoundExpression {
             }
         }
 
-        return hBox;
+        this.node = hBox;
     }
 }

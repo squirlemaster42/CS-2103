@@ -9,6 +9,7 @@ import java.util.ListIterator;
 
 public class ParentheticalExpression extends AbstractCompoundExpression {
 
+    private Node node = null;
     private List<Expression> _children;
     /**
      * Creates an instance of Parenthetical Expression
@@ -70,14 +71,25 @@ public class ParentheticalExpression extends AbstractCompoundExpression {
 
     @Override
     public Node getNode() {
+        return this.node;
+    }
+
+    @Override
+    public String getSymbol() {
+        return "()";
+    }
+
+    @Override
+    public void calculateNode(){
         final HBox hBox = new HBox();
         final Label left = new Label("(");
         left.setFont(_FONT);
         hBox.getChildren().add(left);
+        ((AbstractExpression) super.getChildren().get(0)).calculateNode();
         hBox.getChildren().add(super.getChildren().get(0).getNode());
         final Label right = new Label(")");
         right.setFont(_FONT);
         hBox.getChildren().add(right);
-        return hBox;
+        this.node = hBox;
     }
 }

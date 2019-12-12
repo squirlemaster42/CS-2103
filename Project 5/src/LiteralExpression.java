@@ -6,6 +6,7 @@ public class LiteralExpression extends AbstractExpression implements Expression{
 
     private final String value;
 
+    private Node node = null;
     /**
      * Creates an Literal of Additive Expression
      * @param parent parent of the additive expression
@@ -34,8 +35,19 @@ public class LiteralExpression extends AbstractExpression implements Expression{
 
     @Override
     public Node getNode() {
+        return this.node;
+    }
+
+    @Override
+    public void calculateNode() {
         final Label label = new Label(value);
         label.setFont(_FONT);
-        return label;
+        this.node = label;
     }
+
+    @Override
+    public String getSymbol() {
+        return "";
+    }
+
 }
