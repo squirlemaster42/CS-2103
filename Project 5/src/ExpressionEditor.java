@@ -66,6 +66,8 @@ public class ExpressionEditor extends Application {
             movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             expressionPane.getChildren().add(movingExpression.getNode());
+            movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
+            movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
             ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
