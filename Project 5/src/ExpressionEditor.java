@@ -114,6 +114,7 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        //TODO Change names
         private boolean inNode(final MouseEvent e, final Node n) {
             //TODO Check if we should use bounds instead
 			Bounds boundsInScence = n.localToScene(n.getBoundsInLocal());
