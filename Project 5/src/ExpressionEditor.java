@@ -66,6 +66,7 @@ public class ExpressionEditor extends Application {
             movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             expressionPane.getChildren().add(movingExpression.getNode());
+            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
@@ -82,6 +83,9 @@ public class ExpressionEditor extends Application {
         }
 
         private void changeFocus(final MouseEvent e) {
+            if(focus != null){
+                ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
+            }
 			if(focus == null){
 				focus = rootExpression;
 			}else if(focus instanceof CompoundExpression){
@@ -101,7 +105,6 @@ public class ExpressionEditor extends Application {
 					}
 				}
 			}
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
         private void setColor(final Node n, final Color c) {
