@@ -37,33 +37,50 @@ public class ExpressionEditor extends Application {
      */
     private static class MouseEventHandler implements EventHandler<MouseEvent> {
         private final CompoundExpression rootExpression;
-        private final Pane pane;
+        private final Pane queryPane;
 
         MouseEventHandler(Pane pane_, CompoundExpression rootExpression_) {
             this.rootExpression = rootExpression_;
-            this.pane = pane_;
+            this.queryPane = pane_;
         }
 
         public void handle(MouseEvent event) {
+            //TODO Change to use MouseEventHandler class
+            // Try to parse the expression
+            //TODO Set focus
+            // Success! Add the expression's Node to the expressionPane
+
+            // If the parsed expression is a CompoundExpression, then register some callbacks
+            //TODO Figure out why it moves on first click
+            ((Pane) rootExpression.getNode()).setBorder(Expression.NO_BORDER);
             if (event.getEventType() == MouseEvent.MOUSE_PRESSED) {
-            	handlePressed(event);
+                handlePressed(event);
             } else if (event.getEventType() == MouseEvent.MOUSE_DRAGGED) {
-				handleDragged(event);
+                handleDragged(event);
             } else if (event.getEventType() == MouseEvent.MOUSE_RELEASED) {
-				handleReleased(event);
+                handleReleased(event);
             }
         }
 
-        private void handlePressed(MouseEvent e) {
-
+        private void handlePressed(MouseEvent mouseEvent) {
+            //TODO Set color
+            movingExpression = rootExpression.deepCopy();
+            ((AbstractExpression) movingExpression).calculateNode();
+            movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
+            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY());
+            queryPane.getChildren().add(movingExpression.getNode());
         }
 
-        private void handleDragged(MouseEvent e) {
-
+        private void handleDragged(MouseEvent mouseEvent) {
+            //movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - (expressionPane.getWidth() / 2 + 50));
+            movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - (50 / 2 + 50));
+            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - 25);
         }
 
         private void handleReleased(MouseEvent e) {
-
+            System.out.println("here");
+            queryPane.getChildren().remove(movingExpression.getNode());
+            movingExpression = null;
         }
 
         private void changeFocus(final MouseEvent e) {
@@ -120,40 +137,14 @@ public class ExpressionEditor extends Application {
                 try {
                     // Success! Add the expression's Node to the expressionPane
                     final Expression expression = expressionParser.parse(textField.getText(), true);
-					((AbstractExpression) expression).calculateNode();
+                    ((AbstractExpression) expression).calculateNode();
                     expressionPane.getChildren().clear();
                     expressionPane.getChildren().add(expression.getNode());
 
-
-                    // If the parsed expression is a CompoundExpression, then register some callbacks
-                    if (expression instanceof CompoundExpression) {
-                        //TODO Figure out why it moves on first click
-                        ((Pane) expression.getNode()).setBorder(Expression.NO_BORDER);
-                        expressionPane.setOnMousePressed(mouseEvent -> {
-                            //TODO Set color
-                            movingExpression = expression.deepCopy();
-							((AbstractExpression) movingExpression).calculateNode();
-							movingExpression.getNode().setTranslateX(mouseEvent.getSceneX());
-							movingExpression.getNode().setTranslateY(mouseEvent.getSceneY());
-                            queryPane.getChildren().add(movingExpression.getNode());
-                        });
-                        expressionPane.setOnMouseDragged(mouseEvent -> {
-							System.out.println("mouse X " + mouseEvent.getSceneX());
-							System.out.println("mouse y " + mouseEvent.getSceneY());
-
-
-							movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() -(expressionPane.getWidth()/2 + 50));
-                            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - 25);
-
-							System.out.println("exp X " + movingExpression.getNode().getTranslateX());
-							System.out.println("exo y " + movingExpression.getNode().getTranslateY());
-                        });
-                        expressionPane.setOnMouseReleased(mouseEvent -> {
-                            queryPane.getChildren().remove(movingExpression.getNode());
-
-                            movingExpression = null;
-                        });
-                    }
+                    final EventHandler<MouseEvent> mouseHandler = new MouseEventHandler(queryPane, (CompoundExpression) expression);
+                    expressionPane.setOnMouseClicked(mouseHandler);
+                    expressionPane.setOnMouseDragged(mouseHandler);
+                    expressionPane.setOnMouseReleased(mouseHandler);
                 } catch (ExpressionParseException epe) {
                     // If we can't parse the expression, then mark it in red
                     textField.setStyle("-fx-text-fill: red");
@@ -178,5 +169,5 @@ public class ExpressionEditor extends Application {
     }
 
     //takes node and  int
-	//make method
+    //make method
 }
