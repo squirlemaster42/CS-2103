@@ -65,14 +65,12 @@ public class ExpressionEditor extends Application {
 			setColor(focus.getNode(), Expression.GHOST_COLOR);
             movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
-            movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
-            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
             expressionPane.getChildren().add(movingExpression.getNode());
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
-            movingExpression.getNode().setTranslateX(mouseEvent.getSceneX() - expressionPane.getWidth() / 2);
-            movingExpression.getNode().setTranslateY(mouseEvent.getSceneY() - expressionPane.getHeight() / 2);
+            movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
+            movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
             ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
         }
 
