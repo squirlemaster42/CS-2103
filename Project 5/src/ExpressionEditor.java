@@ -109,6 +109,20 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        private Expression checkSwap(final CompoundExpression exp, final MouseEvent mouseEvent){
+            //Check data structure
+            final List<List<Expression>> possibleOrders = new ArrayList<>();
+            final List<Expression> parentList = ((AbstractCompoundExpression) exp.getParent()).getChildren();
+            parentList.remove(exp);
+            for(int i = 0; i <= parentList.size(); i++){
+                final List<Expression> newList = new ArrayList<>(parentList);
+                newList.add(i, exp);
+                possibleOrders.add(newList);
+            }
+            //TODO find closest
+            return null;
+        }
+
         private void setColor(final Node n, final Color c) {
             if (n instanceof Label) {
                 ((Label) n).setTextFill(c);
@@ -120,8 +134,8 @@ public class ExpressionEditor extends Application {
         //TODO Change names
         private boolean inNode(final MouseEvent e, final Node n) {
             //TODO Check if we should use bounds instead
-			Bounds boundsInScence = n.localToScene(n.getBoundsInLocal());
-			return boundsInScence.contains(new Point2D(e.getSceneX(),e.getSceneY()));
+			Bounds boundsInScene = n.localToScene(n.getBoundsInLocal());
+			return boundsInScene.contains(new Point2D(e.getSceneX(),e.getSceneY()));
         }
     }
 
