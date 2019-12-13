@@ -139,24 +139,33 @@ public class ExpressionEditor extends Application {
             }
             double min = Integer.MAX_VALUE;
             List<Expression> closest = null;
-            //TODO Recalc for entire list
             for(List<Expression> expressions : possibleOrders){
                 System.out.println(Arrays.deepToString(new List[]{expressions}));
                 //Get the difference between where we are ideally and where we are
                 //Check if we are less than the min
                 //Set closest
                 ((AbstractCompoundExpression) exp.getParent()).setChildren(expressions);
-                final double movingCenterX = movingExpression.getNode().getBoundsInLocal().getCenterX();
-                Node expNode = null;
+                final double movingCenterX = movingExpression.getNode().getBoundsInParent().getCenterX();
+                Expression targetExp = null;
                 for(Expression expression : expressions){
                     if(expression.equals(exp)){
                         Expression copy = exp.deepCopy();
                         ((AbstractExpression) copy).calculateNode();
-                        expNode = copy.getNode();
+                        targetExp = copy;
                         break;
                     }
                 }
-                final double targetCenterX = expNode.getBoundsInLocal().getCenterX();
+                List<Expression> expCopy = new ArrayList<>();
+                for(Expression e : expressions){
+                    if(e.equals(exp)){
+                        expCopy.add(targetExp);
+                    }else{
+                        expCopy.add(e.deepCopy());
+                    }
+                }
+                expCopy.forEach(e -> ((AbstractExpression) e).calculateNode());
+                //TODO Recalc
+                final double targetCenterX = targetExp.getNode().getBoundsInParent().getCenterX();
                 final double delta = Math.abs(targetCenterX - movingCenterX); //TODO Check abs
                 System.out.println("Delta: " + delta);
                 if(delta < min){
@@ -212,6 +221,10 @@ public class ExpressionEditor extends Application {
         final Pane expressionPane = new Pane();
 
         // Add the callback to handle when the Parse button is pressed
+        final BorderPane root = new BorderPane();
+        root.setTop(queryPane);
+        root.setCenter(expressionPane);
+
         button.setOnMouseClicked(e -> {
             //TODO Change to use MouseEventHandler class
             // Try to parse the expression
@@ -224,9 +237,9 @@ public class ExpressionEditor extends Application {
                 expressionPane.getChildren().add(expression.getNode());
 
                 final EventHandler<MouseEvent> mouseHandler = new MouseEventHandler(expressionPane, (CompoundExpression) expression);
-                expressionPane.setOnMousePressed(mouseHandler);
-                expressionPane.setOnMouseDragged(mouseHandler);
-                expressionPane.setOnMouseReleased(mouseHandler);
+                root.setOnMousePressed(mouseHandler);
+                root.setOnMouseDragged(mouseHandler);
+                root.setOnMouseReleased(mouseHandler);
 			} catch (ExpressionParseException epe) {
                 // If we can't parse the expression, then mark it in red
                 textField.setStyle("-fx-text-fill: red");
@@ -237,10 +250,6 @@ public class ExpressionEditor extends Application {
 
         // Reset the color to black whenever the user presses a key
         textField.setOnKeyPressed(e -> textField.setStyle("-fx-text-fill: black"));
-
-        final BorderPane root = new BorderPane();
-        root.setTop(queryPane);
-        root.setCenter(expressionPane);
 
         primaryStage.setScene(new Scene(root, WINDOW_WIDTH, WINDOW_HEIGHT));
         primaryStage.show();
