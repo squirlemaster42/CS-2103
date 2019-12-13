@@ -82,7 +82,7 @@ public class ExpressionEditor extends Application {
                 movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
 
                 //Handle Swap
-               // ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
+                ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
 
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
@@ -143,9 +143,9 @@ public class ExpressionEditor extends Application {
             }
 
             List<Expression> closest = null;
-//center of moving compared to loc and see if its less than min then set min = dist between them and closest to that expression and min should be abs()
-
-            //take loc get the val in expressions thats in loc compare its node to the center of the node for moving
+            //center of moving compared to loc and see if its less than min then set min = dist between them
+            // and closest to that expression and min should be abs()
+            //take loc get the val in expressions that's in loc compare its node to the center of the node for moving
 
             double min = Double.MAX_VALUE;
             final Node moving = movingExpression.getNode();
@@ -155,7 +155,9 @@ public class ExpressionEditor extends Application {
                 expressions.forEach(e -> ((AbstractExpression) e).calculateNode());
 
                 //if less than min reset min and set closest to that express
-                int diff = (int) (Math.abs((moving.getBoundsInLocal().getWidth() / 2 ) - (expressions.get(loc).getNode().getBoundsInLocal().getWidth() / 2 )));
+                final double diff = (Math.abs((moving.getBoundsInParent().getWidth() / 2 )
+                        - (expressions.get(loc).getNode().getBoundsInParent().getWidth() / 2 )));
+                System.out.println(diff);
                 if(diff < min){
                     min = diff;
                     closest = expressions;
