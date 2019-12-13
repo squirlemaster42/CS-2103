@@ -81,10 +81,11 @@ public class ExpressionEditor extends Application {
                 movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
                 movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
 
-                //Handle Swap
-                expressionPane.getChildren().remove(rootExpression.getNode());
-                ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
-                expressionPane.getChildren().add(rootExpression.getNode());
+//                //Handle Swap
+//                expressionPane.getChildren().remove(rootExpression.getNode());
+//                ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
+//                expressionPane.getChildren().add(rootExpression.getNode());
+                checkSwap(focus, mouseEvent);
 
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
@@ -96,6 +97,7 @@ public class ExpressionEditor extends Application {
                 movingExpression = null;
                 setColor(rootExpression.getNode(), Color.BLACK);
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+                System.out.println(rootExpression.convertToString(0));
             }
         }
 
@@ -130,11 +132,10 @@ public class ExpressionEditor extends Application {
             ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
         }
 
-        private List<Expression> checkSwap(final Expression exp, final MouseEvent mouseEvent){
+        private void checkSwap(final Expression exp, final MouseEvent mouseEvent){
             //Get the difference between where we are ideally and where we are
             //Check if we are less than the min
             //Set closest
-            final Node currPos = exp.deepCopy().getNode();
             List<List<Expression>> possibleExps = new ArrayList<>();
             final List<Expression> parentList = ((AbstractCompoundExpression) exp.getParent()).getChildren();
             parentList.remove(exp);
@@ -150,23 +151,33 @@ public class ExpressionEditor extends Application {
             //take loc get the val in expressions that's in loc compare its node to the center of the node for moving
 
             double min = Double.MAX_VALUE;
-            final Node moving = movingExpression.getNode();
-            final double movingX = movingExpression.getNode().getTranslateX() + (moving.getBoundsInParent().getWidth() / 2 );
+            final double movingX = movingExpression.getNode().getLayoutX() + movingExpression.getNode().getTranslateX()
+                + movingExpression.getNode().getBoundsInLocal().getWidth()/2;
+            System.out.println("move: " + movingX);
+            int i = 1;
             for(List<Expression> expressions : possibleExps){
                 final int loc = possibleExps.indexOf(expressions);
                 expressions.forEach(e -> ((AbstractExpression) e).calculateNode());
+                ((AbstractCompoundExpression) exp.getParent()).calculateNode();
+                ((AbstractCompoundExpression) exp.getParent()).setChildren(expressions);
+                exp.getParent().getNode().setTranslateY(100 * i);
+                i++;
+                expressionPane.getChildren().add(exp.getParent().getNode());
 
                 //if less than min reset min and set closest to that express
-                final double locX = expressions.get(loc).getNode().getTranslateX() + (expressions.get(loc).getNode().getBoundsInParent().getWidth() / 2 );
+                final double locX = expressions.get(loc).getNode().getBoundsInLocal().getMinX();
+                System.out.println("Loc: " + locX);
                 final double diff = (Math.abs(movingX - locX));
-                System.out.println(diff);
+                System.out.println("Diff: " + diff);
                 if(diff < min){
                     min = diff;
                     closest = expressions;
                 }
             }
 
-            return closest;
+            //node.getParent().getNode().sceneToLocal(event.getSceneX(), event.getSceneY()).getX())
+            System.out.println(Arrays.deepToString(new List[]{closest}));
+            ((AbstractCompoundExpression) exp.getParent()).setChildren(closest);
         }
 
         private void setColor(final Node n, final Color c) {

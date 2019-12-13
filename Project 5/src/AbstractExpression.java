@@ -49,7 +49,6 @@ public abstract class AbstractExpression implements Expression {
     public void calculateNode(){
         final Label label = new Label(getSymbol());
         label.setFont(_FONT);
-
     }
 
     public abstract String getSymbol();
