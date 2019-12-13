@@ -154,7 +154,6 @@ public class ExpressionEditor extends Application {
             final double movingX = movingExpression.getNode().getTranslateX() + (moving.getBoundsInParent().getWidth() / 2 );
             for(List<Expression> expressions : possibleExps){
                 final int loc = possibleExps.indexOf(expressions);
-                expressions = expressions.stream().map(Expression::deepCopy).collect(Collectors.toList());
                 expressions.forEach(e -> ((AbstractExpression) e).calculateNode());
 
                 //if less than min reset min and set closest to that express
