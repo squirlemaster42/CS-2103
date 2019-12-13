@@ -57,10 +57,6 @@ public abstract class AbstractExpression implements Expression {
         label.setFont(_FONT);
     }
 
-    String getID(){
-        return id.toString();
-    }
-
     public abstract String getSymbol();
 
     @Override

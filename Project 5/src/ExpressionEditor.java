@@ -76,6 +76,7 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        //TODO Fix jitter
         private void handleDragged(MouseEvent mouseEvent) {
             if(shouldMove){
                 movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
@@ -139,7 +140,6 @@ public class ExpressionEditor extends Application {
             List<List<Expression>> possibleExps = new ArrayList<>();
             List<Expression> parentList = new ArrayList<>(((AbstractCompoundExpression) exp.getParent()).getChildren());
             final double startPos = parentList.get(0).getNode().getScene().getX();
-            System.out.println(startPos);
             parentList.remove(exp);
             for(int i = 0; i <= parentList.size() + 1; i++){
                 final List<Expression> newList = new ArrayList<>(parentList);
@@ -159,29 +159,35 @@ public class ExpressionEditor extends Application {
                 + movingExpression.getNode().getBoundsInLocal().getWidth()/2;
             for(List<Expression> expressions : possibleExps){
                 //if less than min reset min and set closest to that express
-                final double locX = calcXPos(exp, expressions, startPos);
-                System.out.println("Loc: " + locX);
+                final Expression parentCopy = exp.getParent().deepCopy();
+                ((AbstractCompoundExpression) parentCopy).calculateNode();
+                expressionPane.getChildren().add(parentCopy.getNode());
+                final double locX = calcXPos(exp, ((AbstractCompoundExpression) parentCopy).getChildren(), startPos);
                 final double diff = (Math.abs(movingX - locX));
                 if(diff < min){
                     min = diff;
                     closest = expressions;
                 }
+                expressionPane.getChildren().remove(parentCopy.getNode());
             }
 
             ((AbstractCompoundExpression) exp.getParent()).setChildren(closest);
+            setColor(exp.getNode(), Expression.GHOST_COLOR);
         }
 
         private double calcXPos(final Expression node, final List<Expression> expressions, final double startPos){
-            double width = startPos;
+            double pos = startPos;
+            //The width is always zero. Could not figure out why.
+            //If this was not happening, we should find the position of the target expression of the new expression
             for(Expression exp : expressions){
                 if(exp.equals(node)){
-                    width += exp.getNode().getScene().getWidth() / 2;
+                    pos += exp.getNode().getBoundsInLocal().getWidth() / 2;
                     break;
                 }else{
-                    width += exp.getNode().getScene().getWidth();
+                    pos += exp.getNode().getBoundsInLocal().getWidth();
                 }
             }
-            return width;
+            return pos;
         }
 
         private void setColor(final Node n, final Color c) {

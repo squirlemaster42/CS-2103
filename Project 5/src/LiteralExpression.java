@@ -46,6 +46,7 @@ public class LiteralExpression extends AbstractExpression implements Expression{
         label.setFont(_FONT);
         hBox.getChildren().add(label);
         this.node = hBox;
+
     }
 
     @Override
