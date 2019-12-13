@@ -151,14 +151,15 @@ public class ExpressionEditor extends Application {
 
             double min = Double.MAX_VALUE;
             final Node moving = movingExpression.getNode();
+            final double movingX = movingExpression.getNode().getTranslateX() + (moving.getBoundsInParent().getWidth() / 2 );
             for(List<Expression> expressions : possibleExps){
                 final int loc = possibleExps.indexOf(expressions);
                 expressions = expressions.stream().map(Expression::deepCopy).collect(Collectors.toList());
                 expressions.forEach(e -> ((AbstractExpression) e).calculateNode());
 
                 //if less than min reset min and set closest to that express
-                final double diff = (Math.abs((moving.getBoundsInParent().getWidth() / 2 )
-                        - (expressions.get(loc).getNode().getBoundsInParent().getWidth() / 2 )));
+                final double locX = expressions.get(loc).getNode().getTranslateX() + (expressions.get(loc).getNode().getBoundsInParent().getWidth() / 2 );
+                final double diff = (Math.abs(movingX - locX));
                 System.out.println(diff);
                 if(diff < min){
                     min = diff;
