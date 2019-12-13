@@ -1,3 +1,5 @@
+import com.sun.javafx.tk.FontLoader;
+import com.sun.javafx.tk.Toolkit;
 import javafx.application.Application;
 
 import java.awt.event.MouseListener;
@@ -6,6 +8,7 @@ import java.util.stream.Collectors;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
+import javafx.scene.Group;
 import javafx.scene.control.Label;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.event.EventHandler;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.w3c.dom.ls.LSOutput;
 
@@ -159,16 +163,12 @@ public class ExpressionEditor extends Application {
                 + movingExpression.getNode().getBoundsInLocal().getWidth()/2;
             for(List<Expression> expressions : possibleExps){
                 //if less than min reset min and set closest to that express
-                final Expression parentCopy = exp.getParent().deepCopy();
-                ((AbstractCompoundExpression) parentCopy).calculateNode();
-                expressionPane.getChildren().add(parentCopy.getNode());
-                final double locX = calcXPos(exp, ((AbstractCompoundExpression) parentCopy).getChildren(), startPos);
+                final double locX = calcXPos(exp, expressions, startPos);
                 final double diff = (Math.abs(movingX - locX));
                 if(diff < min){
                     min = diff;
                     closest = expressions;
                 }
-                expressionPane.getChildren().remove(parentCopy.getNode());
             }
 
             ((AbstractCompoundExpression) exp.getParent()).setChildren(closest);
@@ -177,16 +177,15 @@ public class ExpressionEditor extends Application {
 
         private double calcXPos(final Expression node, final List<Expression> expressions, final double startPos){
             double pos = startPos;
-            //The width is always zero. Could not figure out why.
-            //If this was not happening, we should find the position of the target expression of the new expression
             for(Expression exp : expressions){
                 if(exp.equals(node)){
-                    pos += exp.getNode().getBoundsInLocal().getWidth() / 2;
+                    pos += calcWidth((HBox) exp.getNode()) / 2;
                     break;
                 }else{
-                    pos += exp.getNode().getBoundsInLocal().getWidth();
+                    pos += calcWidth((HBox) exp.getNode());
                 }
             }
+            System.out.println(pos);
             return pos;
         }
 
@@ -196,6 +195,21 @@ public class ExpressionEditor extends Application {
             } else {
                 ((HBox) n).getChildren().forEach(e -> setColor(e, c));
             }
+        }
+
+        private double calcWidth(final HBox node){
+            double width = 0;
+            for(Node child : node.getChildren()){
+                if(child instanceof Label){
+                    final Text text = new Text(((Label) child).getText());
+                    new Scene(new Group(text));
+                    text.applyCss();
+                    width += text.getLayoutBounds().getWidth();
+                }else{
+                    width += calcWidth((HBox) child);
+                }
+            }
+            return width;
         }
 
         //TODO Change names
