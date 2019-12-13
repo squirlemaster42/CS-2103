@@ -185,7 +185,6 @@ public class ExpressionEditor extends Application {
                     pos += calcWidth((HBox) exp.getNode());
                 }
             }
-            System.out.println(pos);
             return pos;
         }
 
