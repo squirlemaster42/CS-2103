@@ -128,51 +128,26 @@ public class ExpressionEditor extends Application {
         }
 
         private List<Expression> checkSwap(final Expression exp, final MouseEvent mouseEvent){
-            //Check data structure
-            final List<List<Expression>> possibleOrders = new ArrayList<>();
+            //Get the difference between where we are ideally and where we are
+            //Check if we are less than the min
+            //Set closest
+            final Node currPos = exp.deepCopy().getNode();
+            List<List<Expression>> possibleExps = new ArrayList<>();
             final List<Expression> parentList = ((AbstractCompoundExpression) exp.getParent()).getChildren();
             parentList.remove(exp);
             for(int i = 0; i <= parentList.size(); i++){
                 final List<Expression> newList = new ArrayList<>(parentList);
                 newList.add(i, exp);
-                possibleOrders.add(newList);
+                possibleExps.add(newList);
             }
-            double min = Integer.MAX_VALUE;
+
             List<Expression> closest = null;
-            for(List<Expression> expressions : possibleOrders){
-                System.out.println(Arrays.deepToString(new List[]{expressions}));
-                //Get the difference between where we are ideally and where we are
-                //Check if we are less than the min
-                //Set closest
-                ((AbstractCompoundExpression) exp.getParent()).setChildren(expressions);
-                final double movingCenterX = movingExpression.getNode().getBoundsInParent().getCenterX();
-                Expression targetExp = null;
-                for(Expression expression : expressions){
-                    if(expression.equals(exp)){
-                        Expression copy = exp.deepCopy();
-                        ((AbstractExpression) copy).calculateNode();
-                        targetExp = copy;
-                        break;
-                    }
-                }
-                List<Expression> expCopy = new ArrayList<>();
-                for(Expression e : expressions){
-                    if(e.equals(exp)){
-                        expCopy.add(targetExp);
-                    }else{
-                        expCopy.add(e.deepCopy());
-                    }
-                }
-                expCopy.forEach(e -> ((AbstractExpression) e).calculateNode());
-                //TODO Recalc
-                final double targetCenterX = targetExp.getNode().getBoundsInParent().getCenterX();
-                final double delta = Math.abs(targetCenterX - movingCenterX); //TODO Check abs
-                System.out.println("Delta: " + delta);
-                if(delta < min){
-                    min = delta;
-                    closest = expressions;
-                }
+            double min = Double.MAX_VALUE;
+            final Node moving = movingExpression.getNode();
+            for(List<Expression> expressions : possibleExps){
+                
             }
+
             return closest;
         }
 
