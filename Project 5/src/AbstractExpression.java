@@ -2,11 +2,16 @@ import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.text.Font;
 
+import java.util.Objects;
+import java.util.UUID;
+
 public abstract class AbstractExpression implements Expression {
 
     private CompoundExpression parent;
     private final String symbol;
     public static final Font _FONT = new Font("Comic Sans", 36);
+    private final UUID id;
+
     /**
      * An abstract implementation of Expression
      * @param parent The parent of the expression
@@ -15,6 +20,7 @@ public abstract class AbstractExpression implements Expression {
     AbstractExpression(final CompoundExpression parent, final String symbol){
         this.parent = parent;
         this.symbol = symbol;
+        this.id = UUID.randomUUID();
     }
 
     /**
@@ -51,6 +57,17 @@ public abstract class AbstractExpression implements Expression {
         label.setFont(_FONT);
     }
 
+    String getID(){
+        return id.toString();
+    }
+
     public abstract String getSymbol();
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AbstractExpression that = (AbstractExpression) o;
+        return Objects.equals(id, that.id);
+    }
 }
