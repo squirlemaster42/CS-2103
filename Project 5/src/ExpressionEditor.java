@@ -82,7 +82,9 @@ public class ExpressionEditor extends Application {
                 movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
 
                 //Handle Swap
+                expressionPane.getChildren().remove(rootExpression.getNode());
                 ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
+                expressionPane.getChildren().add(rootExpression.getNode());
 
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
