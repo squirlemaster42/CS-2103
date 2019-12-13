@@ -69,19 +69,19 @@ public class ExpressionEditor extends Application {
             ((AbstractExpression) movingExpression).calculateNode();
             expressionPane.getChildren().add(movingExpression.getNode());
             if(shouldMove){
-                movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
-                movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
             if(shouldMove){
-                movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
-                movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
 
                 //Handle Swap
-                ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
+               // ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
 
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
@@ -145,7 +145,7 @@ public class ExpressionEditor extends Application {
                 //Check if we are less than the min
                 //Set closest
                 ((AbstractCompoundExpression) exp.getParent()).setChildren(expressions);
-                final double movingCenterX = movingExpression.getNode().getBoundsInParent().getCenterX();
+                //final double movingCenterX = movingExpression.getNode().getBoundsInParent().getCenterX();
                 Expression targetExp = null;
                 for(Expression expression : expressions){
                     if(expression.equals(exp)){
@@ -165,13 +165,13 @@ public class ExpressionEditor extends Application {
                 }
                 expCopy.forEach(e -> ((AbstractExpression) e).calculateNode());
                 //TODO Recalc
-                final double targetCenterX = targetExp.getNode().getBoundsInParent().getCenterX();
+               /* final double targetCenterX = targetExp.getNode().getBoundsInParent().getCenterX();
                 final double delta = Math.abs(targetCenterX - movingCenterX); //TODO Check abs
                 System.out.println("Delta: " + delta);
                 if(delta < min){
                     min = delta;
                     closest = expressions;
-                }
+                }*/
             }
             return closest;
         }
@@ -231,6 +231,7 @@ public class ExpressionEditor extends Application {
             //TODO Set focus
             try {
                 // Success! Add the expression's Node to the expressionPane
+                focus = null;
                 final Expression expression = expressionParser.parse(textField.getText(), true);
                 ((AbstractExpression) expression).calculateNode();
                 expressionPane.getChildren().clear();
