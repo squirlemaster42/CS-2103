@@ -2,6 +2,7 @@ import javafx.application.Application;
 
 import java.awt.event.MouseListener;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javafx.geometry.Bounds;
 import javafx.geometry.Point2D;
@@ -142,11 +143,23 @@ public class ExpressionEditor extends Application {
             }
 
             List<Expression> closest = null;
+//center of moving compared to loc and see if its less than min then set min = dist between them and closest to that expression and min should be abs()
+
+            //take loc get the val in expressions thats in loc compare its node to the center of the node for moving
 
             double min = Double.MAX_VALUE;
             final Node moving = movingExpression.getNode();
             for(List<Expression> expressions : possibleExps){
+                final int loc = possibleExps.indexOf(expressions);
+                expressions = expressions.stream().map(Expression::deepCopy).collect(Collectors.toList());
+                expressions.forEach(e -> ((AbstractExpression) e).calculateNode());
 
+                //if less than min reset min and set closest to that express
+                int diff = (int) (Math.abs((moving.getBoundsInLocal().getWidth() / 2 ) - (expressions.get(loc).getNode().getBoundsInLocal().getWidth() / 2 )));
+                if(diff < min){
+                    min = diff;
+                    closest = expressions;
+                }
             }
 
             return closest;
