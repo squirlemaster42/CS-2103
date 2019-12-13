@@ -4,7 +4,7 @@ import java.util.List;
 
 public abstract class AbstractCompoundExpression extends AbstractExpression implements CompoundExpression {
 
-    private final List<Expression> children;
+    private List<Expression> children;
     public CompoundExpression parent;
 
     /**
@@ -15,6 +15,10 @@ public abstract class AbstractCompoundExpression extends AbstractExpression impl
      */
     AbstractCompoundExpression(List<Expression> children, CompoundExpression parent, final String symbol){
         super(parent, symbol);
+        this.children = children;
+    }
+
+    void setChildren(final List<Expression> children){
         this.children = children;
     }
 

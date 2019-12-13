@@ -32,6 +32,7 @@ public class ExpressionEditor extends Application {
 
     private static Expression focus;
     private static Expression movingExpression;
+    private static boolean shouldMove = false;
 
     /**
      * Mouse event handler for the entire pane that constitutes the ExpressionEditor
@@ -43,6 +44,7 @@ public class ExpressionEditor extends Application {
         MouseEventHandler(Pane pane_, CompoundExpression rootExpression_) {
             this.rootExpression = rootExpression_;
             this.expressionPane = pane_;
+            changeFocus(null);
         }
 
         public void handle(MouseEvent event) {
@@ -66,22 +68,32 @@ public class ExpressionEditor extends Application {
             movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             expressionPane.getChildren().add(movingExpression.getNode());
-            movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
-            movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            if(shouldMove){
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
+                ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            }
         }
 
         private void handleDragged(MouseEvent mouseEvent) {
-            movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
-            movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            if(shouldMove){
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - movingExpression.getNode().getBoundsInLocal().getWidth()/2);
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - movingExpression.getNode().getBoundsInLocal().getHeight()/2);
+
+                //Handle Swap
+                ((AbstractCompoundExpression) focus.getParent()).setChildren(checkSwap(focus, mouseEvent));
+
+                ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            }
         }
 
         private void handleReleased(MouseEvent mouseEvent) {
-            expressionPane.getChildren().remove(movingExpression.getNode());
-            movingExpression = null;
-            setColor(rootExpression.getNode(), Color.BLACK);
-            ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            if(shouldMove){
+                expressionPane.getChildren().remove(movingExpression.getNode());
+                movingExpression = null;
+                setColor(rootExpression.getNode(), Color.BLACK);
+                ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
+            }
         }
 
         private void changeFocus(final MouseEvent e) {
@@ -90,12 +102,14 @@ public class ExpressionEditor extends Application {
             }
 			if(focus == null){
 				focus = rootExpression;
+                ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
 				return;
 			}else if(focus instanceof CompoundExpression){
 				List<Expression> children = ((AbstractCompoundExpression)(focus)).getChildren();
 				for (Expression ex : children){
 					if(inNode(e,ex.getNode())){
 						focus = ex;
+						shouldMove = true;
 						return;
 					}
 				}
@@ -104,12 +118,16 @@ public class ExpressionEditor extends Application {
             for (Expression ex : children){
                 if(inNode(e,ex.getNode())){
                     focus = ex;
+                    shouldMove = true;
                     return;
                 }
             }
+            focus = rootExpression;
+            shouldMove = false;
+            ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
         }
 
-        private Expression checkSwap(final CompoundExpression exp, final MouseEvent mouseEvent){
+        private List<Expression> checkSwap(final Expression exp, final MouseEvent mouseEvent){
             //Check data structure
             final List<List<Expression>> possibleOrders = new ArrayList<>();
             final List<Expression> parentList = ((AbstractCompoundExpression) exp.getParent()).getChildren();
@@ -119,8 +137,34 @@ public class ExpressionEditor extends Application {
                 newList.add(i, exp);
                 possibleOrders.add(newList);
             }
-            //TODO find closest
-            return null;
+            double min = Integer.MAX_VALUE;
+            List<Expression> closest = null;
+            //TODO Recalc for entire list
+            for(List<Expression> expressions : possibleOrders){
+                System.out.println(Arrays.deepToString(new List[]{expressions}));
+                //Get the difference between where we are ideally and where we are
+                //Check if we are less than the min
+                //Set closest
+                ((AbstractCompoundExpression) exp.getParent()).setChildren(expressions);
+                final double movingCenterX = movingExpression.getNode().getBoundsInLocal().getCenterX();
+                Node expNode = null;
+                for(Expression expression : expressions){
+                    if(expression.equals(exp)){
+                        Expression copy = exp.deepCopy();
+                        ((AbstractExpression) copy).calculateNode();
+                        expNode = copy.getNode();
+                        break;
+                    }
+                }
+                final double targetCenterX = expNode.getBoundsInLocal().getCenterX();
+                final double delta = Math.abs(targetCenterX - movingCenterX); //TODO Check abs
+                System.out.println("Delta: " + delta);
+                if(delta < min){
+                    min = delta;
+                    closest = expressions;
+                }
+            }
+            return closest;
         }
 
         private void setColor(final Node n, final Color c) {
