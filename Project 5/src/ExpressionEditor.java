@@ -39,6 +39,8 @@ public class ExpressionEditor extends Application {
     private static Expression movingExpression;
     private static boolean shouldMove = false;
 
+    private static final double TRANSLATE_CONSTANTX = focus.getNode().getBoundsInLocal().getWidth() + 40;
+    private static final double TRANSLATE_CONSTANTY = focus.getNode().getBoundsInLocal().getHeight() + 40;
     /**
      * Mouse event handler for the entire pane that constitutes the ExpressionEditor
      */
@@ -68,14 +70,19 @@ public class ExpressionEditor extends Application {
 
         //TODO Fix ghosting when moving
         private void handlePressed(MouseEvent mouseEvent) {
-			changeFocus(mouseEvent);
+			//changes the focus when pressed
+            changeFocus(mouseEvent);
+            //sets color of moving focus to gray
 			setColor(focus.getNode(), Expression.GHOST_COLOR);
-            movingExpression = focus.deepCopy();
+            //creates deep copy of the focus and sets it to moving expression
+			movingExpression = focus.deepCopy();
             ((AbstractExpression) movingExpression).calculateNode();
             expressionPane.getChildren().add(movingExpression.getNode());
+
+            //moves the focused expression
             if(shouldMove){
-                movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
-                movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - TRANSLATE_CONSTANTX);
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - TRANSLATE_CONSTANTY);
                 ((Pane) focus.getNode()).setBorder(Expression.RED_BORDER);
             }
         }
@@ -83,8 +90,9 @@ public class ExpressionEditor extends Application {
         //TODO Fix jitter
         private void handleDragged(MouseEvent mouseEvent) {
             if(shouldMove){
-                movingExpression.getNode().setTranslateX(mouseEvent.getX() - (focus.getNode().getBoundsInLocal().getWidth() + 40));
-                movingExpression.getNode().setTranslateY(mouseEvent.getY() - (focus.getNode().getBoundsInLocal().getHeight() + 40));
+                //drags expression around
+                movingExpression.getNode().setTranslateX(mouseEvent.getX() - TRANSLATE_CONSTANTX);
+                movingExpression.getNode().setTranslateY(mouseEvent.getY() - TRANSLATE_CONSTANTY);
 
                 //Handle Swap
                 expressionPane.getChildren().remove(rootExpression.getNode());
@@ -106,6 +114,10 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        /**
+         * Changes the focus
+         * @param e mouse event to know when mouse is clicked to changed the focus
+         */
         private void changeFocus(final MouseEvent e) {
             if(focus != null){
                 ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
@@ -137,6 +149,11 @@ public class ExpressionEditor extends Application {
             ((Pane) focus.getNode()).setBorder(Expression.NO_BORDER);
         }
 
+        /**
+         * Swaps the parts of the expresison around
+         * @param exp expression to be swapped
+         * @param mouseEvent mouse event to control mouse input
+         */
         private void checkSwap(final Expression exp, final MouseEvent mouseEvent){
             //Get the difference between where we are ideally and where we are
             //Check if we are less than the min
@@ -175,6 +192,13 @@ public class ExpressionEditor extends Application {
             setColor(exp.getNode(), Expression.GHOST_COLOR);
         }
 
+        /**
+         * calculates x position
+         * @param node node whos pos we are calculating
+         * @param expressions orientation of the expressions
+         * @param startPos starting position
+         * @return xposition
+         */
         private double calcXPos(final Expression node, final List<Expression> expressions, final double startPos){
             double pos = startPos;
             for(Expression exp : expressions){
@@ -196,6 +220,11 @@ public class ExpressionEditor extends Application {
             }
         }
 
+        /**
+         * Gets width of Hbox node
+         * @param node node whos width we want to find
+         * @return width of the hbox
+         */
         private double calcWidth(final HBox node){
             double width = 0;
             for(Node child : node.getChildren()){
@@ -211,7 +240,12 @@ public class ExpressionEditor extends Application {
             return width;
         }
 
-        //TODO Change names
+        /**
+         * checks if we are clicking inside a node
+         * @param e mouse event to handle mouse clicks
+         * @param n node to check
+         * @return true if we are in a fnode false otherwise
+         */
         private boolean inNode(final MouseEvent e, final Node n) {
             //TODO Check if we should use bounds instead
 			Bounds boundsInScene = n.localToScene(n.getBoundsInLocal());
